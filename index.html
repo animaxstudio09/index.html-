@@ -23,11 +23,11 @@
         #splash-screen { display: flex; }
         #auth-screen, #main-app { display: none; }
         .tab-content { display: none; }
-        .active-tab { display: block; animation: fadeIn 0.4s ease-out; }
+        .active-tab { display: flex !important; flex-direction: column; animation: fadeIn 0.4s ease-out; }
         
         @keyframes fadeIn { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        #live-notify { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        #live-notify { position: fixed; top: 15px; right: 15px; z-index: 99999; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; pointer-events: none; }
         
         .btn-shine { position: relative; overflow: hidden; }
         .btn-shine::after { content: ''; position: absolute; top: -50%; left: -60%; width: 20%; height: 200%; opacity: 0; transform: rotate(30deg); background: rgba(255, 255, 255, 0.3); background: linear-gradient(to right, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.13) 77%, rgba(255, 255, 255, 0.5) 92%, rgba(255, 255, 255, 0.0) 100%); animation: shine 3s infinite; }
@@ -85,6 +85,20 @@
         #ai-cat-bot-2 .mea-mouth { border-bottom-color: #ff0055; box-shadow: 0 2px 5px rgba(255,0,85,0.5); }
         #ai-cat-bot-2 .mea-collar { border-top-color: #ff0055; }
         #ai-cat-bot-2 .mea-ear::after { border-bottom-color: #ff0055; }
+
+        /* CHAT STYLES */
+        .chat-container { display: flex; flex-direction: column; height: 100%; position: relative; }
+        #chat-messages { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 80px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth;}
+        #chat-messages::-webkit-scrollbar { display: none; }
+        .chat-bubble-left { background: #1f2937; color: #e5e7eb; padding: 10px 14px; border-radius: 18px 18px 18px 4px; max-width: 80%; width: fit-content; font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: relative;}
+        .chat-bubble-right { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; padding: 10px 14px; border-radius: 18px 18px 4px 18px; max-width: 80%; align-self: flex-end; font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: relative;}
+        .chat-name { font-size: 10px; color: #9ca3af; margin-bottom: 2px; margin-left: 4px; font-weight: bold; }
+        .mention { color: #60a5fa; font-weight: bold; }
+        #chat-input-area { position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px; background: rgba(11, 14, 20, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 8px; z-index: 50; }
+        #chat-input-field { flex: 1; background: #121822; border: 1px solid #1f2937; border-radius: 20px; padding: 10px 16px; color: #fff; outline: none; font-size: 13px; }
+        #chat-input-field:focus { border-color: #3b82f6; }
+        .chat-btn { background: #2563eb; width: 42px; height: 42px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff; transition: 0.2s; }
+        .chat-btn:active { transform: scale(0.9); }
     </style>
 </head>
 <body>
@@ -174,12 +188,22 @@
 
     <!-- MAIN APP -->
     <div id="main-app" class="h-full flex-col w-full relative hidden">
-        <div class="bg-blue-600/20 text-blue-400 text-xs py-1.5 px-3 flex items-center border-b border-blue-500/30 z-10">
-            <i class="fa-solid fa-bell mr-2 animate-bounce"></i>
-            <marquee id="app-notice" class="font-bold tracking-wide">EarnPro-তে স্বাগতম! বেশি বেশি রেফার করুন এবং নিশ্চিত পেমেন্ট নিন। কোনো ভিপিএন ব্যবহার করবেন ঘন না!</marquee>
+        
+        <!-- FAKE LIVE USERS HEADER -->
+        <div class="bg-[#0b0e14] border-b border-white/5 py-2 px-4 flex justify-between items-center z-20">
+            <div class="flex items-center gap-2 bg-gray-800/50 px-3 py-1 rounded-full border border-gray-700/50">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
+                <span class="text-[10px] font-bold text-gray-300 tracking-wider">LIVE USERS: <span id="fake-live-count" class="text-green-400 font-mono text-xs ml-1">১,২৪৫</span></span>
+            </div>
+            <div class="text-[10px] text-gray-500 font-bold"><i class="fa-solid fa-shield-halved text-blue-400"></i> Secure</div>
         </div>
 
-        <div class="scrollable-content">
+        <div class="bg-blue-600/20 text-blue-400 text-xs py-1.5 px-3 flex items-center border-b border-blue-500/30 z-10">
+            <i class="fa-solid fa-bell mr-2 animate-bounce"></i>
+            <marquee id="app-notice" class="font-bold tracking-wide">EarnPro-তে স্বাগতম! বেশি বেশি রেফার করুন এবং নিশ্চিত পেমেন্ট নিন। কোনো ভিপিএন ব্যবহার করবেন না!</marquee>
+        </div>
+
+        <div class="scrollable-content relative">
             <!-- HOME TAB -->
             <div id="home" class="tab-content active-tab">
                 <div class="p-6 pb-2 flex justify-between items-center">
@@ -213,10 +237,11 @@
                 </div>
 
                 <div class="px-6 py-4 grid grid-cols-2 gap-4">
-                    <div onclick="window.switchTab('tasks')" class="glass p-4 rounded-2xl border-l-2 border-purple-500 text-center active:scale-95 transition cursor-pointer">
-                        <i class="fa-solid fa-list-check text-purple-400 text-2xl mb-2"></i>
-                        <h3 class="font-bold text-white">টাস্ক করুন</h3>
-                        <p class="text-[10px] text-gray-400">ভিডিও দেখে ইনকাম</p>
+                    <div onclick="window.switchTab('chat')" class="glass p-4 rounded-2xl border-l-2 border-blue-500 text-center active:scale-95 transition cursor-pointer relative overflow-hidden">
+                        <div class="absolute right-2 top-2 w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
+                        <i class="fa-solid fa-comments text-blue-400 text-2xl mb-2"></i>
+                        <h3 class="font-bold text-white">লাইভ চ্যাট</h3>
+                        <p class="text-[10px] text-gray-400">সবার সাথে কথা বলুন</p>
                     </div>
                     <div onclick="window.switchTab('box')" class="glass p-4 rounded-2xl border-l-2 border-yellow-500 text-center active:scale-95 transition cursor-pointer">
                         <i class="fa-solid fa-boxes-stacked text-yellow-400 text-2xl mb-2"></i>
@@ -228,43 +253,34 @@
                 <div class="px-6 pb-4">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="font-bold text-sm text-gray-400 uppercase tracking-wider">🏆 টপ আর্নারস</h3>
-                        <span class="text-xs text-blue-400"><i class="fa-solid fa-circle-dot fa-fade text-[8px] text-green-500 mr-1"></i>Live</span>
+                        <span class="text-xs text-blue-400 flex items-center"><i class="fa-solid fa-circle text-[6px] text-green-500 mr-1 animate-pulse"></i>Live</span>
                     </div>
-                    <div id="leaderboard-list" class="bg-[#121822] rounded-2xl p-3 border border-gray-800 space-y-2">
-                        <p class="text-center text-xs text-gray-500 py-2"><i class="fa-solid fa-spinner fa-spin"></i> লোডিং...</p>
+                    <!-- 🟢 FAKE LEADERBOARD CONTAINER 🟢 -->
+                    <div id="leaderboard-list" class="bg-[#0b0e14]/50 rounded-2xl border border-gray-800 space-y-2 p-1">
+                        <!-- Content will be injected by JS -->
                     </div>
                 </div>
             </div>
 
-            <!-- TASKS TAB -->
-            <div id="tasks" class="tab-content p-6 text-center">
-                <div class="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl text-purple-400 pulse-logo">
-                    <i class="fa-solid fa-video"></i>
+            <!-- 🟢 NEW CHAT TAB 🟢 -->
+            <div id="chat" class="tab-content chat-container hidden">
+                <div class="p-4 border-b border-gray-800 bg-[#0b0e14] z-10 flex justify-between items-center shadow-lg">
+                    <h2 class="text-xl font-bold"><i class="fa-solid fa-comments text-blue-500 mr-2"></i> ইউজার চ্যাট</h2>
+                    <span class="text-[10px] bg-green-500/10 border border-green-500/30 text-green-400 px-2 py-1 rounded-full font-bold"><i class="fa-solid fa-circle text-[8px] animate-pulse mr-1"></i>Online</span>
                 </div>
-                <h2 class="text-2xl font-bold mb-1">দৈনিক টাস্ক 🎯</h2>
-                <p class="text-sm text-gray-400 mb-2">বিজ্ঞাপন দেখে এবং ওয়েবসাইট ভিজিট করে ইনকাম করুন।</p>
-                <p class="text-sm text-gray-400 mb-6">আজকের বাকি টাস্ক: <b id="task-left-text" class="text-purple-400">২</b> টি</p>
                 
-                <div class="space-y-4">
-                    <div class="glass p-4 rounded-2xl border border-gray-700 flex justify-between items-center">
-                        <div class="text-left">
-                            <h3 class="font-bold text-white">টাস্ক ১: ভিডিও দেখুন</h3>
-                            <p class="text-xs text-green-400">+৳১.০০ বোনাস</p>
-                        </div>
-                        <button id="btn-task-1" onclick="window.startTask(1, 10, 1.00)" class="bg-purple-600 px-4 py-2 rounded-xl text-sm font-bold active:scale-95">শুরু করুন</button>
-                    </div>
-                    <div class="glass p-4 rounded-2xl border border-gray-700 flex justify-between items-center">
-                        <div class="text-left">
-                            <h3 class="font-bold text-white">টাস্ক ২: ওয়েবসাইট ভিজিট</h3>
-                            <p class="text-xs text-green-400">+৳০.৫০ বোনাস</p>
-                        </div>
-                        <button id="btn-task-2" onclick="window.startTask(2, 5, 0.50)" class="bg-blue-600 px-4 py-2 rounded-xl text-sm font-bold active:scale-95">শুরু করুন</button>
-                    </div>
+                <div id="chat-messages">
+                    <!-- Fake & Real Messages will be injected here -->
+                </div>
+
+                <div id="chat-input-area">
+                    <input type="text" id="chat-input-field" placeholder="মেসেজ লিখুন..." onkeypress="if(event.key === 'Enter') window.sendChatMessage()">
+                    <button onclick="window.sendChatMessage()" class="chat-btn"><i class="fa-solid fa-paper-plane"></i></button>
                 </div>
             </div>
 
             <!-- MYSTERY BOX TAB -->
-            <div id="box" class="tab-content p-6 text-center">
+            <div id="box" class="tab-content p-6 text-center hidden">
                 <h2 class="text-2xl font-bold mb-2 pt-2">মিস্ট্রি বক্স 🎁</h2>
                 <p class="text-sm text-gray-400 mb-6">আজকের বাকি বক্স: <b id="box-left-text" class="text-yellow-400">২</b> টি (প্রতিদিন ২টি খুলতে পারবেন)</p>
                 
@@ -277,10 +293,11 @@
             </div>
 
             <!-- REFER TAB -->
-            <div id="refer" class="tab-content p-6">
+            <div id="refer" class="tab-content p-6 hidden">
                 <h2 class="text-2xl font-bold mb-4 pt-2">রেফার করুন 🤝</h2>
+                
                 <div class="bg-gradient-to-br from-blue-900/30 to-[#0b0e14] border border-blue-500/30 p-6 rounded-3xl mb-6 text-center shadow-lg shadow-blue-500/10">
-                    <div class="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl text-blue-400 pulse-logo">
+                    <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl text-blue-400 pulse-logo">
                         <i class="fa-solid fa-share-nodes"></i>
                     </div>
                     <h3 class="text-lg font-bold mb-1">আপনার বন্ধুদের ইনভাইট করুন</h3>
@@ -293,6 +310,20 @@
                         </button>
                     </div>
                 </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="glass p-4 rounded-2xl border-t-2 border-blue-500 text-center shadow-lg">
+                        <i class="fa-solid fa-user-group text-blue-400 text-2xl mb-1"></i>
+                        <p class="text-[10px] text-gray-400 tracking-wide">মোট রেফার</p>
+                        <h3 class="font-bold text-2xl text-white mt-1" id="total-refers-count">০ <span class="text-xs text-gray-500 font-normal">জন</span></h3>
+                    </div>
+                    <div class="glass p-4 rounded-2xl border-t-2 border-green-500 text-center shadow-lg">
+                        <i class="fa-solid fa-hand-holding-dollar text-green-400 text-2xl mb-1"></i>
+                        <p class="text-[10px] text-gray-400 tracking-wide">রেফার ইনকাম</p>
+                        <h3 class="font-bold text-2xl text-white mt-1">৳ <span id="total-refer-income">0.00</span></h3>
+                    </div>
+                </div>
+
                 <div class="glass p-4 rounded-2xl border-l-4 border-yellow-500">
                     <h4 class="font-bold text-yellow-500 mb-1"><i class="fa-solid fa-shield-halved"></i> অ্যান্টি-চিট সিস্টেম চালু!</h4>
                     <p class="text-xs text-gray-300 leading-relaxed">একই ফোনে একাধিক একাউন্ট বা ভিপিএন দিয়ে রেফার করলে একাউন্ট ব্যান করা হবে।</p>
@@ -300,7 +331,7 @@
             </div>
 
             <!-- PROFILE TAB -->
-            <div id="profile" class="tab-content p-6">
+            <div id="profile" class="tab-content p-6 hidden">
                 <h2 class="text-2xl font-bold mb-4 pt-2">প্রোফাইল 👤</h2>
                 
                 <div class="glass p-5 rounded-3xl mb-6 flex items-center justify-between border-t-2 border-t-blue-500">
@@ -358,7 +389,7 @@
 
         <nav class="absolute bottom-0 left-0 w-full glass border-t border-white/10 flex justify-between py-2 px-4 bg-[#0b0e14]/95 z-50 pb-4">
             <button id="nav-home" onclick="window.switchTab('home')" class="nav-btn text-blue-400 flex flex-col items-center text-[10px] transition-all transform scale-110"><i class="fa-solid fa-house text-xl mb-1"></i> Home</button>
-            <button id="nav-tasks" onclick="window.switchTab('tasks')" class="nav-btn text-gray-500 flex flex-col items-center text-[10px] transition-all"><i class="fa-solid fa-list-check text-xl mb-1"></i> Task</button>
+            <button id="nav-chat" onclick="window.switchTab('chat')" class="nav-btn text-gray-500 flex flex-col items-center text-[10px] transition-all"><i class="fa-solid fa-comments text-xl mb-1"></i> Chat</button>
             <button id="nav-box" onclick="window.switchTab('box')" class="nav-btn text-gray-500 flex flex-col items-center text-[10px] transition-all relative">
                 <span class="absolute -top-1 -right-1 flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span>
                 <i class="fa-solid fa-box-open text-xl mb-1"></i> Box
@@ -384,7 +415,7 @@
                 <li>"টাকা উইথড্র করবো"</li>
                 <li>"আমার লিমিট কত বাকি আছে?"</li>
                 <li>"ভিআইপি প্যাকেজ দেখাও"</li>
-                <li>"টাস্ক পেজে চলো"</li>
+                <li>"চ্যাট পেজে চলো"</li>
                 <li>"মিস্ট্রি বক্স খুলবো"</li>
                 <li>"একটু নাচো তো!"</li>
             </ul>
@@ -430,7 +461,7 @@
             <select id="wd-method" class="input-style" required>
                 <option value="">সিলেক্ট করুন</option>
                 <option value="bkash">বিকাশ (bKash)</option>
-                <option value="nagad">ন নগদ (Nagad)</option>
+                <option value="nagad">নগদ (Nagad)</option>
             </select>
             <label class="text-sm text-gray-400 mb-1 block">একাউন্ট নম্বর</label>
             <input type="number" id="wd-number" placeholder="017XXXXXXXX" class="input-style" required>
@@ -491,7 +522,7 @@
         <div class="text-sm text-gray-400 text-left h-48 overflow-y-auto pr-2 my-4 space-y-2">
             <p>১. টাকা উত্তোলন করার জন্য অবশ্যই VIP প্যাকেজ কিনতে হবে। ফ্রি একাউন্টে উইথড্র দেওয়া হবে না।</p>
             <p>২. একটি মোবাইল দিয়ে একটির বেশি একাউন্ট খোলা সম্পূর্ণ নিষেধ।</p>
-            <p>৩. ভিপিএন (VPN) কানেক্ট করে কোনো কাজ করা যাবেবিধা নেই।</p>
+            <p>৩. ভিপিএন (VPN) কানেক্ট করে কোনো কাজ করা যাবে না।</p>
             <p>৪. ফেক রেফার করলে একাউন্ট ব্যান করা হবে।</p>
             <p>৫. পেমেন্ট রিকোয়েস্ট দেওয়ার ২৪ ঘণ্টার মধ্যে টাকা পাঠিয়ে দেওয়া হবে।</p>
         </div>
@@ -517,26 +548,60 @@
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
     const firebaseConfig = {
-  apiKey: "AIzaSyC6hBSb0qwrYthLqrOK3rM-PsptPoObUuM",
-  authDomain: "refer-and-earn-9968d.firebaseapp.com",
-  databaseURL: "https://refer-and-earn-9968d-default-rtdb.firebaseio.com",
-  projectId: "refer-and-earn-9968d",
-  storageBucket: "refer-and-earn-9968d.firebasestorage.app",
-  messagingSenderId: "1021785364972",
-  appId: "1:1021785364972:web:5e1447a056dcec5342c8c9"
-};
+      apiKey: "AIzaSyC6hBSb0qwrYthLqrOK3rM-PsptPoObUuM",
+      authDomain: "refer-and-earn-9968d.firebaseapp.com",
+      databaseURL: "https://refer-and-earn-9968d-default-rtdb.firebaseio.com",
+      projectId: "refer-and-earn-9968d",
+      storageBucket: "refer-and-earn-9968d.firebasestorage.app",
+      messagingSenderId: "1021785364972",
+      appId: "1:1021785364972:web:5e1447a056dcec5342c8c9"
+    };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const storage = getStorage(app);
 
+    const engToBng = (num) => num ? num.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]) : "০";
+
     let isSignupMode = false;
     let currentUserData = null;
     const adminWhatsApp = "8801600678966";
     let isOpeningBox = false;
     let withdrawListenerUnsubscribe = null;
+    let chatInterval = null;
     
+    // ==========================================
+    // 🟢 1. FAKE LIVE USERS LOGIC (50 to 500 range)
+    // ==========================================
+    function startFakeLiveUsers() {
+        let currentFakeUsers = Math.floor(Math.random() * (500 - 50) + 50);
+        const countEl = document.getElementById('fake-live-count');
+        if(countEl) countEl.innerText = engToBng(currentFakeUsers);
+
+        setInterval(() => {
+            let change = Math.floor(Math.random() * 31) - 15; 
+            currentFakeUsers += change;
+            if(currentFakeUsers < 50) currentFakeUsers = Math.floor(Math.random() * 30) + 50;
+            if(currentFakeUsers > 600) currentFakeUsers = 600;
+            if(countEl) countEl.innerText = engToBng(currentFakeUsers);
+        }, 3500); 
+    }
+
+    function trackRealtimePresence(user) {
+        if(!user) return;
+        const updatePresence = () => {
+            setDoc(doc(db, "live_users_admin", user.uid), {
+                uid: user.uid,
+                name: currentUserData ? currentUserData.name : "User",
+                phone: currentUserData ? currentUserData.phone : "",
+                lastActive: serverTimestamp()
+            }, { merge: true }).catch(e => {});
+        };
+        updatePresence(); 
+        setInterval(updatePresence, 60000); 
+    }
+
     function getDeviceId() {
         let deviceId = localStorage.getItem('earnpro_device_id');
         if (!deviceId) { deviceId = 'device_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('earnpro_device_id', deviceId); }
@@ -551,28 +616,68 @@
         let bgColor = type === 'success' ? 'bg-green-500' : (type === 'error' ? 'bg-red-500' : 'bg-gradient-to-r from-blue-600 to-indigo-600');
         let icon = type === 'success' ? '<i class="fa-solid fa-circle-check"></i>' : (type === 'error' ? '<i class="fa-solid fa-circle-exclamation"></i>' : '<i class="fa-solid fa-bell"></i>');
         
-        toast.className = `${bgColor} text-white px-4 py-3 rounded-xl shadow-2xl text-center text-sm font-bold transition-all duration-500 flex items-center justify-center gap-2 border border-white/20 transform translate-y-[-20px] opacity-0`;
+        toast.className = `${bgColor} text-white px-4 py-3 rounded-xl shadow-2xl text-sm font-bold transition-transform duration-500 flex items-center gap-2 transform translate-x-[120%] mb-2 relative self-end max-w-[90vw]`;
         toast.innerHTML = `${icon} <span>${msg}</span>`;
         container.appendChild(toast);
         
-        setTimeout(() => { toast.style.transform = 'translateY(0)'; toast.style.opacity = '1'; }, 10);
-        setTimeout(() => { toast.style.transform = 'translateY(-20px)'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 500); }, 3500);
+        setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 50);
+        setTimeout(() => { toast.style.transform = 'translateX(120%)'; setTimeout(() => toast.remove(), 500); }, 3500);
     };
 
-    const engToBng = (num) => num ? num.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]) : "০";
+    function showTrustNotification(phoneMasked, actionText, isVip) {
+        const container = document.getElementById('live-notify');
+        const toast = document.createElement('div');
+        
+        let icon = isVip ? '<i class="fa-solid fa-crown text-yellow-400"></i>' : '<i class="fa-solid fa-money-bill-transfer text-green-400"></i>';
+        let bgIcon = isVip ? 'bg-yellow-400/20' : 'bg-green-400/20';
+        let borderSide = isVip ? 'border-yellow-500' : 'border-green-500';
+
+        toast.className = `bg-[#121822]/95 border border-gray-700/80 border-l-4 ${borderSide} p-3 rounded-2xl shadow-2xl flex items-center gap-3 transform translate-x-[120%] transition-transform duration-500 w-[90vw] max-w-[320px] backdrop-blur-xl mb-3 relative overflow-hidden self-end pointer-events-auto`;
+        
+        toast.innerHTML = `
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shine_2s_infinite]"></div>
+            <div class="w-10 h-10 min-w-[40px] rounded-full ${bgIcon} flex items-center justify-center text-lg shadow-inner z-10 border border-white/5">
+                ${icon}
+            </div>
+            <div class="flex-1 z-10">
+                <p class="font-bold text-gray-200 text-sm tracking-widest">${phoneMasked}</p>
+                <p class="text-[11px] text-gray-400 mt-0.5 leading-tight">${actionText}</p>
+            </div>
+            <span class="text-[9px] text-green-500 font-bold self-start mt-1 absolute top-2 right-3 flex items-center gap-1 z-10">
+                <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_5px_#22c55e]"></div> Just now
+            </span>
+        `;
+        container.appendChild(toast);
+        
+        setTimeout(() => toast.style.transform = 'translateX(0)', 50);
+        setTimeout(() => { toast.style.transform = 'translateX(120%)'; setTimeout(() => toast.remove(), 500); }, 4000);
+    }
 
     function showFakeNotification() {
         if(currentUserData && !currentUserData.isBanned) {
-            const fakeNames = ["Rahim", "Karim", "Sabbir", "Riyad", "Hasan", "Sakib", "Mehedi", "Sumon", "Arif", "Nayeem", "Tariqul", "Rakib", "Faruk"];
-            let randName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-            let randAmount = Math.floor(Math.random() * 5 + 2) * 100; 
-            let action = Math.random() > 0.5 ? `৳${randAmount} উত্তোলন করেছেন!` : `VIP প্যাকেজ কিনেছেন!`;
-            window.showNotify(`${randName} সদ্য ${action}`, 'success');
+            const prefixes = ["017", "019", "018", "016", "013", "014"];
+            let pre = prefixes[Math.floor(Math.random() * prefixes.length)];
+            let suffix = Math.floor(1000 + Math.random() * 9000);
+            let fakePhone = `${pre}****${suffix}`;
+
+            let isVip = Math.random() > 0.6;
+            
+            if(isVip) {
+                let pkg = Math.random() > 0.5 ? "VIP 1" : "VIP 2";
+                showTrustNotification(fakePhone, `সদ্য ${pkg} প্যাকেজ কিনেছেন!`, true);
+            } else {
+                let amounts = [200, 300, 400, 500, 1000];
+                let randAmount = amounts[Math.floor(Math.random() * amounts.length)];
+                let method = Math.random() > 0.5 ? "বিকাশ" : "নগদ";
+                showTrustNotification(fakePhone, `সদ্য ৳${engToBng(randAmount)} ${method}-এ উত্তোলন করেছেন!`, false);
+            }
         }
-        let randomDelay = Math.floor(Math.random() * 60000) + 60000; 
+        let randomDelay = Math.floor(Math.random() * 25000) + 15000; 
         setTimeout(showFakeNotification, randomDelay);
     }
-    setTimeout(showFakeNotification, 10000); 
+    
+    startFakeLiveUsers();
+    setTimeout(showFakeNotification, 5000); 
 
     async function checkSystemSettings() {
         try {
@@ -589,7 +694,9 @@
     onAuthStateChanged(auth, (user) => {
         if (user) {
             listenToUserData(user.uid);
-            loadLeaderboard();
+            generateFakeLeaderboard(); 
+            trackRealtimePresence(user); 
+            startFakeChatEngine(); 
             document.getElementById('splash-screen').style.display = 'none';
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
@@ -600,6 +707,7 @@
             document.getElementById('banned-screen').style.display = 'none';
             document.getElementById('auth-screen').style.display = 'flex';
             if(withdrawListenerUnsubscribe) { withdrawListenerUnsubscribe(); withdrawListenerUnsubscribe = null; }
+            if(chatInterval) { clearInterval(chatInterval); chatInterval = null; }
         }
     });
 
@@ -729,6 +837,9 @@
         document.getElementById('profile-phone').innerText = currentUserData.phone;
         document.getElementById('my-refer-code').innerText = currentUserData.myReferCode;
 
+        document.getElementById('total-refers-count').innerHTML = engToBng(currentUserData.totalRefers || 0) + ' <span class="text-xs text-gray-500 font-normal">জন</span>';
+        document.getElementById('total-refer-income').innerText = (currentUserData.referIncome || 0).toFixed(2);
+
         let avatarHtml = (currentUserData.avatar && currentUserData.avatar.trim() !== "") 
             ? `<img src="${currentUserData.avatar}" class="w-full h-full object-cover">` 
             : currentUserData.name.charAt(0).toUpperCase();
@@ -747,19 +858,13 @@
         if (currentUserData.lastBoxDate !== todayDate) {
             updates.boxesLeft = 2; updates.openedBoxes = []; updates.lastBoxDate = todayDate; needsUpdate = true;
         }
-        if (currentUserData.lastTaskDate !== todayDate) {
-            updates.tasksLeft = 2; updates.lastTaskDate = todayDate; needsUpdate = true;
-        }
 
         if (needsUpdate && currentUserData.uid) {
             setDoc(doc(db, "users", currentUserData.uid), updates, { merge: true });
             if(updates.boxesLeft !== undefined) { currentUserData.boxesLeft = updates.boxesLeft; currentUserData.openedBoxes = updates.openedBoxes; }
-            if(updates.tasksLeft !== undefined) currentUserData.tasksLeft = updates.tasksLeft;
         }
 
         document.getElementById('box-left-text').innerText = engToBng(currentUserData.boxesLeft === undefined ? 2 : currentUserData.boxesLeft);
-        document.getElementById('task-left-text').innerText = engToBng(currentUserData.tasksLeft === undefined ? 2 : currentUserData.tasksLeft);
-
         renderBoxes();
     }
 
@@ -800,7 +905,6 @@
                 box.className = "mystery-box";
                 box.id = `box-${i}`;
                 box.innerHTML = '🎁';
-                // ফিক্স করা হয়েছে:
                 box.onclick = () => window.openBox(i);
             }
             container.appendChild(box);
@@ -842,46 +946,40 @@
         }, 800);
     }
 
-    window.startTask = (taskId, seconds, reward) => {
-        if(currentUserData.tasksLeft <= 0) return window.showNotify("আজকের টাস্ক শেষ! কাল আবার চেষ্টা করুন।", "error");
-
-        const btn = document.getElementById(`btn-task-${taskId}`);
-        if(btn.disabled) return;
+    // ==========================================
+    // 🟢 4. BEAUTIFUL FAKE LEADERBOARD (DYNAMIC)
+    // ==========================================
+    function generateFakeLeaderboard() {
+        const listDiv = document.getElementById('leaderboard-list');
+        if(!listDiv) return;
+        listDiv.innerHTML = "";
         
-        btn.disabled = true;
-        let timeLeft = seconds;
-        let originalText = btn.innerText;
+        let fakeLeaders = [];
+        const prefixes = ["017", "019", "018", "016", "013", "014"];
         
-        let timer = setInterval(() => {
-            btn.innerText = `অপেক্ষা করুন ${timeLeft}s`;
-            timeLeft--;
-            if(timeLeft < 0) {
-                clearInterval(timer);
-                completeTask(taskId, reward, btn, originalText);
-            }
-        }, 1000);
-    };
-
-    async function completeTask(taskId, reward, btn, originalText) {
-        btn.innerText = "লোডিং...";
-        try {
-            await setDoc(doc(db, "users", currentUserData.uid), { 
-                balance: currentUserData.balance + reward,
-                tasksLeft: currentUserData.tasksLeft - 1 
-            }, { merge: true });
-
-            triggerConfetti();
-            window.showNotify(`টাস্ক কমপ্লিট! ৳${reward} অ্যাড হয়েছে।`, "success");
-            btn.innerText = "সম্পন্ন ✔";
-            btn.classList.replace('bg-purple-600', 'bg-green-600');
-            btn.classList.replace('bg-blue-600', 'bg-green-600');
-
-            setTimeout(() => {
-                btn.innerText = originalText; btn.disabled = false;
-                btn.classList.replace('bg-green-600', taskId === 1 ? 'bg-purple-600' : 'bg-blue-600');
-            }, 2000);
-        } catch(e) { btn.innerText = "আবার চেষ্টা করুন"; btn.disabled = false; }
+        for(let i=0; i<5; i++) {
+            let pre = prefixes[Math.floor(Math.random() * prefixes.length)];
+            let suf = Math.floor(100 + Math.random() * 900);
+            let amt = Math.floor(Math.random() * (2000 - 200) + 200); 
+            fakeLeaders.push({ phone: `${pre}***${suf}`, amount: amt });
+        }
+        
+        fakeLeaders.sort((a,b) => b.amount - a.amount);
+        
+        fakeLeaders.forEach((u, index) => {
+            let medal = index === 0 ? "🥇" : (index === 1 ? "🥈" : (index === 2 ? "🥉" : "🏅"));
+            listDiv.innerHTML += `
+                <div class="flex justify-between items-center bg-[#0b0e14] p-3 rounded-xl border border-gray-800/50 mb-1.5 shadow-lg" style="animation: fadeIn 0.5s ease-in-out;">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gray-800/80 text-white flex items-center justify-center text-sm font-bold border border-gray-700 shadow-inner">${medal}</div>
+                        <p class="text-sm font-bold tracking-wider">${u.phone}</p>
+                    </div>
+                    <p class="text-green-400 font-bold text-sm bg-green-400/10 px-3 py-1 rounded-lg">৳ ${engToBng(u.amount)}</p>
+                </div>
+            `;
+        });
     }
+    setInterval(generateFakeLeaderboard, 12000);
 
     window.openWithdrawModal = () => { 
         document.getElementById('withdraw-modal').style.display = 'flex'; 
@@ -912,7 +1010,7 @@
         
         if(currentUserData.currentVIP === "Free") {
             speakLocalized("আপনার একাউন্ট ফ্রি। টাকা তোলার জন্য ভিআইপি প্যাকেজ কিনুন।");
-            return window.showNotify("VIP কেনা ছাড়া উইথড্র হবে না!", "error");
+            return window.showNotify("VIP কেনা ছাড়া উইথড্র হবে ওয়েবসাইটে না!", "error");
         }
 
         let maxLimit = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
@@ -983,11 +1081,15 @@
     };
 
     window.switchTab = (tabId) => {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active-tab'));
-        document.getElementById(tabId).classList.add('active-tab');
+        document.querySelectorAll('.tab-content').forEach(tab => { tab.classList.remove('active-tab'); tab.classList.add('hidden'); });
+        let target = document.getElementById(tabId);
+        target.classList.remove('hidden'); target.classList.add('active-tab');
+        
         document.querySelectorAll('.nav-btn').forEach(btn => { btn.classList.remove('text-blue-400', 'scale-110'); btn.classList.add('text-gray-500'); });
         const activeNav = document.getElementById(`nav-${tabId}`);
         if(activeNav) { activeNav.classList.remove('text-gray-500'); activeNav.classList.add('text-blue-400', 'scale-110'); }
+
+        if(tabId === 'chat') { setTimeout(() => { let cb = document.getElementById('chat-messages'); cb.scrollTop = cb.scrollHeight; }, 100); }
     };
 
     window.logout = () => { signOut(auth); };
@@ -1024,22 +1126,6 @@
         }
     };
 
-    async function loadLeaderboard() {
-        const listDiv = document.getElementById('leaderboard-list');
-        try {
-            // ফিক্স করা হয়েছে: শুধু ১০ জন না, ব্যালেন্সের ভিত্তিতে টপ ১০ জন ইউজার আনবে
-            const q = query(collection(db, "users"), orderBy("balance", "desc"), limit(10)); 
-            const querySnapshot = await getDocs(q);
-            let users = []; querySnapshot.forEach((doc) => { users.push(doc.data()); });
-            listDiv.innerHTML = "";
-            users.slice(0, 3).forEach((u, index) => {
-                let medal = index === 0 ? "🥇" : (index === 1 ? "🥈" : "🥉");
-                let phoneHidden = u.phone.substring(0, 3) + "***" + u.phone.substring(8);
-                listDiv.innerHTML += `<div class="flex justify-between items-center bg-[#0b0e14] p-2 rounded-xl"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center text-sm font-bold border border-gray-700">${medal}</div><p class="text-sm font-bold">${phoneHidden}</p></div><p class="text-green-400 font-bold text-sm">৳ ${engToBng(Math.floor(u.balance))}</p></div>`;
-            });
-        } catch(e) { console.error(e); listDiv.innerHTML = '<p class="text-center text-xs text-red-500 py-2">ডাটা লোড হয়নি (ডাটাবেস ইনডেক্স প্রয়োজন)</p>'; }
-    }
-
     window.openHistoryModal = async () => {
         document.getElementById('history-modal').style.display = 'flex';
         const listDiv = document.getElementById('history-list');
@@ -1061,7 +1147,165 @@
 
     window.contactSupport = () => { window.open(`https://t.me/Refer_earn08`, '_blank'); };
 
-    // AI ASSISTANT LOGIC
+    // ==========================================
+    // 🟢 5. CONTEXTUAL AI CHAT ENGINE (THE MAGIC)
+    // ==========================================
+    const maleNames = ["Sabbir", "Rakib", "Akash", "Fahim", "Hridoy", "Jahid", "Siyam", "Raju", "Imran", "Arif", "Touhid", "Rubel", "Emon", "Babu", "Momin", "Tarek", "Shanto", "Omi", "Parvez", "Maruf", "Nayeem", "Karim"];
+    const femaleNames = ["Riya", "Mim", "Sadia", "Kona", "Tanjila", "Nusrat", "Sumaiya", "Liza", "Sonia", "Mitu", "Toma", "Lamia", "Nadia", "Moumita", "Lima", "Poly", "Maha", "Irin", "Sraboni", "Nisha"];
+    
+    // Variables for standard message generation
+    const chatVariables = {
+        amounts: ["100", "200", "300", "400", "500", "1000", "1500", "2000", "২৫০", "৩০০", "৫০০", "১০০০"],
+        methods: ["bkash", "nagad", "rocket", "বিকাশ", "নগদ"],
+        times: ["just now", "10 min age", "ajke", "matroi", "kal rate", "এইমাত্র", "আজ সকালে"],
+        vips: ["VIP 1", "VIP 2", "ভিআইপি ১", "ভিআইপি ২"],
+        emojis: ["😍", "✅", "🤑", "❤️", "🔥", "💯", "🥰", "", ""] 
+    };
+
+    let lastSender = { name: "System", gender: "none", isReal: false, text: "" };
+
+    const flirtTemplates = [
+        "Hi <span class='mention'>@name</span> kemon aso? 😍",
+        "<span class='mention'>@name</span> apu, apnar bari koi?",
+        "Aha <span class='mention'>@name</span> apu, ekhane onek kosto, amar sathe team a kaj korben?",
+        "<span class='mention'>@name</span> apu, apnar number ta deya jabe?",
+        "Areh <span class='mention'>@name</span> apu je! ki obostha? 🥰",
+        "<span class='mention'>@name</span> apu withdraw dile party den!",
+        "Meyerao eto kaj kore ekhane! Wow <span class='mention'>@name</span> apu 🔥",
+        "Apu <span class='mention'>@name</span> apnar refer code den, ami use korbo 😉",
+        "<span class='mention'>@name</span> apu ki eka eka income korben? Amake sikhay den na!"
+    ];
+
+    const replyTemplates = [
+        "<span class='mention'>@name</span> vai thik bolsen.",
+        "<span class='mention'>@name</span> ha vai amio agree.",
+        "<span class='mention'>@name</span> koto tk tulsen apni?",
+        "Ji <span class='mention'>@name</span>.",
+        "<span class='mention'>@name</span> vai kon package valo hobe?",
+        "Right <span class='mention'>@name</span>."
+    ];
+
+    function generateDynamicMessage() {
+        const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+        const templates = [
+            `Bhai ami ${rand(chatVariables.amounts)} taka withdraw dilam ${rand(chatVariables.times)} ${rand(chatVariables.emojis)}`,
+            `Alhamdulillah, ${rand(chatVariables.methods)} e ${rand(chatVariables.amounts)} taka payment pelam ${rand(chatVariables.emojis)}`,
+            `Admin vai onnek fast. ${rand(chatVariables.amounts)} tk withdraw disilam, asche ✅`,
+            `Ami to bhabchi fake, kintu ${rand(chatVariables.times)} payment pelam! ${rand(chatVariables.emojis)}`,
+            `Wow! ${rand(chatVariables.methods)} a ${rand(chatVariables.amounts)} tk dhuke geche.`,
+            `Ami ${rand(chatVariables.vips)} nilam ajke. Onek valo income hocche.`,
+            `${rand(chatVariables.vips)} kinle ki beshi income hoy?`,
+            `Ami ${rand(chatVariables.vips)} kine ajke ${rand(chatVariables.amounts)} tk tulam ${rand(chatVariables.emojis)}`,
+            `ভিআইপি ছাড়া কি পেমেন্ট দেয় না?`,
+            `আমি কালকে ${rand(chatVariables.vips)} কিনেছি, দারুণ ইনকাম হচ্ছে। ${rand(chatVariables.emojis)}`,
+            `Mystery box theke ami ${Math.floor(Math.random() * 10) + 2} taka peyechi!`,
+            `Ajker kaj sesh. Sobai valovabe kaj koren. ${rand(chatVariables.emojis)}`,
+            `Keu amar refer code use korben plz?`,
+            `Ami kal ${Math.floor(Math.random() * 5) + 1} ta refer korechi. ${rand(chatVariables.emojis)}`,
+            `Fake refer korben na, account ban hobe.`,
+            `EarnPro is the best app in BD ${rand(chatVariables.emojis)}`,
+            `Admin bhai amar withdraw ta ektu dekhen.`,
+            `Student der jonno best earning app. ${rand(chatVariables.emojis)}`,
+            `এই অ্যাপটা আসলেই সেরা, কোনো সন্দেহ নাই। 💯`,
+            `Hmm`, `Ji`, `Yes`, `Thik`, `Nice`, `Good`, `Best app ${rand(chatVariables.emojis)}`,
+            `ke ke on achen?`, `hlo`, `hi`, `salam`, `kaj shuru korlam`, `done`, 
+            `wait koren peye jaben`, `thank you`, `100% real`
+        ];
+        return rand(templates);
+    }
+
+    function appendChatMessage(name, text, isMe) {
+        const chatBox = document.getElementById('chat-messages');
+        if(!chatBox) return;
+        const bgClass = isMe ? 'chat-bubble-right' : 'chat-bubble-left';
+        chatBox.innerHTML += `
+            <div style="display: flex; flex-direction: column; width: 100%; animation: fadeIn 0.3s ease-out;">
+                ${!isMe ? `<span class="chat-name">${name}</span>` : ''}
+                <div class="${bgClass}">${text}</div>
+            </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // THE BRAIN OF THE BOT
+    function triggerBotMessage(forcedReplyTo = null) {
+        let botGender = Math.random() > 0.3 ? 'male' : 'female'; 
+        let botName = botGender === 'male' ? maleNames[Math.floor(Math.random() * maleNames.length)] : femaleNames[Math.floor(Math.random() * femaleNames.length)];
+        let msgText = "";
+
+        if (forcedReplyTo) {
+            // Reply to Real User
+            let responsesToReal = [
+                `<span class='mention'>@${forcedReplyTo.name}</span> vai, valo vabe kaj koren payment paben.`,
+                `<span class='mention'>@${forcedReplyTo.name}</span> ha ekdom thik.`,
+                `<span class='mention'>@${forcedReplyTo.name}</span> apnar vip koto?`,
+                `<span class='mention'>@${forcedReplyTo.name}</span> ji vai ami onnek din dore kaj kori ekhane.`,
+                `<span class='mention'>@${forcedReplyTo.name}</span> koto withdraw dilen?`
+            ];
+            msgText = responsesToReal[Math.floor(Math.random() * responsesToReal.length)];
+            botGender = 'male'; 
+            botName = maleNames[Math.floor(Math.random() * maleNames.length)];
+        } 
+        else if (lastSender.gender === 'female' && botGender === 'male' && Math.random() > 0.4) {
+            // FLIRT WITH FEMALE BOTS
+            let temp = flirtTemplates[Math.floor(Math.random() * flirtTemplates.length)];
+            msgText = temp.replace('@name', lastSender.name);
+        }
+        else if (lastSender.name !== "System" && !lastSender.isReal && Math.random() > 0.6) {
+            // BOT REPLYING TO BOT
+            let temp = replyTemplates[Math.floor(Math.random() * replyTemplates.length)];
+            msgText = temp.replace('@name', lastSender.name);
+        }
+        else {
+            // STANDARD DYNAMIC MESSAGE
+            msgText = generateDynamicMessage();
+        }
+
+        appendChatMessage(botName, msgText, false);
+        lastSender = { name: botName, gender: botGender, isReal: false, text: msgText };
+    }
+
+    function startFakeChatEngine() {
+        if(chatInterval) return;
+        
+        // Initial 3 messages
+        for(let i=0; i<3; i++) { triggerBotMessage(); }
+
+        chatInterval = setInterval(() => {
+            triggerBotMessage();
+        }, Math.floor(Math.random() * 5000) + 5000); 
+    }
+
+    window.sendChatMessage = async () => {
+        let input = document.getElementById('chat-input-field');
+        let text = input.value.trim();
+        if(!text || !currentUserData) return;
+        
+        input.value = "";
+        appendChatMessage("You", text, true); 
+        
+        // Update State as Real User
+        lastSender = { name: currentUserData.name, gender: "real", isReal: true, text: text };
+
+        // Bot will reply to the real user after 3-5 seconds
+        setTimeout(() => {
+            if(Math.random() > 0.3) { // 70% chance a bot replies
+                triggerBotMessage(lastSender);
+            }
+        }, Math.floor(Math.random() * 3000) + 2000);
+
+        try {
+            await addDoc(collection(db, "global_chat_logs"), {
+                uid: currentUserData.uid,
+                name: currentUserData.name,
+                phone: currentUserData.phone,
+                text: text,
+                timestamp: serverTimestamp()
+            });
+        } catch(err) { console.log(err); }
+    };
+
+    // AI ASSISTANT LOGIC (MEOW BOT)
     const catBot = document.getElementById('ai-cat-bot');
     let isDraggingCat = false;
     let dragOffsetX = 0, dragOffsetY = 0;
@@ -1159,7 +1403,7 @@
         }
         else if(t.match(/(উইথড্র|withdraw|টাকা তুলবো|পেমেন্ট নিবো|ক্যাশ আউট|টাকা তুলব)/)) { reply = "উইথড্র পেজ খুলছি। মনে রাখবেন, টাকা তুলতে ভিআইপি লাগবে।"; action = () => window.openWithdrawModal(); }
         else if(t.match(/(ভিআইপি|vip|প্যাকেজ|কিনবো|কিনব)/)) { reply = "ভিআইপি প্যাকেজ পেজ খুলছি।"; action = () => window.openVipPackages(); }
-        else if(t.match(/(কাজ|টাস্ক|task|ভিডিও দেখবো)/)) { reply = "টাস্ক পেজ খুলছি। প্রতিদিন ২টি টাস্ক করতে পারবেন।"; action = () => window.switchTab('tasks'); }
+        else if(t.match(/(চ্যাট|chat|মেসেজ|message|কথা বলবো)/)) { reply = "চ্যাট পেজ খুলছি। সবার সাথে কথা বলুন।"; action = () => window.switchTab('chat'); }
         else if(t.match(/(বক্স|box|স্পিন|spin|মিস্ট্রি)/)) { reply = "মিস্ট্রি বক্স খুলছি। প্রতিদিন ২টি বক্স খুলতে পারবেন।"; action = () => window.switchTab('box'); }
         else if(t.match(/(রেফার|refer|ইনভাইট)/)) { reply = "রেফার পেজে যাচ্ছি। বন্ধুদের ইনভাইট করে বোনাস পান।"; action = () => window.switchTab('refer'); }
         else if(t.match(/(প্রোফাইল|profile|একাউন্ট)/)) { reply = "প্রোফাইল পেজ খুলছি।"; action = () => window.switchTab('profile'); }
@@ -1169,14 +1413,13 @@
         else if(t.match(/(কেমন আছো|how are you|কি খবর)/)) { reply = "আমি দারুণ আছি বস! আপনি কেমন আছেন? চলুন কিছু ইনকাম করা যাক।"; }
         else if(t.match(/(হ্যালো|হাই|hello|hi|hey)/)) { reply = "হ্যালো! আমি আর্নপ্রো এর এআই অ্যাসিস্ট্যান্ট। কীভাবে সাহায্য করতে পারি?"; }
         else if(t.match(/(তুমি কে|তোমার নাম কি|who are you)/)) { reply = "আমি আর্নপ্রো অ্যাসিস্ট্যান্ট! এই অ্যাপের সব নিয়মকানুন আমার জানা। আমাকে যেকোনো কিছু জিজ্ঞেস করতে পারেন।"; }
-        else { reply = "দুঃখিত, আমি বুঝতে পারিনি। 'উইথড্র', 'ভিআইপি', 'আমার লিমিট কত', বা 'টাস্ক' এর মতো কিছু বলে চেষ্টা করুন।"; }
+        else { reply = "দুঃখিত, আমি বুঝতে পারিনি। 'উইথড্র', 'ভিআইপি', বা 'চ্যাট' এর মতো কিছু বলে চেষ্টা করুন।"; }
 
         return { reply, action };
     }
 
     function resetTooltip(tooltip) { tooltip.innerText = "ক্লিক করে কথা বলুন! 🎤"; tooltip.style.opacity = ""; tooltip.style.animation = "showTooltip 8s infinite"; }
 
-    // ফিক্স করা হয়েছে
     window.handleCatBotClick = (e) => {
         if(catMoved) return; 
 
