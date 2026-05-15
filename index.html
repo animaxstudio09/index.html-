@@ -343,7 +343,6 @@
                         <i class="fa-solid fa-chevron-right text-yellow-600 text-sm"></i>
                     </button>
 
-                    <!-- 🤖 AI Guide Button Added Here 🤖 -->
                     <button onclick="document.getElementById('ai-guide-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-[#00d2ff]">
                         <div class="flex items-center gap-3"><i class="fa-solid fa-robot text-[#00d2ff] text-lg w-5 text-center"></i><span class="font-bold text-[#00d2ff]">এআই গাইড (AI Assistant)</span></div>
                         <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
@@ -407,10 +406,10 @@
             <ul class="list-disc pl-5 space-y-1 text-blue-300">
                 <li>"আমার ব্যালেন্স কত?"</li>
                 <li>"টাকা উইথড্র করবো"</li>
+                <li>"আমার লিমিট কত বাকি আছে?"</li>
                 <li>"ভিআইপি প্যাকেজ দেখাও"</li>
                 <li>"টাস্ক পেজে চলো"</li>
                 <li>"মিস্ট্রি বক্স খুলবো"</li>
-                <li>"অ্যাপের রুলস কি?"</li>
                 <li>"একটু নাচো তো!"</li>
             </ul>
         </div>
@@ -531,7 +530,7 @@
         <div class="text-sm text-gray-400 text-left h-48 overflow-y-auto pr-2 my-4 space-y-2">
             <p>১. টাকা উত্তোলন করার জন্য অবশ্যই VIP প্যাকেজ কিনতে হবে। ফ্রি একাউন্টে উইথড্র দেওয়া হবে না।</p>
             <p>২. একটি মোবাইল দিয়ে একটির বেশি একাউন্ট খোলা সম্পূর্ণ নিষেধ।</p>
-            <p>৩. ভিপিএন (VPN) কানেক্ট করে কোনো কাজ করা যাবেবিধা নেই।</p>
+            <p>৩. ভিপিএন (VPN) কানেক্ট করে কোনো কাজ করা যাবে না।</p>
             <p>৪. ফেক রেফার করলে একাউন্ট ব্যান করা হবে।</p>
             <p>৫. পেমেন্ট রিকোয়েস্ট দেওয়ার ২৪ ঘণ্টার মধ্যে টাকা পাঠিয়ে দেওয়া হবে।</p>
         </div>
@@ -576,6 +575,7 @@
     let currentUserData = null;
     const adminWhatsApp = "8801600678966";
     let isOpeningBox = false;
+    let withdrawListenerUnsubscribe = null;
     
     function getDeviceId() {
         let deviceId = localStorage.getItem('earnpro_device_id');
@@ -640,6 +640,7 @@
             document.getElementById('main-app').style.display = 'none';
             document.getElementById('banned-screen').style.display = 'none';
             document.getElementById('auth-screen').style.display = 'flex';
+            if(withdrawListenerUnsubscribe) { withdrawListenerUnsubscribe(); withdrawListenerUnsubscribe = null; }
         }
     });
 
@@ -725,6 +726,42 @@
                     document.getElementById('banned-screen').style.display = 'none';
                 }
                 updateUI();
+            }
+        });
+
+        // 🌟 LISTEN FOR WITHDRAWAL STATUS CHANGES (AI VOICE & NOTIFY) 🌟
+        if(withdrawListenerUnsubscribe) withdrawListenerUnsubscribe();
+        const q = query(collection(db, "withdrawals"), where("uid", "==", uid));
+        withdrawListenerUnsubscribe = onSnapshot(q, (querySnapshot) => {
+            let notifiedWds = JSON.parse(localStorage.getItem('notified_wds') || '{}');
+            let needsSave = false;
+
+            querySnapshot.forEach((docSnap) => {
+                let wd = docSnap.data();
+                let id = docSnap.id;
+                
+                if(wd.status !== 'Pending' && !notifiedWds[id]) {
+                    if(wd.status === 'Approved') {
+                        speakLocalized(`আপনার ${wd.amount} টাকার উইথড্র সফল হয়েছে! টাকা পেয়ে গেছেন।`);
+                        window.showNotify(`৳${wd.amount} উইথড্র সফল হয়েছে!`, 'success');
+                    } 
+                    else if(wd.status === 'Rejected') {
+                        speakLocalized(`আপনার ${wd.amount} টাকার উইথড্র বাতিল করা হয়েছে এবং টাকা ব্যালেন্সে ফেরত দেওয়া হয়েছে।`);
+                        window.showNotify(`৳${wd.amount} উইথড্র বাতিল হয়েছে!`, 'error');
+                        
+                        // Restore the local limits (assuming Admin didn't manually refund totalWithdrawn limit)
+                        if (currentUserData && currentUserData.totalWithdrawn) {
+                            let restored = Math.max(0, currentUserData.totalWithdrawn - wd.amount);
+                            setDoc(doc(db, "users", uid), { totalWithdrawn: restored }, { merge: true });
+                        }
+                    }
+                    notifiedWds[id] = true;
+                    needsSave = true;
+                }
+            });
+
+            if(needsSave) {
+                localStorage.setItem('notified_wds', JSON.stringify(notifiedWds));
             }
         });
     }
@@ -902,35 +939,28 @@
         } catch(e) { btn.innerText = "আবার চেষ্টা করুন"; btn.disabled = false; }
     }
 
-    // ============= VIP & WITHDRAW LOGIC FIX =============
+    // ============= 🌟 VIP & WITHDRAW LIMIT LOGIC (AUTO EXPIRE VIP) 🌟 =============
     window.openWithdrawModal = () => { 
         document.getElementById('withdraw-modal').style.display = 'flex'; 
 
-        // If User is Free
         if(currentUserData.currentVIP === "Free") {
             document.getElementById('wd-free-warning').style.display = 'block';
             document.getElementById('wd-limit-info').style.display = 'none';
             
             let form = document.getElementById('withdraw-form');
-            form.style.opacity = '0.5';
-            form.style.pointerEvents = 'none';
+            form.style.opacity = '0.5'; form.style.pointerEvents = 'none';
             document.getElementById('btn-withdraw').innerText = "VIP কেনা প্রয়োজন";
             return;
         }
 
-        // If User is VIP
         document.getElementById('wd-free-warning').style.display = 'none';
         document.getElementById('wd-limit-info').style.display = 'block';
         
         let form = document.getElementById('withdraw-form');
-        form.style.opacity = '1';
-        form.style.pointerEvents = 'auto';
+        form.style.opacity = '1'; form.style.pointerEvents = 'auto';
         document.getElementById('btn-withdraw').innerText = "উত্তোলন রিকোয়েস্ট দিন";
 
-        let maxLimit = 0;
-        if(currentUserData.currentVIP.includes("VIP 1")) maxLimit = 1000;
-        else if(currentUserData.currentVIP.includes("VIP 2")) maxLimit = 2000;
-
+        let maxLimit = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
         document.getElementById('wd-vip-name').innerText = currentUserData.currentVIP;
         document.getElementById('wd-vip-max').innerText = maxLimit;
         document.getElementById('wd-vip-used').innerText = currentUserData.totalWithdrawn || 0;
@@ -939,40 +969,72 @@
     window.submitWithdraw = async (e) => {
         e.preventDefault();
         
-        let maxLimit = 0;
-        if(currentUserData.currentVIP.includes("VIP 1")) maxLimit = 1000;
-        else if(currentUserData.currentVIP.includes("VIP 2")) maxLimit = 2000;
+        if(currentUserData.currentVIP === "Free") {
+            speakLocalized("আপনার একাউন্ট ফ্রি। টাকা তোলার জন্য ভিআইপি প্যাকেজ কিনুন।");
+            return window.showNotify("VIP কেনা ছাড়া উইথড্র হবে না!", "error");
+        }
 
+        let maxLimit = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
         let totalWithdrawn = currentUserData.totalWithdrawn || 0;
         let method = document.getElementById('wd-method').value; 
         let number = document.getElementById('wd-number').value; 
         let amount = parseFloat(document.getElementById('wd-amount').value);
         
-        if(amount < 200) return window.showNotify('সর্বনিম্ন ৳২০০', 'error');
-        if(amount > currentUserData.balance) return window.showNotify('পর্যাপ্ত ব্যালেন্স নেই', 'error');
+        if(amount < 200) {
+            speakLocalized("সর্বনিম্ন দুইশো টাকা তুলতে পারবেন।");
+            return window.showNotify('সর্বনিম্ন ৳২০০', 'error');
+        }
+        if(amount > currentUserData.balance) {
+            speakLocalized("আপনার একাউন্টে পর্যাপ্ত ব্যালেন্স নেই।");
+            return window.showNotify('পর্যাপ্ত ব্যালেন্স নেই', 'error');
+        }
 
         if((totalWithdrawn + amount) > maxLimit) {
-            return window.showNotify(`আপনার VIP লিমিট শেষ। আপনাকে নতুন করে VIP আপগ্রেড করতে হবে।`, "error");
+            let remaining = maxLimit - totalWithdrawn;
+            if(remaining <= 0) {
+                await setDoc(doc(db, "users", currentUserData.uid), { currentVIP: "Free", totalWithdrawn: 0 }, { merge: true });
+                speakLocalized("আপনার ভিআইপি লিমিট শেষ হয়ে গেছে। নতুন করে প্যাকেজ কিনুন।");
+                return window.showNotify(`আপনার VIP লিমিট শেষ। নতুন করে VIP আপগ্রেড করুন।`, "error");
+            }
+            speakLocalized(`আপনার ভিআইপি লিমিট অনুযায়ী আপনি সর্বোচ্চ আর ${remaining} টাকা তুলতে পারবেন।`);
+            return window.showNotify(`আপনি সর্বোচ্চ আর ৳${remaining} তুলতে পারবেন।`, "error");
         }
 
         const btn = document.getElementById('btn-withdraw'); btn.innerText = "অপেক্ষা করুন..."; btn.disabled = true;
         try {
-            await setDoc(doc(db, "users", currentUserData.uid), { 
+            let newTotal = totalWithdrawn + amount;
+            let updates = {
                 balance: currentUserData.balance - amount,
-                totalWithdrawn: totalWithdrawn + amount 
-            }, { merge: true });
-            
+                totalWithdrawn: newTotal
+            };
+
+            // 🌟 If limit is perfectly exhausted, downgrade to FREE immediately 🌟
+            let limitExhausted = false;
+            if(newTotal >= maxLimit) {
+                updates.currentVIP = "Free";
+                updates.totalWithdrawn = 0; 
+                limitExhausted = true;
+            }
+
+            await setDoc(doc(db, "users", currentUserData.uid), updates, { merge: true });
             await addDoc(collection(db, "withdrawals"), { uid: currentUserData.uid, method: method, account: number, amount: amount, status: "Pending", timestamp: serverTimestamp() });
             
             document.getElementById('withdraw-form').reset(); document.getElementById('withdraw-modal').style.display='none';
-            window.showNotify('উত্তোলন রিকোয়েস্ট সফল হয়েছে।', 'success');
+            
+            if(limitExhausted) {
+                speakLocalized(`উইথড্র রিকোয়েস্ট সফল হয়েছে! আপনার ভিআইপি লিমিট শেষ হওয়ায় একাউন্টটি ফ্রি হয়ে গেছে। নতুন করে ভিআইপি কিনুন।`);
+                window.showNotify('উইথড্র সফল! VIP লিমিট শেষ।', 'success');
+            } else {
+                speakLocalized("উইথড্র রিকোয়েস্ট সফলভাবে সাবমিট হয়েছে। এডমিন চেক করে পেমেন্ট করে দিবে।");
+                window.showNotify('উইথড্র রিকোয়েস্ট সফল হয়েছে।', 'success');
+            }
+
         } catch (error) { window.showNotify("সমস্যা হয়েছে", "error"); }
         btn.innerText = "উত্তোলন রিকোয়েস্ট দিন"; btn.disabled = false;
     };
 
     // Separate VIP Modal
     window.openVipPackages = () => { document.getElementById('vip-modal').style.display = 'flex'; };
-    
     window.updateVipInfo = () => {
         let select = document.getElementById('vip-select');
         let price = select.options[select.selectedIndex].getAttribute('data-price');
@@ -990,6 +1052,7 @@
         try {
             await addDoc(collection(db, "vip_requests"), { uid: currentUserData.uid, phone: currentUserData.phone, package: selectedPackage, paymentNumber: payNum, trxId: trxId, status: "Pending", timestamp: serverTimestamp() });
             document.getElementById('vip-modal').style.display = 'none';
+            speakLocalized("ভিআইপি রিকোয়েস্ট সাবমিট হয়েছে। এডমিন ভেরিফাই করে এক্টিভ করে দিবে।");
             window.showNotify("VIP রিকোয়েস্ট সাবমিট হয়েছে", "success");
             window.open(`https://wa.me/${adminWhatsApp}?text=${encodeURIComponent(`আমি ${selectedPackage} কিনতে চাই।\nএকাউন্ট: ${currentUserData.phone}\nটাকা দিয়েছি: ${payNum}\nTrxID: ${trxId}`)}`, '_blank');
         } catch (error) { window.showNotify("এরর হয়েছে", "error"); }
@@ -1076,7 +1139,7 @@
     window.contactSupport = () => { window.open(`https://t.me/Refer_earn08`, '_blank'); };
 
     // ==========================================
-    // 🤖 AI ASSISTANT LOGIC (DRAG & VOICE) 🤖
+    // 🤖 AI ASSISTANT LOGIC (UPDATED VOICE & LOGIC) 🤖
     // ==========================================
     const catBot = document.getElementById('ai-cat-bot');
     let isDraggingCat = false;
@@ -1138,17 +1201,31 @@
         }, 8000); 
     }
 
+    // 🌟 ENHANCED GOOGLE TRANSLATE NATIVE TTS FOR SMOOTHER BENGALI VOICE 🌟
     function speakLocalized(text) {
+        try {
+            // Using Google's direct TTS API for natural human-like voice
+            let url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=bn&client=tw-ob`;
+            let audio = new Audio(url);
+            audio.onplay = () => setCatEmote('talking');
+            audio.onended = () => setCatEmote('neutral');
+            audio.onerror = () => speakWithOriginalTTS(text); // Fallback if blocked
+            audio.play().catch(e => speakWithOriginalTTS(text));
+        } catch(e) {
+            speakWithOriginalTTS(text);
+        }
+    }
+
+    function speakWithOriginalTTS(text) {
         if(!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
         let utter = new SpeechSynthesisUtterance(text);
         
         let voices = window.speechSynthesis.getVoices();
-        // Trying to find Bengali Voice
         let targetVoice = voices.find(v => v.lang.startsWith('bn'));
         if(targetVoice) utter.voice = targetVoice;
         
-        utter.lang = 'bn-BD'; // Default Bengali
+        utter.lang = 'bn-BD'; 
         utter.rate = 1.0; 
         utter.pitch = 1.2; 
         
@@ -1158,6 +1235,7 @@
         window.speechSynthesis.speak(utter);
     }
 
+    // 🌟 UPDATED AI LOGIC (WITHDRAW LIMITS) 🌟
     function processLocalVoiceCommand(text) {
         let t = text.toLowerCase().trim();
         let reply = "";
@@ -1166,6 +1244,16 @@
         if(t.match(/(ব্যালেন্স|balance|টাকা আছে|কত টাকা)/)) {
             let bal = currentUserData ? currentUserData.balance : 0;
             reply = `আপনার বর্তমান ব্যালেন্স ${bal} টাকা।`;
+        }
+        else if(t.match(/(লিমিট|limit|কত টাকা তুলতে পারব|বাকি আছে|লিমিট কত)/)) {
+            if(!currentUserData || currentUserData.currentVIP === "Free") {
+                reply = "আপনার একাউন্টটি ফ্রি। টাকা তোলার জন্য ভিআইপি প্যাকেজ কিনে নিন।";
+            } else {
+                let max = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
+                let used = currentUserData.totalWithdrawn || 0;
+                let rem = max - used;
+                reply = `আপনার ${currentUserData.currentVIP} প্যাকেজে আর ${rem} টাকা তোলার লিমিট বাকি আছে।`;
+            }
         }
         else if(t.match(/(উইথড্র|withdraw|টাকা তুলবো|পেমেন্ট নিবো|ক্যাশ আউট|টাকা তুলব)/)) {
             reply = "উইথড্র পেজ খুলছি। মনে রাখবেন, টাকা তুলতে ভিআইপি লাগবে।";
@@ -1213,7 +1301,7 @@
             reply = "আমি আর্নপ্রো অ্যাসিস্ট্যান্ট! এই অ্যাপের সব নিয়মকানুন আমার জানা। আমাকে যেকোনো কিছু জিজ্ঞেস করতে পারেন।";
         }
         else {
-            reply = "দুঃখিত, আমি বুঝতে পারিনি। 'উইথড্র', 'ভিআইপি', বা 'টাস্ক' এর মতো কিছু বলে চেষ্টা করুন।";
+            reply = "দুঃখিত, আমি বুঝতে পারিনি। 'উইথড্র', 'ভিআইপি', 'আমার লিমিট কত', বা 'টাস্ক' এর মতো কিছু বলে চেষ্টা করুন।";
         }
 
         return { reply, action };
@@ -1236,7 +1324,7 @@
         }
 
         let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'bn-BD'; // Default Bengali
+        recognition.lang = 'bn-BD'; 
         recognition.interimResults = false;
 
         recognition.onstart = () => {
