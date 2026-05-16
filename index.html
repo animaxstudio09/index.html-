@@ -99,6 +99,17 @@
         #chat-input-field:focus { border-color: #3b82f6; }
         .chat-btn { background: #2563eb; width: 42px; height: 42px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff; transition: 0.2s; }
         .chat-btn:active { transform: scale(0.9); }
+
+        /* WITHDRAW MODAL STYLES */
+        .type-card { border: 2px solid #1f2937; border-radius: 12px; cursor: pointer; transition: 0.3s; background: #121822; text-align: center; padding: 10px; font-size: 13px; font-weight: bold; color: #9ca3af; }
+        .type-card.active-type { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); color: #fff; box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.2); }
+        
+        .pay-card { border: 2px solid #1f2937; border-radius: 12px; cursor: pointer; transition: 0.3s; background: #121822; }
+        .pay-card.active-bkash { border-color: #e2136e; background: rgba(226, 19, 110, 0.1); box-shadow: 0 0 10px rgba(226, 19, 110, 0.3); }
+        .pay-card.active-nagad { border-color: #ed1c24; background: rgba(237, 28, 36, 0.1); box-shadow: 0 0 10px rgba(237, 28, 36, 0.3); }
+        
+        .amt-card { border: 2px solid #1f2937; border-radius: 12px; cursor: pointer; transition: 0.3s; background: #121822; text-align: center; padding: 12px 4px; }
+        .amt-card.active { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.2); }
     </style>
 </head>
 <body>
@@ -200,7 +211,7 @@
 
         <div class="bg-blue-600/20 text-blue-400 text-xs py-1.5 px-3 flex items-center border-b border-blue-500/30 z-10">
             <i class="fa-solid fa-bell mr-2 animate-bounce"></i>
-            <marquee id="app-notice" class="font-bold tracking-wide">EarnPro-তে স্বাগতম! বেশি বেশি রেফার করুন এবং নিশ্চিত পেমেন্ট নিন। কোনো ভিপিএন ব্যবহার করবেন না!</marquee>
+            <marquee id="app-notice" class="font-bold tracking-wide">EarnPro-তে স্বাগতম! বেশি বেশি রেফার করুন এবং নিশ্চিত পেমেন্ট নিন। কোনো ভিপিএন ব্যবহার করবেন মিলিটারি!</marquee>
         </div>
 
         <div class="scrollable-content relative">
@@ -227,8 +238,13 @@
 
                 <div class="mx-6 mt-4 p-6 rounded-3xl bg-gradient-to-br from-[#1a1c29] to-[#0b0e14] border border-gray-800 shadow-2xl relative overflow-hidden">
                     <div class="absolute -right-10 -top-10 w-32 h-32 bg-blue-500 opacity-10 rounded-full blur-2xl"></div>
-                    <p class="text-gray-400 text-sm">বর্তমান ব্যালেন্স</p>
-                    <h2 class="text-4xl font-bold mt-1 text-white">৳ <span id="balance">0.00</span></h2>
+                    <p class="text-gray-400 text-sm">সর্বমোট ব্যালেন্স</p>
+                    <h2 class="text-4xl font-bold mt-1 text-white">৳ <span id="total-balance">0.00</span></h2>
+                    
+                    <div class="flex gap-2 mt-3">
+                        <span class="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-1 rounded text-xs font-bold">নিজস্ব আয়: ৳<span id="balance">0.00</span></span>
+                        <span class="bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-1 rounded text-xs font-bold">রেফার আয়: ৳<span id="refer-balance">0.00</span></span>
+                    </div>
                     
                     <button onclick="window.openWithdrawModal()" class="absolute right-5 top-5 bg-gradient-to-r from-red-500 to-orange-500 px-4 py-2 rounded-lg text-sm font-bold shadow-lg active:scale-95">উত্তোলন</button>
                     <button onclick="window.claimDailyBonus()" id="btn-daily-bonus" class="absolute right-5 top-16 bg-gradient-to-r from-green-500 to-emerald-600 px-4 py-2 rounded-lg text-xs font-bold shadow-lg shadow-green-500/30 active:scale-95 btn-shine mt-1">
@@ -255,14 +271,13 @@
                         <h3 class="font-bold text-sm text-gray-400 uppercase tracking-wider">🏆 টপ আর্নারস</h3>
                         <span class="text-xs text-blue-400 flex items-center"><i class="fa-solid fa-circle text-[6px] text-green-500 mr-1 animate-pulse"></i>Live</span>
                     </div>
-                    <!-- 🟢 FAKE LEADERBOARD CONTAINER 🟢 -->
                     <div id="leaderboard-list" class="bg-[#0b0e14]/50 rounded-2xl border border-gray-800 space-y-2 p-1">
                         <!-- Content will be injected by JS -->
                     </div>
                 </div>
             </div>
 
-            <!-- 🟢 NEW CHAT TAB 🟢 -->
+            <!-- CHAT TAB -->
             <div id="chat" class="tab-content chat-container hidden">
                 <div class="p-4 border-b border-gray-800 bg-[#0b0e14] z-10 flex justify-between items-center shadow-lg">
                     <h2 class="text-xl font-bold"><i class="fa-solid fa-comments text-blue-500 mr-2"></i> ইউজার চ্যাট</h2>
@@ -319,7 +334,7 @@
                     </div>
                     <div class="glass p-4 rounded-2xl border-t-2 border-green-500 text-center shadow-lg">
                         <i class="fa-solid fa-hand-holding-dollar text-green-400 text-2xl mb-1"></i>
-                        <p class="text-[10px] text-gray-400 tracking-wide">রেফার ইনকাম</p>
+                        <p class="text-[10px] text-gray-400 tracking-wide">সর্বমোট রেফার ইনকাম</p>
                         <h3 class="font-bold text-2xl text-white mt-1">৳ <span id="total-refer-income">0.00</span></h3>
                     </div>
                 </div>
@@ -442,32 +457,75 @@
 </div>
 
 <div id="withdraw-modal" class="modal-overlay">
-    <div class="modal-content">
+    <div class="modal-content !p-5">
         <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
             <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-money-bill-transfer text-green-400 mr-2"></i> টাকা উত্তোলন (Withdraw)</h3>
             <button onclick="document.getElementById('withdraw-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
+        
         <div id="wd-free-warning" class="bg-red-500/10 border border-red-500/30 p-3 rounded-xl mb-4 hidden">
             <p class="text-xs text-red-400 font-bold mb-3 leading-relaxed">⚠️ ফ্রি একাউন্টে টাকা উত্তোলন করা যায় না। টাকা তুলতে হলে আপনাকে আগে VIP প্যাকেজ কিনে একাউন্ট অ্যাক্টিভ করতে হবে।</p>
             <button onclick="document.getElementById('withdraw-modal').style.display='none'; window.openVipPackages();" class="w-full bg-red-600 py-2 rounded-lg text-sm font-bold text-white shadow-lg active:scale-95">VIP আপগ্রেড করুন</button>
         </div>
-        <div id="wd-limit-info" class="bg-blue-500/10 border border-blue-500/30 p-3 rounded-xl mb-4 text-xs text-gray-300">
+        
+        <label class="text-sm text-gray-300 mb-2 block font-bold">ব্যালেন্স টাইপ সিলেক্ট করুন</label>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div id="type-self" class="type-card active-type" onclick="window.selectType('self')">নিজস্ব আয়<br><span class="text-[10px] text-blue-400 font-normal">কোনো লিমিট নেই</span></div>
+            <div id="type-refer" class="type-card" onclick="window.selectType('refer')">রেফার আয়<br><span class="text-[10px] text-green-400 font-normal">VIP লিমিট প্রযোজ্য</span></div>
+        </div>
+
+        <div id="wd-limit-info" class="bg-blue-500/10 border border-blue-500/30 p-3 rounded-xl mb-4 text-xs text-gray-300 hidden">
             আপনার প্যাকেজ: <b id="wd-vip-name" class="text-blue-400">Loading</b><br>
-            সর্বোচ্চ ইনকাম লিমিট: <b id="wd-vip-max" class="text-green-400">0</b> ৳<br>
+            সর্বোচ্চ রেফার ইনকাম লিমিট: <b id="wd-vip-max" class="text-green-400">0</b> ৳<br>
             এখন পর্যন্ত তুলেছেন: <b id="wd-vip-used" class="text-yellow-400">0</b> ৳
         </div>
+        
         <form id="withdraw-form" onsubmit="window.submitWithdraw(event)">
-            <label class="text-sm text-gray-400 mb-1 block">পেমেন্ট মেথড</label>
-            <select id="wd-method" class="input-style" required>
-                <option value="">সিলেক্ট করুন</option>
-                <option value="bkash">বিকাশ (bKash)</option>
-                <option value="nagad">নগদ (Nagad)</option>
-            </select>
-            <label class="text-sm text-gray-400 mb-1 block">একাউন্ট নম্বর</label>
-            <input type="number" id="wd-number" placeholder="017XXXXXXXX" class="input-style" required>
-            <label class="text-sm text-gray-400 mb-1 block">পরিমাণ (সর্বনিম্ন ৳২০০)</label>
-            <input type="number" id="wd-amount" placeholder="৳" class="input-style" required min="200">
-            <button type="submit" id="btn-withdraw" class="w-full bg-blue-600 py-4 rounded-xl font-bold active:scale-95 shadow-lg shadow-blue-500/30">উত্তোলন রিকোয়েস্ট দিন</button>
+            
+            <label class="text-sm text-gray-300 mb-2 block font-bold">পেমেন্ট মেথড সিলেক্ট করুন</label>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div id="method-bkash" class="pay-card p-3 flex flex-col items-center justify-center gap-2" onclick="window.selectMethod('bkash')">
+                    <div class="bg-white p-1.5 rounded-lg shadow-sm"><img src="https://i.ibb.co.com/JWsLQxjp/bkash-logo-png-seeklogo-382709.png" class="w-10 h-10 object-contain" alt="bKash" onerror="this.style.display='none'"></div>
+                    <span class="text-sm font-bold text-gray-300">bKash</span>
+                </div>
+                <div id="method-nagad" class="pay-card p-3 flex flex-col items-center justify-center gap-2" onclick="window.selectMethod('nagad')">
+                    <div class="bg-white p-1.5 rounded-lg shadow-sm"><img src="https://i.ibb.co.com/w1cvHgy/images-2.png" class="w-10 h-10 object-contain" alt="Nagad" onerror="this.style.display='none'"></div>
+                    <span class="text-sm font-bold text-gray-300">Nagad</span>
+                </div>
+            </div>
+
+            <label class="text-sm text-gray-300 mb-2 block font-bold">একাউন্ট নম্বর দিন</label>
+            <input type="number" id="wd-number" placeholder="017XXXXXXXX" class="input-style mb-4" required>
+
+            <label class="text-sm text-gray-300 mb-2 block font-bold">টাকার পরিমাণ সিলেক্ট করুন</label>
+            <div class="grid grid-cols-3 gap-2 mb-6">
+                <div id="amt-200" class="amt-card" onclick="window.selectAmount(200, 0)">
+                    <h3 class="font-bold text-lg text-white">৳২০০</h3>
+                    <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
+                </div>
+                <div id="amt-300" class="amt-card" onclick="window.selectAmount(300, 0)">
+                    <h3 class="font-bold text-lg text-white">৳৩০০</h3>
+                    <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
+                </div>
+                <div id="amt-500" class="amt-card" onclick="window.selectAmount(500, 0)">
+                    <h3 class="font-bold text-lg text-white">৳৫০০</h3>
+                    <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
+                </div>
+                <div id="amt-1000" class="amt-card" onclick="window.selectAmount(1000, 5)">
+                    <h3 class="font-bold text-lg text-white">৳১০০০</h3>
+                    <p class="text-[10px] text-gray-400 mt-1">চার্জ: ৳৫</p>
+                </div>
+                <div id="amt-1500" class="amt-card" onclick="window.selectAmount(1500, 5)">
+                    <h3 class="font-bold text-lg text-white">৳১৫০০</h3>
+                    <p class="text-[10px] text-gray-400 mt-1">চার্জ: ৳৫</p>
+                </div>
+                <div id="amt-2000" class="amt-card" onclick="window.selectAmount(2000, 5)">
+                    <h3 class="font-bold text-lg text-white">৳২০০০</h3>
+                    <p class="text-[10px] text-gray-400 mt-1">চার্জ: ৳৫</p>
+                </div>
+            </div>
+
+            <button type="submit" id="btn-withdraw" class="w-full bg-blue-600 hover:bg-blue-500 transition py-4 rounded-xl font-bold active:scale-95 shadow-lg shadow-blue-500/30">উত্তোলন রিকোয়েস্ট দিন</button>
         </form>
     </div>
 </div>
@@ -570,10 +628,48 @@
     let isOpeningBox = false;
     let withdrawListenerUnsubscribe = null;
     let chatInterval = null;
+    window.hasWelcomed = false;
+
+    let wdSelectedMethod = "";
+    let wdSelectedAmount = 0;
+    let wdCharge = 0;
+    let wdSelectedType = 'self'; // New Logic added
     
-    // ==========================================
-    // 🟢 1. FAKE LIVE USERS LOGIC (50 to 500 range)
-    // ==========================================
+    // Dynamic Bot Settings
+    let maleNames = ["Sabbir", "Rakib", "Akash", "Fahim", "Hridoy", "Jahid", "Siyam", "Raju", "Imran", "Arif", "Touhid", "Rubel", "Emon", "Babu", "Momin", "Tarek", "Shanto", "Omi", "Parvez", "Maruf", "Nayeem", "Karim"];
+    let femaleNames = ["Riya", "Mim", "Sadia", "Kona", "Tanjila", "Nusrat", "Sumaiya", "Liza", "Sonia", "Mitu", "Toma", "Lamia", "Nadia", "Moumita", "Lima", "Poly", "Maha", "Irin", "Sraboni", "Nisha"];
+    
+    let chatVariables = {
+        amounts: ["100", "200", "300", "400", "500", "1000", "1500", "2000", "২৫০", "৩০০", "৫০০", "১০০০"],
+        methods: ["bkash", "nagad", "rocket", "বিকাশ", "নগদ"],
+        times: ["just now", "10 min age", "ajke", "matroi", "kal rate", "এইমাত্র", "আজ সকালে"],
+        vips: ["VIP 1", "VIP 2", "ভিআইপি ১", "ভিআইপি ২"],
+        emojis: ["😍", "✅", "🤑", "❤️", "🔥", "💯", "🥰", "", ""] 
+    };
+
+    let flirtTemplates = [
+        "Hi <span class='mention'>@name</span> kemon aso? 😍",
+        "<span class='mention'>@name</span> apu, apnar bari koi?",
+        "Aha <span class='mention'>@name</span> apu, ekhane onek kosto, amar sathe team a kaj korben?",
+        "<span class='mention'>@name</span> apu, apnar number ta deya jabe?",
+        "Areh <span class='mention'>@name</span> apu je! ki obostha? 🥰",
+        "<span class='mention'>@name</span> apu withdraw dile party den!",
+        "Meyerao eto kaj kore ekhane! Wow <span class='mention'>@name</span> apu 🔥",
+        "Apu <span class='mention'>@name</span> apnar refer code den, ami use korbo 😉",
+        "<span class='mention'>@name</span> apu ki eka eka income korben? Amake sikhay den na!"
+    ];
+
+    let replyTemplates = [
+        "<span class='mention'>@name</span> vai thik bolsen.",
+        "<span class='mention'>@name</span> ha vai amio agree.",
+        "<span class='mention'>@name</span> koto tk tulsen apni?",
+        "Ji <span class='mention'>@name</span>.",
+        "<span class='mention'>@name</span> vai kon package valo hobe?",
+        "Right <span class='mention'>@name</span>."
+    ];
+
+    let lastSender = { name: "System", gender: "none", isReal: false, text: "" };
+
     function startFakeLiveUsers() {
         let currentFakeUsers = Math.floor(Math.random() * (500 - 50) + 50);
         const countEl = document.getElementById('fake-live-count');
@@ -687,6 +783,18 @@
                 if(data.maintenance === true) document.getElementById('maintenance-screen').style.display = 'flex';
                 if(data.notice) document.getElementById('app-notice').innerText = data.notice;
             }
+            
+            // Dynamic Bot Config Fetch
+            onSnapshot(doc(db, "app_settings", "bots"), (botSnap) => {
+                if(botSnap.exists()) {
+                    let bData = botSnap.data();
+                    if(bData.maleNames) maleNames = bData.maleNames;
+                    if(bData.femaleNames) femaleNames = bData.femaleNames;
+                    if(bData.chatVariables) chatVariables = bData.chatVariables;
+                    if(bData.flirtTemplates) flirtTemplates = bData.flirtTemplates;
+                    if(bData.replyTemplates) replyTemplates = bData.replyTemplates;
+                }
+            });
         } catch(e) { console.log(e); }
     }
     checkSystemSettings();
@@ -702,6 +810,7 @@
             document.getElementById('main-app').style.display = 'flex';
             window.switchTab('home'); 
         } else {
+            window.hasWelcomed = false;
             document.getElementById('splash-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'none';
             document.getElementById('banned-screen').style.display = 'none';
@@ -748,11 +857,13 @@
                     phone: phone,
                     password: pass, 
                     avatar: "",
-                    balance: 5.00,
+                    balance: 5.00,        // Self Income
+                    referBalance: 0,      // Refer Available Income
                     totalRefers: 0,
-                    referIncome: 0,
+                    referIncome: 0,       // Lifetime Refer Income
                     currentVIP: "Free",
-                    totalWithdrawn: 0,
+                    usedVipLimit: 0,      // Limit tracker for current VIP
+                    totalWithdrawn: 0,    // Lifetime Total Withdrawn
                     myReferCode: referCode,
                     referredBy: appliedRefer || "None",
                     deviceId: getDeviceId(), 
@@ -793,6 +904,14 @@
                     document.getElementById('banned-screen').style.display = 'none';
                 }
                 updateUI();
+                
+                // Welcome Message from AI when user data loads for the first time
+                if(!window.hasWelcomed) {
+                    window.hasWelcomed = true;
+                    setTimeout(() => {
+                        speakLocalized(`স্বাগতম ${currentUserData.name}! আর্ন প্রো তে আপনাকে স্বাগতম। যেকোনো দরকারে স্ক্রিনের নিচে আমার উপর ক্লিক করে কথা বলতে পারেন।`);
+                    }, 1500);
+                }
             }
         });
 
@@ -812,13 +931,10 @@
                         window.showNotify(`৳${wd.amount} উইথড্র সফল হয়েছে!`, 'success');
                     } 
                     else if(wd.status === 'Rejected') {
-                        speakLocalized(`আপনার ${wd.amount} টাকার উইথড্র বাতিল করা হয়েছে এবং টাকা ব্যালেন্সে ফেরত দেওয়া হয়েছে।`);
+                        speakLocalized(`আপনার ${wd.amount} টাকার উইথড্র বাতিল করা হয়েছে এবং আপনার অ্যাকাউন্টে টাকা ফেরত দেওয়া হয়েছে।`);
                         window.showNotify(`৳${wd.amount} উইথড্র বাতিল হয়েছে!`, 'error');
                         
-                        if (currentUserData && currentUserData.totalWithdrawn) {
-                            let restored = Math.max(0, currentUserData.totalWithdrawn - wd.amount);
-                            setDoc(doc(db, "users", uid), { totalWithdrawn: restored }, { merge: true });
-                        }
+                        // Admin panel rejection refund logic is handled directly in Admin Dashboard code.
                     }
                     notifiedWds[id] = true;
                     needsSave = true;
@@ -831,7 +947,15 @@
 
     function updateUI() {
         if(!currentUserData) return;
-        document.getElementById('balance').innerText = currentUserData.balance.toFixed(2);
+        
+        let selfBal = currentUserData.balance || 0;
+        let referBal = currentUserData.referBalance || 0;
+        let totalBal = selfBal + referBal;
+
+        document.getElementById('total-balance').innerText = totalBal.toFixed(2);
+        document.getElementById('balance').innerText = selfBal.toFixed(2);
+        document.getElementById('refer-balance').innerText = referBal.toFixed(2);
+
         document.getElementById('user-name-display').innerText = currentUserData.name;
         document.getElementById('profile-name').innerText = currentUserData.name;
         document.getElementById('profile-phone').innerText = currentUserData.phone;
@@ -913,7 +1037,10 @@
 
     window.openBox = async (boxId) => {
         if(isOpeningBox) return;
-        if((currentUserData.boxesLeft || 0) <= 0) return window.showNotify("আজকের ২ টি বক্স খোলা শেষ! কাল চেষ্টা করুন।", "error");
+        if((currentUserData.boxesLeft || 0) <= 0) {
+            speakLocalized("দুঃখিত, আপনার আজকের মিস্ট্রি বক্স খোলা শেষ হয়ে গেছে। দয়া করে আগামীকাল আবার চেষ্টা করুন।");
+            return window.showNotify("আজকের ২ টি বক্স খোলা শেষ! কাল চেষ্টা করুন।", "error");
+        }
         
         isOpeningBox = true;
         let boxElement = document.getElementById(`box-${boxId}`);
@@ -933,8 +1060,9 @@
             currentOpened.push(boxId);
 
             try {
+                // Box gives SELF income (balance)
                 await setDoc(doc(db, "users", currentUserData.uid), { 
-                    balance: currentUserData.balance + winAmount,
+                    balance: (currentUserData.balance || 0) + winAmount,
                     boxesLeft: currentUserData.boxesLeft - 1,
                     openedBoxes: currentOpened
                 }, { merge: true });
@@ -946,9 +1074,6 @@
         }, 800);
     }
 
-    // ==========================================
-    // 🟢 4. BEAUTIFUL FAKE LEADERBOARD (DYNAMIC)
-    // ==========================================
     function generateFakeLeaderboard() {
         const listDiv = document.getElementById('leaderboard-list');
         if(!listDiv) return;
@@ -981,6 +1106,35 @@
     }
     setInterval(generateFakeLeaderboard, 12000);
 
+    window.selectType = (type) => {
+        wdSelectedType = type;
+        document.getElementById('type-self').classList.remove('active-type');
+        document.getElementById('type-refer').classList.remove('active-type');
+        document.getElementById(`type-${type}`).classList.add('active-type');
+
+        if (type === 'refer') {
+            document.getElementById('wd-limit-info').style.display = 'block';
+        } else {
+            document.getElementById('wd-limit-info').style.display = 'none';
+        }
+    };
+
+    window.selectMethod = (method) => {
+        wdSelectedMethod = method;
+        document.getElementById('method-bkash').classList.remove('active-bkash');
+        document.getElementById('method-nagad').classList.remove('active-nagad');
+        
+        if(method === 'bkash') document.getElementById('method-bkash').classList.add('active-bkash');
+        if(method === 'nagad') document.getElementById('method-nagad').classList.add('active-nagad');
+    };
+
+    window.selectAmount = (amt, charge) => {
+        wdSelectedAmount = amt;
+        wdCharge = charge;
+        document.querySelectorAll('.amt-card').forEach(el => el.classList.remove('active'));
+        document.getElementById(`amt-${amt}`).classList.add('active');
+    };
+
     window.openWithdrawModal = () => { 
         document.getElementById('withdraw-modal').style.display = 'flex'; 
 
@@ -994,58 +1148,106 @@
         }
 
         document.getElementById('wd-free-warning').style.display = 'none';
-        document.getElementById('wd-limit-info').style.display = 'block';
+        
         let form = document.getElementById('withdraw-form');
         form.style.opacity = '1'; form.style.pointerEvents = 'auto';
         document.getElementById('btn-withdraw').innerText = "উত্তোলন রিকোয়েস্ট দিন";
 
+        // Pre-select type self by default when opened
+        window.selectType('self');
+
         let maxLimit = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
         document.getElementById('wd-vip-name').innerText = currentUserData.currentVIP;
         document.getElementById('wd-vip-max').innerText = maxLimit;
-        document.getElementById('wd-vip-used').innerText = currentUserData.totalWithdrawn || 0;
+        document.getElementById('wd-vip-used').innerText = currentUserData.usedVipLimit || 0;
     };
 
     window.submitWithdraw = async (e) => {
         e.preventDefault();
         
         if(currentUserData.currentVIP === "Free") {
-            speakLocalized("আপনার একাউন্ট ফ্রি। টাকা তোলার জন্য ভিআইপি প্যাকেজ কিনুন।");
-            return window.showNotify("VIP কেনা ছাড়া উইথড্র হবে ওয়েবসাইটে না!", "error");
+            speakLocalized("দুঃখিত, আপনার একাউন্টটি ফ্রি। টাকা তোলার জন্য দয়া করে একটি ভিআইপি প্যাকেজ কিনে নিন।");
+            return window.showNotify("VIP কেনা ছাড়া উইথড্র হবে না!", "error");
         }
 
-        let maxLimit = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
-        let totalWithdrawn = currentUserData.totalWithdrawn || 0;
-        let method = document.getElementById('wd-method').value; 
-        let number = document.getElementById('wd-number').value; 
-        let amount = parseFloat(document.getElementById('wd-amount').value);
-        
-        if(amount < 200) { speakLocalized("সর্বনিম্ন দুইশো টাকা তুলতে পারবেন।"); return window.showNotify('সর্বনিম্ন ৳২০০', 'error'); }
-        if(amount > currentUserData.balance) { speakLocalized("আপনার একাউন্টে পর্যাপ্ত ব্যালেন্স নেই।"); return window.showNotify('পর্যাপ্ত ব্যালেন্স নেই', 'error'); }
+        if(!wdSelectedMethod) return window.showNotify("পেমেন্ট মেথড সিলেক্ট করুন!", "error");
+        if(wdSelectedAmount === 0) return window.showNotify("টাকার পরিমাণ সিলেক্ট করুন!", "error");
 
-        if((totalWithdrawn + amount) > maxLimit) {
-            let remaining = maxLimit - totalWithdrawn;
-            if(remaining <= 0) {
-                await setDoc(doc(db, "users", currentUserData.uid), { currentVIP: "Free", totalWithdrawn: 0 }, { merge: true });
-                speakLocalized("আপনার ভিআইপি লিমিট শেষ হয়ে গেছে। নতুন করে প্যাকেজ কিনুন।");
-                return window.showNotify(`আপনার VIP লিমিট শেষ। নতুন করে VIP আপগ্রেড করুন।`, "error");
+        let number = document.getElementById('wd-number').value; 
+        if(number.length < 10) return window.showNotify("সঠিক একাউন্ট নাম্বার দিন!", "error");
+
+        let maxLimit = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
+        let usedVipLimit = currentUserData.usedVipLimit || 0;
+        let totalCutAmount = wdSelectedAmount + wdCharge;
+
+        // Balance Checks based on selected type
+        if(wdSelectedType === 'refer') {
+            if(totalCutAmount > (currentUserData.referBalance || 0)) { 
+                speakLocalized(`দুঃখিত, আপনার রেফার ব্যালেন্সে পর্যাপ্ত টাকা নেই।`); 
+                return window.showNotify(`পর্যাপ্ত রেফার ব্যালেন্স নেই! (উইথড্র+চার্জ: ৳${totalCutAmount})`, 'error'); 
             }
-            speakLocalized(`আপনার ভিআইপি লিমিট অনুযায়ী আপনি সর্বোচ্চ আর ${remaining} টাকা তুলতে পারবেন।`);
-            return window.showNotify(`আপনি সর্বোচ্চ আর ৳${remaining} তুলতে পারবেন।`, "error");
+            if((usedVipLimit + wdSelectedAmount) > maxLimit) {
+                let remaining = maxLimit - usedVipLimit;
+                if(remaining <= 0) {
+                    await setDoc(doc(db, "users", currentUserData.uid), { currentVIP: "Free", usedVipLimit: 0 }, { merge: true });
+                    speakLocalized("আপনার ভিআইপি লিমিট শেষ হয়ে গেছে। নতুন করে প্যাকেজ কিনুন।");
+                    return window.showNotify(`আপনার VIP লিমিট শেষ। নতুন করে VIP আপগ্রেড করুন।`, "error");
+                }
+                speakLocalized(`আপনার রেফার ইনকাম তোলার লিমিট অনুযায়ী আপনি সর্বোচ্চ আর ${remaining} টাকা তুলতে পারবেন।`);
+                return window.showNotify(`আপনি সর্বোচ্চ আর ৳${remaining} রেফার আয় তুলতে পারবেন।`, "error");
+            }
+        } else {
+            // Self Income
+            if(totalCutAmount > (currentUserData.balance || 0)) { 
+                speakLocalized(`দুঃখিত, আপনার নিজস্ব ব্যালেন্সে পর্যাপ্ত টাকা নেই।`); 
+                return window.showNotify(`পর্যাপ্ত নিজস্ব ব্যালেন্স নেই! (উইথড্র+চার্জ: ৳${totalCutAmount})`, 'error'); 
+            }
         }
 
         const btn = document.getElementById('btn-withdraw'); btn.innerText = "অপেক্ষা করুন..."; btn.disabled = true;
+        
         try {
-            let newTotal = totalWithdrawn + amount;
-            let updates = { balance: currentUserData.balance - amount, totalWithdrawn: newTotal };
-            let limitExhausted = false;
-            if(newTotal >= maxLimit) { updates.currentVIP = "Free"; updates.totalWithdrawn = 0; limitExhausted = true; }
+            let updates = {};
+            let isLimitExhausted = false;
+            
+            if(wdSelectedType === 'refer') {
+                let newUsed = usedVipLimit + wdSelectedAmount;
+                updates.referBalance = (currentUserData.referBalance || 0) - totalCutAmount;
+                
+                if(newUsed >= maxLimit) { 
+                    updates.currentVIP = "Free"; 
+                    updates.usedVipLimit = 0; // Reset for next VIP
+                    isLimitExhausted = true; 
+                } else {
+                    updates.usedVipLimit = newUsed;
+                }
+            } else {
+                updates.balance = (currentUserData.balance || 0) - totalCutAmount;
+            }
+
+            updates.totalWithdrawn = (currentUserData.totalWithdrawn || 0) + wdSelectedAmount;
 
             await setDoc(doc(db, "users", currentUserData.uid), updates, { merge: true });
-            await addDoc(collection(db, "withdrawals"), { uid: currentUserData.uid, method: method, account: number, amount: amount, status: "Pending", timestamp: serverTimestamp() });
             
-            document.getElementById('withdraw-form').reset(); document.getElementById('withdraw-modal').style.display='none';
+            await addDoc(collection(db, "withdrawals"), { 
+                uid: currentUserData.uid, 
+                method: wdSelectedMethod, 
+                type: wdSelectedType, // Record type (self or refer)
+                account: number, 
+                amount: wdSelectedAmount, 
+                charge: wdCharge,
+                status: "Pending", 
+                timestamp: serverTimestamp() 
+            });
             
-            if(limitExhausted) {
+            document.getElementById('withdraw-form').reset(); 
+            document.getElementById('withdraw-modal').style.display='none';
+            
+            wdSelectedMethod = ""; wdSelectedAmount = 0; wdCharge = 0;
+            document.querySelectorAll('.pay-card').forEach(el => el.classList.remove('active-bkash', 'active-nagad'));
+            document.querySelectorAll('.amt-card').forEach(el => el.classList.remove('active'));
+            
+            if(isLimitExhausted) {
                 speakLocalized(`উইথড্র রিকোয়েস্ট সফল হয়েছে! আপনার ভিআইপি লিমিট শেষ হওয়ায় একাউন্টটি ফ্রি হয়ে গেছে। নতুন করে ভিআইপি কিনুন।`);
                 window.showNotify('উইথড্র সফল! VIP লিমিট শেষ।', 'success');
             } else {
@@ -1098,11 +1300,15 @@
     window.claimDailyBonus = async () => {
         if(!currentUserData) return;
         let todayDate = new Date().toLocaleDateString('en-GB'); 
-        if(currentUserData.lastDailyBonus === todayDate) return window.showNotify("আজকের বোনাস আগেই নেওয়া হয়েছে!", "error");
+        if(currentUserData.lastDailyBonus === todayDate) {
+            speakLocalized("দুঃখিত, আপনি আজকের দৈনিক বোনাস ইতিমধ্যে নিয়ে নিয়েছেন। দয়া করে আগামীকাল আবার চেষ্টা করুন।");
+            return window.showNotify("আজকের বোনাস আগেই নেওয়া হয়েছে!", "error");
+        }
         const btn = document.getElementById('btn-daily-bonus'); btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; btn.disabled = true;
         try {
             let bonus = Math.floor(Math.random() * 2) + 1; 
-            await setDoc(doc(db, "users", currentUserData.uid), { balance: currentUserData.balance + bonus, lastDailyBonus: todayDate }, { merge: true });
+            // Daily Bonus gives SELF income (balance)
+            await setDoc(doc(db, "users", currentUserData.uid), { balance: (currentUserData.balance || 0) + bonus, lastDailyBonus: todayDate }, { merge: true });
             triggerConfetti(); window.showNotify(`🎉 ৳${bonus} বোনাস পেয়েছেন!`, "success");
         } catch (error) {}
         btn.innerHTML = '<i class="fa-solid fa-gift mr-1"></i> দৈনিক বোনাস'; btn.disabled = false;
@@ -1148,44 +1354,12 @@
     window.contactSupport = () => { window.open(`https://t.me/Refer_earn08`, '_blank'); };
 
     // ==========================================
-    // 🟢 5. CONTEXTUAL AI CHAT ENGINE (THE MAGIC)
+    // 🟢 5. ADVANCED DYNAMIC FAKE CHAT ENGINE
     // ==========================================
-    const maleNames = ["Sabbir", "Rakib", "Akash", "Fahim", "Hridoy", "Jahid", "Siyam", "Raju", "Imran", "Arif", "Touhid", "Rubel", "Emon", "Babu", "Momin", "Tarek", "Shanto", "Omi", "Parvez", "Maruf", "Nayeem", "Karim"];
-    const femaleNames = ["Riya", "Mim", "Sadia", "Kona", "Tanjila", "Nusrat", "Sumaiya", "Liza", "Sonia", "Mitu", "Toma", "Lamia", "Nadia", "Moumita", "Lima", "Poly", "Maha", "Irin", "Sraboni", "Nisha"];
-    
-    // Variables for standard message generation
-    const chatVariables = {
-        amounts: ["100", "200", "300", "400", "500", "1000", "1500", "2000", "২৫০", "৩০০", "৫০০", "১০০০"],
-        methods: ["bkash", "nagad", "rocket", "বিকাশ", "নগদ"],
-        times: ["just now", "10 min age", "ajke", "matroi", "kal rate", "এইমাত্র", "আজ সকালে"],
-        vips: ["VIP 1", "VIP 2", "ভিআইপি ১", "ভিআইপি ২"],
-        emojis: ["😍", "✅", "🤑", "❤️", "🔥", "💯", "🥰", "", ""] 
-    };
-
-    let lastSender = { name: "System", gender: "none", isReal: false, text: "" };
-
-    const flirtTemplates = [
-        "Hi <span class='mention'>@name</span> kemon aso? 😍",
-        "<span class='mention'>@name</span> apu, apnar bari koi?",
-        "Aha <span class='mention'>@name</span> apu, ekhane onek kosto, amar sathe team a kaj korben?",
-        "<span class='mention'>@name</span> apu, apnar number ta deya jabe?",
-        "Areh <span class='mention'>@name</span> apu je! ki obostha? 🥰",
-        "<span class='mention'>@name</span> apu withdraw dile party den!",
-        "Meyerao eto kaj kore ekhane! Wow <span class='mention'>@name</span> apu 🔥",
-        "Apu <span class='mention'>@name</span> apnar refer code den, ami use korbo 😉",
-        "<span class='mention'>@name</span> apu ki eka eka income korben? Amake sikhay den na!"
-    ];
-
-    const replyTemplates = [
-        "<span class='mention'>@name</span> vai thik bolsen.",
-        "<span class='mention'>@name</span> ha vai amio agree.",
-        "<span class='mention'>@name</span> koto tk tulsen apni?",
-        "Ji <span class='mention'>@name</span>.",
-        "<span class='mention'>@name</span> vai kon package valo hobe?",
-        "Right <span class='mention'>@name</span>."
-    ];
-
     function generateDynamicMessage() {
+        let hr = new Date().getHours();
+        let timeContext = (hr < 12) ? "sokal sokal" : (hr < 18 ? "dupore" : "rate");
+        
         const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
         const templates = [
             `Bhai ami ${rand(chatVariables.amounts)} taka withdraw dilam ${rand(chatVariables.times)} ${rand(chatVariables.emojis)}`,
@@ -1207,6 +1381,8 @@
             `Admin bhai amar withdraw ta ektu dekhen.`,
             `Student der jonno best earning app. ${rand(chatVariables.emojis)}`,
             `এই অ্যাপটা আসলেই সেরা, কোনো সন্দেহ নাই। 💯`,
+            `${timeContext} ke ke kaj korchen?`,
+            `Ajke amar network ektu problem korche.`,
             `Hmm`, `Ji`, `Yes`, `Thik`, `Nice`, `Good`, `Best app ${rand(chatVariables.emojis)}`,
             `ke ke on achen?`, `hlo`, `hi`, `salam`, `kaj shuru korlam`, `done`, 
             `wait koren peye jaben`, `thank you`, `100% real`
@@ -1227,14 +1403,12 @@
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // THE BRAIN OF THE BOT
     function triggerBotMessage(forcedReplyTo = null) {
         let botGender = Math.random() > 0.3 ? 'male' : 'female'; 
         let botName = botGender === 'male' ? maleNames[Math.floor(Math.random() * maleNames.length)] : femaleNames[Math.floor(Math.random() * femaleNames.length)];
         let msgText = "";
 
         if (forcedReplyTo) {
-            // Reply to Real User
             let responsesToReal = [
                 `<span class='mention'>@${forcedReplyTo.name}</span> vai, valo vabe kaj koren payment paben.`,
                 `<span class='mention'>@${forcedReplyTo.name}</span> ha ekdom thik.`,
@@ -1247,17 +1421,14 @@
             botName = maleNames[Math.floor(Math.random() * maleNames.length)];
         } 
         else if (lastSender.gender === 'female' && botGender === 'male' && Math.random() > 0.4) {
-            // FLIRT WITH FEMALE BOTS
             let temp = flirtTemplates[Math.floor(Math.random() * flirtTemplates.length)];
             msgText = temp.replace('@name', lastSender.name);
         }
         else if (lastSender.name !== "System" && !lastSender.isReal && Math.random() > 0.6) {
-            // BOT REPLYING TO BOT
             let temp = replyTemplates[Math.floor(Math.random() * replyTemplates.length)];
             msgText = temp.replace('@name', lastSender.name);
         }
         else {
-            // STANDARD DYNAMIC MESSAGE
             msgText = generateDynamicMessage();
         }
 
@@ -1268,7 +1439,6 @@
     function startFakeChatEngine() {
         if(chatInterval) return;
         
-        // Initial 3 messages
         for(let i=0; i<3; i++) { triggerBotMessage(); }
 
         chatInterval = setInterval(() => {
@@ -1284,12 +1454,10 @@
         input.value = "";
         appendChatMessage("You", text, true); 
         
-        // Update State as Real User
         lastSender = { name: currentUserData.name, gender: "real", isReal: true, text: text };
 
-        // Bot will reply to the real user after 3-5 seconds
         setTimeout(() => {
-            if(Math.random() > 0.3) { // 70% chance a bot replies
+            if(Math.random() > 0.3) { 
                 triggerBotMessage(lastSender);
             }
         }, Math.floor(Math.random() * 3000) + 2000);
@@ -1305,7 +1473,6 @@
         } catch(err) { console.log(err); }
     };
 
-    // AI ASSISTANT LOGIC (MEOW BOT)
     const catBot = document.getElementById('ai-cat-bot');
     let isDraggingCat = false;
     let dragOffsetX = 0, dragOffsetY = 0;
@@ -1390,15 +1557,15 @@
         let reply = ""; let action = null;
 
         if(t.match(/(ব্যালেন্স|balance|টাকা আছে|কত টাকা)/)) {
-            let bal = currentUserData ? currentUserData.balance : 0;
-            reply = `আপনার বর্তমান ব্যালেন্স ${bal} টাকা।`;
+            let totalBal = (currentUserData ? currentUserData.balance : 0) + (currentUserData ? currentUserData.referBalance : 0);
+            reply = `আপনার বর্তমান সর্বমোট ব্যালেন্স ${totalBal} টাকা।`;
         }
         else if(t.match(/(লিমিট|limit|কত টাকা তুলতে পারব|বাকি আছে|লিমিট কত)/)) {
             if(!currentUserData || currentUserData.currentVIP === "Free") { reply = "আপনার একাউন্টটি ফ্রি। টাকা তোলার জন্য ভিআইপি প্যাকেজ কিনে নিন।"; } 
             else {
                 let max = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
-                let used = currentUserData.totalWithdrawn || 0; let rem = max - used;
-                reply = `আপনার ${currentUserData.currentVIP} প্যাকেজে আর ${rem} টাকা তোলার লিমিট বাকি আছে।`;
+                let used = currentUserData.usedVipLimit || 0; let rem = max - used;
+                reply = `আপনার ${currentUserData.currentVIP} প্যাকেজে আর ${rem} টাকা রেফার ইনকাম তোলার লিমিট বাকি আছে। নিজস্ব আয় তুলতে কোনো লিমিট নেই।`;
             }
         }
         else if(t.match(/(উইথড্র|withdraw|টাকা তুলবো|পেমেন্ট নিবো|ক্যাশ আউট|টাকা তুলব)/)) { reply = "উইথড্র পেজ খুলছি। মনে রাখবেন, টাকা তুলতে ভিআইপি লাগবে।"; action = () => window.openWithdrawModal(); }
