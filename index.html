@@ -36,8 +36,8 @@
         .pulse-logo { animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(59, 130, 246, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 9999; }
-        .modal-content { background: #121822; width: 90%; max-width: 400px; padding: 24px; border-radius: 24px; border: 1px solid #1f2937; animation: fadeIn 0.3s ease-out; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px;}
+        .modal-content { background: #121822; width: 100%; max-width: 400px; padding: 24px; border-radius: 24px; border: 1px solid #1f2937; animation: fadeIn 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
 
         .box-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 300px; margin: 0 auto; }
         .mystery-box { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-radius: 16px; height: 85px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; cursor: pointer; transition: all 0.2s ease; border: 2px solid #3b82f6; box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); }
@@ -135,69 +135,23 @@
         <div class="mea-tail"></div>
     </div>
 
-    <div class="mea-container companion-bot" id="ai-cat-bot-2">
-        <div class="mea-head">
-            <div class="mea-ear left"></div>
-            <div class="mea-ear right"></div>
-            <div class="mea-visor">
-                <div class="mea-eyes-wrap">
-                    <div class="mea-eye"></div>
-                    <div class="mea-mouth"></div>
-                    <div class="mea-eye"></div>
-                </div>
-            </div>
-        </div>
-        <div class="mea-body"><div class="mea-collar"></div><div class="mea-arm left"></div><div class="mea-arm right"></div></div>
-        <div class="mea-tail"></div>
-    </div>
-
     <!-- 🚀 PREMIUM CAPCUT STYLE UPDATE OVERLAY 🚀 -->
     <div id="update-screen" class="modal-overlay flex-col items-center justify-center text-left p-4 z-[9999999] bg-black/80 backdrop-blur-sm">
         <div class="bg-[#1a1d24] w-full max-w-[340px] rounded-[24px] p-5 shadow-2xl border border-white/5 relative overflow-hidden">
-            <!-- Header -->
             <div class="flex justify-between items-center mb-5">
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center text-blue-600 text-2xl shadow-sm">
-                        <i class="fa-solid fa-wallet"></i>
-                    </div>
+                    <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center text-blue-600 text-2xl shadow-sm"><i class="fa-solid fa-wallet"></i></div>
                     <h2 class="text-white text-[19px] font-bold tracking-wide">EarnPro</h2>
                 </div>
-                <!-- Banner / Badge -->
-                <div class="bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded flex items-center gap-1">
-                    <i class="fa-solid fa-bolt text-blue-400 text-[10px]"></i>
-                    <span class="text-blue-400 text-[10px] font-bold">NEW VERSION</span>
-                </div>
+                <div class="bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded flex items-center gap-1"><i class="fa-solid fa-bolt text-blue-400 text-[10px]"></i><span class="text-blue-400 text-[10px] font-bold">NEW VERSION</span></div>
             </div>
-
-            <!-- Features Box -->
             <div class="bg-[#232732] rounded-2xl p-4 mb-5 shadow-inner border border-white/5">
                 <ul class="space-y-3">
-                    <li class="flex gap-3 items-start">
-                        <span class="w-[18px] h-[18px] rounded-full bg-[#40827f] flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5 shadow">1</span>
-                        <span class="text-gray-300 text-sm">নতুন আপডেট ভার্সন রিলিজ হয়েছে!</span>
-                    </li>
-                    <li class="flex gap-3 items-start">
-                        <span class="w-[18px] h-[18px] rounded-full bg-[#40827f] flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5 shadow">2</span>
-                        <span class="text-gray-300 text-sm">নতুন ডিজাইন এবং পেমেন্ট সিস্টেম।</span>
-                    </li>
-                    <li class="flex gap-3 items-start">
-                        <span class="w-[18px] h-[18px] rounded-full bg-[#40827f] flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5 shadow">3</span>
-                        <span class="text-gray-300 text-sm">কাজ করতে এখনই অ্যাপটি আপডেট করুন।</span>
-                    </li>
+                    <li class="flex gap-3 items-start"><span class="w-[18px] h-[18px] rounded-full bg-[#40827f] flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5 shadow">1</span><span class="text-gray-300 text-sm">নতুন আপডেট ভার্সন রিলিজ হয়েছে!</span></li>
+                    <li class="flex gap-3 items-start"><span class="w-[18px] h-[18px] rounded-full bg-[#40827f] flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5 shadow">2</span><span class="text-gray-300 text-sm">নতুন ডিজাইন এবং পেমেন্ট সিস্টেম।</span></li>
+                    <li class="flex gap-3 items-start"><span class="w-[18px] h-[18px] rounded-full bg-[#40827f] flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5 shadow">3</span><span class="text-gray-300 text-sm">কাজ করতে এখনই অ্যাপটি আপডেট করুন।</span></li>
                 </ul>
             </div>
-
-            <!-- Bottom Actions -->
-            <div class="flex justify-between items-center mb-4 px-1">
-                <button class="bg-[#2d323e] hover:bg-[#363c4a] text-gray-300 text-xs px-4 py-1.5 rounded-full font-bold transition">More</button>
-                <div class="flex gap-2.5 text-xl">
-                    <i class="fa-brands fa-telegram text-blue-400 cursor-pointer"></i>
-                    <i class="fa-brands fa-facebook text-blue-600 cursor-pointer"></i>
-                    <i class="fa-brands fa-youtube text-red-500 cursor-pointer"></i>
-                </div>
-            </div>
-
-            <!-- Download Button -->
             <button id="btn-download-update" class="w-full bg-gradient-to-b from-[#3b4252] to-[#242832] text-white font-bold py-3.5 rounded-xl border border-white/10 shadow-[0_4px_15px_rgba(0,0,0,0.3)] active:scale-95 transition tracking-widest text-sm hover:from-[#434b5d] hover:to-[#2c313c]">
                 DOWNLOAD
             </button>
@@ -336,11 +290,7 @@
                     <h2 class="text-xl font-bold"><i class="fa-solid fa-comments text-blue-500 mr-2"></i> ইউজার চ্যাট</h2>
                     <span class="text-[10px] bg-green-500/10 border border-green-500/30 text-green-400 px-2 py-1 rounded-full font-bold"><i class="fa-solid fa-circle text-[8px] animate-pulse mr-1"></i>Online</span>
                 </div>
-                
-                <div id="chat-messages">
-                    <!-- Fake & Real Messages will be injected here -->
-                </div>
-
+                <div id="chat-messages"></div>
                 <div id="chat-input-area">
                     <input type="text" id="chat-input-field" placeholder="মেসেজ লিখুন..." onkeypress="if(event.key === 'Enter') window.sendChatMessage()">
                     <button onclick="window.sendChatMessage()" class="chat-btn"><i class="fa-solid fa-paper-plane"></i></button>
@@ -351,9 +301,7 @@
             <div id="box" class="tab-content p-6 text-center hidden">
                 <h2 class="text-2xl font-bold mb-2 pt-2">মিস্ট্রি বক্স 🎁</h2>
                 <p class="text-sm text-gray-400 mb-6">আজকের বাকি বক্স: <b id="box-left-text" class="text-yellow-400">২</b> টি (প্রতিদিন ২টি খুলতে পারবেন)</p>
-                
                 <div class="box-grid" id="box-grid-container"></div>
-
                 <div class="glass p-4 mt-8 rounded-2xl border-l-4 border-yellow-500 text-left">
                     <h4 class="font-bold text-yellow-500 mb-1"><i class="fa-solid fa-medal"></i> মেগা প্রাইস!</h4>
                     <p class="text-xs text-gray-300">বক্সগুলোর ভেতরে ৳১০ বা ৳৫ টাকার হাইড প্রাইস লুকিয়ে আছে! আপনার ভাগ্য পরীক্ষা করুন।</p>
@@ -369,7 +317,7 @@
                         <i class="fa-solid fa-share-nodes"></i>
                     </div>
                     <h3 class="text-lg font-bold mb-1">আপনার বন্ধুদের ইনভাইট করুন</h3>
-                    <p class="text-sm text-gray-400 mb-4">প্রতি ভ্যালিড রেফারে নিশ্চিত বোনাস!</p>
+                    <p class="text-sm text-gray-400 mb-4">রেফার করে বিশাল কমিশন বুঝে নিন!</p>
                     
                     <div class="bg-[#05070a] p-3 rounded-xl flex justify-between items-center border border-gray-700">
                         <span class="text-blue-400 font-mono tracking-widest text-xl pl-2 font-bold" id="my-refer-code">...</span>
@@ -377,6 +325,29 @@
                             <i class="fa-regular fa-copy"></i> কপি
                         </button>
                     </div>
+                </div>
+
+                <!-- 🟢 REFER RULES SECTION (NEW CLARITY) 🟢 -->
+                <div class="glass p-5 rounded-2xl border-l-4 border-green-500 mb-6 bg-green-500/5">
+                    <h4 class="font-bold text-green-400 mb-3 text-lg"><i class="fa-solid fa-money-bill-wave"></i> রেফার করে কে কত পাবে?</h4>
+                    <ul class="text-[13px] text-gray-300 space-y-3 leading-relaxed">
+                        <li class="flex gap-2 items-start">
+                            <i class="fa-solid fa-check text-green-400 mt-1"></i>
+                            <span><b>VIP 1 কমিশন:</b> আপনি <b>VIP 1</b> হলে, আপনার বন্ধু যেই প্যাকেজই কিনুক, আপনি পাবেন <b>৫০৳</b>।</span>
+                        </li>
+                        <li class="flex gap-2 items-start">
+                            <i class="fa-solid fa-check text-green-400 mt-1"></i>
+                            <span><b>VIP 2 কমিশন:</b> আপনি <b>VIP 2</b> হলে এবং বন্ধু VIP 1 কিনলে পাবেন <b>৫০৳</b>। কিন্তু বন্ধুও <b>VIP 2</b> কিনলে পাবেন পুরো <b>১০০৳</b>!</span>
+                        </li>
+                        <li class="flex gap-2 items-start">
+                            <i class="fa-solid fa-bolt text-yellow-400 mt-1"></i>
+                            <span><b>জেনারেশন (২য় লেভেল):</b> আপনার বন্ধুর রেফার করা মেম্বার VIP 1 কিনলে আপনি বসে বসে <b>৭.৫৳</b> এবং VIP 2 কিনলে <b>১৩৳</b> পাবেন।</span>
+                        </li>
+                        <li class="flex gap-2 items-start">
+                            <i class="fa-solid fa-triangle-exclamation text-red-400 mt-1"></i>
+                            <span><b>শর্ত:</b> এই রেফার কমিশনগুলো পেতে হলে আপনাকে অবশ্যই যেকোনো একটি VIP প্যাকেজ কিনে এক্টিভ থাকতে হবে।</span>
+                        </li>
+                    </ul>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-6">
@@ -390,11 +361,6 @@
                         <p class="text-[10px] text-gray-400 tracking-wide">সর্বমোট রেফার ইনকাম</p>
                         <h3 class="font-bold text-2xl text-white mt-1">৳ <span id="total-refer-income">0.00</span></h3>
                     </div>
-                </div>
-
-                <div class="glass p-4 rounded-2xl border-l-4 border-yellow-500">
-                    <h4 class="font-bold text-yellow-500 mb-1"><i class="fa-solid fa-shield-halved"></i> অ্যান্টি-চিট সিস্টেম চালু!</h4>
-                    <p class="text-xs text-gray-300 leading-relaxed">একই ফোনে একাধিক একাউন্ট বা ভিপিএন দিয়ে রেফার করলে একাউন্ট ব্যান করা হবে।</p>
                 </div>
             </div>
 
@@ -423,6 +389,13 @@
                         <div class="flex items-center gap-3"><i class="fa-solid fa-crown text-yellow-400 text-lg w-5 text-center"></i><span class="font-bold text-yellow-400">VIP প্যাকেজ (ডিপোজিট)</span></div>
                         <i class="fa-solid fa-chevron-right text-yellow-600 text-sm"></i>
                     </button>
+                    
+                    <!-- 🟢 RULES BUTTON IN PROFILE 🟢 -->
+                    <button onclick="document.getElementById('rules-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-green-500 bg-green-500/5">
+                        <div class="flex items-center gap-3"><i class="fa-solid fa-book-open text-green-400 text-lg w-5 text-center"></i><span class="font-bold text-green-400">কাজের নিয়মকানুন (Rules)</span></div>
+                        <i class="fa-solid fa-chevron-right text-green-600 text-sm"></i>
+                    </button>
+
                     <button onclick="document.getElementById('ai-guide-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-[#00d2ff]">
                         <div class="flex items-center gap-3"><i class="fa-solid fa-robot text-[#00d2ff] text-lg w-5 text-center"></i><span class="font-bold text-[#00d2ff]">এআই গাইড (AI Assistant)</span></div>
                         <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
@@ -431,16 +404,12 @@
                         <div class="flex items-center gap-3"><i class="fa-solid fa-clock-rotate-left text-blue-400 text-lg w-5 text-center"></i><span>উত্তোলনের হিস্ট্রি</span></div>
                         <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
                     </button>
-                    <button onclick="document.getElementById('password-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-key text-purple-400 text-lg w-5 text-center"></i><span>পাসওয়ার্ড পরিবর্তন</span></div>
-                        <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
-                    </button>
                     <button onclick="window.contactSupport()" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
                         <div class="flex items-center gap-3"><i class="fa-brands fa-telegram text-[#0088cc] text-xl w-5 text-center"></i><span class="text-blue-400 font-bold">সাপোর্ট / এডমিন</span></div>
                         <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
                     </button>
                     <button onclick="document.getElementById('privacy-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-shield text-green-400 text-lg w-5 text-center"></i><span>প্রাইভেসি পলিসি</span></div>
+                        <div class="flex items-center gap-3"><i class="fa-solid fa-shield text-gray-400 text-lg w-5 text-center"></i><span>প্রাইভেসি পলিসি</span></div>
                         <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
                     </button>
                 </div>
@@ -469,6 +438,41 @@
 </div>
 
 <!-- MODALS -->
+
+<!-- 🟢 NEW RULES MODAL (CLEAR AND SIMPLE) 🟢 -->
+<div id="rules-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+            <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-book-open text-green-400 mr-2"></i> কাজের নিয়মকানুন</h3>
+            <button onclick="document.getElementById('rules-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+        <div class="text-[13px] text-gray-300 pr-2 my-2 space-y-4">
+            <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
+                <h4 class="font-bold text-blue-400 mb-1">১. রেফার কমিশন (Direct):</h4>
+                <p><b>১০০ টাকা রেফার কমিশন পেতে হলে আপনাকে এবং আপনার বন্ধু দুজনকেই VIP 2 (২০০৳) হতে হবে।</b> বিস্তারিত:
+                <br>- আপনি <b>VIP 1</b> হলে: আপনার বন্ধু VIP 1 বা VIP 2 যাই কিনুক, আপনি পাবেন <b>৫০৳</b>।
+                <br>- আপনি <b>VIP 2</b> হলে: আপনার বন্ধু VIP 1 কিনলে পাবেন <b>৫০৳</b>। কিন্তু বন্ধুও <b>VIP 2</b> কিনলে পাবেন পুরো <b>১০০৳</b>!</p>
+            </div>
+            
+            <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
+                <h4 class="font-bold text-yellow-400 mb-1">২. জেনারেশন বোনাস (Level 2):</h4>
+                <p>আপনার রেফার করা বন্ধু যখন অন্য কাউকে রেফার করে VIP 1 সেল করবে, তখন আপনি ঘরে বসে পাবেন <b>৳৭.৫</b> এবং VIP 2 সেল করলে পাবেন <b>৳১৩</b>।</p>
+            </div>
+            
+            <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
+                <h4 class="font-bold text-green-400 mb-1">৩. সাইনআপ বোনাস:</h4>
+                <p>যে ব্যক্তি আপনার রেফার কোড দিয়ে একাউন্ট খুলে VIP কিনবে, সে সাথে সাথে <b>৳৫</b> বোনাস পাবে।</p>
+            </div>
+            
+            <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
+                <h4 class="font-bold text-pink-400 mb-1">৪. ইনকাম লিমিট:</h4>
+                <p><b>VIP 1</b> (৳১০০) দিয়ে সর্বোচ্চ <b>৳১০০০</b> এবং <b>VIP 2</b> (৳২০০) দিয়ে সর্বোচ্চ <b>৳২০০০</b> রেফার ইনকাম করা যাবে। লিমিট শেষ হলে আবার প্যাকেজ কিনতে হবে।</p>
+            </div>
+        </div>
+        <button onclick="document.getElementById('rules-modal').style.display='none'" class="w-full bg-green-600 py-3 rounded-xl font-bold text-white shadow-lg active:scale-95 mt-4">বুঝতে পেরেছি</button>
+    </div>
+</div>
+
 <div id="ai-guide-modal" class="modal-overlay">
     <div class="modal-content text-center">
         <div class="flex justify-between items-center mb-2 border-b border-gray-700 pb-2">
@@ -681,6 +685,9 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
+    // 🚀 APP VERSION CONTROL 🚀
+    const CURRENT_APP_VERSION = 2;
+
     const engToBng = (num) => num ? num.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]) : "০";
 
     let isSignupMode = false;
@@ -804,7 +811,6 @@
     startFakeLiveUsers();
     setTimeout(showFakeNotification, 5000); 
 
-    // 🚀 Check if running in App (WebView/APK) or Browser 🚀
     function isRunningInApp() {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const isAndroidWebView = /wv/.test(userAgent) || /Android.*AppleWebKit.*Version\/[\d.]+.*Chrome\/[\d.]+.*Mobile/i.test(userAgent);
@@ -812,14 +818,13 @@
         return isAndroidWebView || isStandalone;
     }
 
-    // 🚀 SYSTEM SETTINGS (WITH SMART APP DETECTION) 🚀
     function checkSystemSettings() {
         onSnapshot(doc(db, "app_settings", "main"), (docSnap) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 
-                // 🟢 Update Overlay Logic (ONLY FOR APP USERS)
-                if(data.appUpdate === true && isRunningInApp()) {
+                let reqVersion = data.requiredVersion || 1;
+                if(CURRENT_APP_VERSION < reqVersion && isRunningInApp()) {
                     document.getElementById('update-screen').style.display = 'flex';
                     let link = data.updateLink || "https://t.me/Refer_earn08";
                     document.getElementById('btn-download-update').onclick = () => window.open(link, '_blank');
@@ -827,14 +832,12 @@
                     document.getElementById('update-screen').style.display = 'none';
                 }
 
-                // 🟠 Maintenance Overlay Logic (For Everyone)
                 if(data.maintenance === true) {
                     document.getElementById('maintenance-screen').style.display = 'flex';
                 } else {
                     document.getElementById('maintenance-screen').style.display = 'none';
                 }
 
-                // 🔵 Notice Board Logic
                 if(data.notice) {
                     document.getElementById('app-notice').innerText = data.notice;
                 }
@@ -1178,7 +1181,6 @@
     window.openWithdrawModal = () => { 
         document.getElementById('withdraw-modal').style.display = 'flex'; 
 
-        // ব্যালেন্স আপডেট করে দেখানো
         document.getElementById('wd-self-bal').innerText = `৳${(currentUserData.balance || 0).toFixed(2)}`;
         document.getElementById('wd-refer-bal').innerText = `৳${(currentUserData.referBalance || 0).toFixed(2)}`;
 
@@ -1656,12 +1658,12 @@
         else if(t.match(/(রেফার|refer|ইনভাইট)/)) { reply = "রেফার পেজে যাচ্ছি। বন্ধুদের ইনভাইট করে বোনাস পান।"; action = () => window.switchTab('refer'); }
         else if(t.match(/(প্রোফাইল|profile|একাউন্ট)/)) { reply = "প্রোফাইল পেজ খুলছি।"; action = () => window.switchTab('profile'); }
         else if(t.match(/(এডমিন|সাপোর্ট|admin|support|টেলিগ্রাম|telegram)/)) { reply = "অ্যাডমিনের টেলিগ্রাম গ্রুপ খুলছি।"; action = () => window.contactSupport(); }
-        else if(t.match(/(রুলস|নিয়ম|rules|policy|পলিসি)/)) { reply = "প্রাইভেসি পলিসি দেখাচ্ছি।"; action = () => { document.getElementById('privacy-modal').style.display='flex'; }; }
+        else if(t.match(/(রুলস|নিয়ম|rules|policy|পলিসি)/)) { reply = "প্রাইভেসি পলিসি দেখাচ্ছি।"; action = () => { document.getElementById('rules-modal').style.display='flex'; }; }
         else if(t.match(/(নাচো|ড্যান্স|dance|নাচতে)/)) { reply = "চলুন একটু নেচে নিই!"; action = () => executeDanceRoutine(); }
         else if(t.match(/(কেমন আছো|how are you|কি খবর)/)) { reply = "আমি দারুণ আছি বস! আপনি কেমন আছেন? চলুন কিছু ইনকাম করা যাক।"; }
         else if(t.match(/(হ্যালো|হাই|hello|hi|hey)/)) { reply = "হ্যালো! আমি আর্নপ্রো এর এআই অ্যাসিস্ট্যান্ট। কীভাবে সাহায্য করতে পারি?"; }
         else if(t.match(/(তুমি কে|তোমার নাম কি|who are you)/)) { reply = "আমি আর্নপ্রো অ্যাসিস্ট্যান্ট! এই অ্যাপের সব নিয়মকানুন আমার জানা। আমাকে যেকোনো কিছু জিজ্ঞেস করতে পারেন।"; }
-        else { reply = "দুঃখিত, আমি বুঝতে পারিনি। 'উইথড্র', 'ভিআইপি', বা 'চ্যাট' এর মতো কিছু বলে চেষ্টা করুন।"; }
+        else { reply = "দুঃখিত, আমি বুঝতে পারিনি। 'উইথড্র', 'ভিআইপি', বা 'রুলস' এর মতো কিছু বলে চেষ্টা করুন।"; }
 
         return { reply, action };
     }
