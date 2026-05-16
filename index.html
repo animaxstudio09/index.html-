@@ -157,7 +157,7 @@
             <i class="fa-solid fa-user-slash text-5xl text-red-500"></i>
         </div>
         <h2 class="text-3xl font-bold text-white mb-2">একাউন্ট ব্যান!</h2>
-        <p class="text-gray-400 mb-6 leading-relaxed">আপনি আমাদের নিয়ম ভঙ্গ করেছেন অথবা অবৈধ উপায়ে কাজ করার চেষ্টা করেছেন, তাই আপনার একাউন্টটি ব্যান করা হয়েছে।</p>
+        <p class="text-gray-400 mb-6 leading-relaxed">আপনি আমাদের নিয়ম ভঙ্গ করেছেন অথবা অবৈধ উপায়ে কাজ করার চেষ্টা করেছেন, তাই আপনার একাউন্টটি ব্যান করা হয়েছে。</p>
         <button onclick="window.contactSupport()" class="bg-blue-600 px-6 py-3 rounded-xl font-bold text-white shadow-lg active:scale-95 mb-3 w-full"><i class="fa-brands fa-telegram mr-2"></i> এডমিনের সাথে কথা বলুন</button>
         <button onclick="window.logout()" class="bg-gray-800 px-6 py-3 rounded-xl font-bold text-gray-300 shadow-lg active:scale-95 w-full">লগআউট করুন</button>
     </div>
@@ -470,8 +470,16 @@
         
         <label class="text-sm text-gray-300 mb-2 block font-bold">ব্যালেন্স টাইপ সিলেক্ট করুন</label>
         <div class="grid grid-cols-2 gap-3 mb-4">
-            <div id="type-self" class="type-card active-type" onclick="window.selectType('self')">নিজস্ব আয়<br><span class="text-[10px] text-blue-400 font-normal">কোনো লিমিট নেই</span></div>
-            <div id="type-refer" class="type-card" onclick="window.selectType('refer')">রেফার আয়<br><span class="text-[10px] text-green-400 font-normal">VIP লিমিট প্রযোজ্য</span></div>
+            <div id="type-self" class="type-card active-type flex flex-col justify-center" onclick="window.selectType('self')">
+                <span>নিজস্ব আয় (টাস্ক)</span>
+                <b id="wd-self-bal" class="text-lg text-white my-1">৳0.00</b>
+                <span class="text-[10px] text-blue-400 font-normal">কোনো লিমিট নেই</span>
+            </div>
+            <div id="type-refer" class="type-card flex flex-col justify-center" onclick="window.selectType('refer')">
+                <span>রেফার আয়</span>
+                <b id="wd-refer-bal" class="text-lg text-white my-1">৳0.00</b>
+                <span class="text-[10px] text-green-400 font-normal">VIP লিমিট প্রযোজ্য</span>
+            </div>
         </div>
 
         <div id="wd-limit-info" class="bg-blue-500/10 border border-blue-500/30 p-3 rounded-xl mb-4 text-xs text-gray-300 hidden">
@@ -633,43 +641,12 @@
     let wdSelectedMethod = "";
     let wdSelectedAmount = 0;
     let wdCharge = 0;
-    let wdSelectedType = 'self'; // New Logic added
+    let wdSelectedType = 'self';
     
-    // Dynamic Bot Settings
+    // Dynamic Bot Names
     let maleNames = ["Sabbir", "Rakib", "Akash", "Fahim", "Hridoy", "Jahid", "Siyam", "Raju", "Imran", "Arif", "Touhid", "Rubel", "Emon", "Babu", "Momin", "Tarek", "Shanto", "Omi", "Parvez", "Maruf", "Nayeem", "Karim"];
     let femaleNames = ["Riya", "Mim", "Sadia", "Kona", "Tanjila", "Nusrat", "Sumaiya", "Liza", "Sonia", "Mitu", "Toma", "Lamia", "Nadia", "Moumita", "Lima", "Poly", "Maha", "Irin", "Sraboni", "Nisha"];
     
-    let chatVariables = {
-        amounts: ["100", "200", "300", "400", "500", "1000", "1500", "2000", "২৫০", "৩০০", "৫০০", "১০০০"],
-        methods: ["bkash", "nagad", "rocket", "বিকাশ", "নগদ"],
-        times: ["just now", "10 min age", "ajke", "matroi", "kal rate", "এইমাত্র", "আজ সকালে"],
-        vips: ["VIP 1", "VIP 2", "ভিআইপি ১", "ভিআইপি ২"],
-        emojis: ["😍", "✅", "🤑", "❤️", "🔥", "💯", "🥰", "", ""] 
-    };
-
-    let flirtTemplates = [
-        "Hi <span class='mention'>@name</span> kemon aso? 😍",
-        "<span class='mention'>@name</span> apu, apnar bari koi?",
-        "Aha <span class='mention'>@name</span> apu, ekhane onek kosto, amar sathe team a kaj korben?",
-        "<span class='mention'>@name</span> apu, apnar number ta deya jabe?",
-        "Areh <span class='mention'>@name</span> apu je! ki obostha? 🥰",
-        "<span class='mention'>@name</span> apu withdraw dile party den!",
-        "Meyerao eto kaj kore ekhane! Wow <span class='mention'>@name</span> apu 🔥",
-        "Apu <span class='mention'>@name</span> apnar refer code den, ami use korbo 😉",
-        "<span class='mention'>@name</span> apu ki eka eka income korben? Amake sikhay den na!"
-    ];
-
-    let replyTemplates = [
-        "<span class='mention'>@name</span> vai thik bolsen.",
-        "<span class='mention'>@name</span> ha vai amio agree.",
-        "<span class='mention'>@name</span> koto tk tulsen apni?",
-        "Ji <span class='mention'>@name</span>.",
-        "<span class='mention'>@name</span> vai kon package valo hobe?",
-        "Right <span class='mention'>@name</span>."
-    ];
-
-    let lastSender = { name: "System", gender: "none", isReal: false, text: "" };
-
     function startFakeLiveUsers() {
         let currentFakeUsers = Math.floor(Math.random() * (500 - 50) + 50);
         const countEl = document.getElementById('fake-live-count');
@@ -783,18 +760,6 @@
                 if(data.maintenance === true) document.getElementById('maintenance-screen').style.display = 'flex';
                 if(data.notice) document.getElementById('app-notice').innerText = data.notice;
             }
-            
-            // Dynamic Bot Config Fetch
-            onSnapshot(doc(db, "app_settings", "bots"), (botSnap) => {
-                if(botSnap.exists()) {
-                    let bData = botSnap.data();
-                    if(bData.maleNames) maleNames = bData.maleNames;
-                    if(bData.femaleNames) femaleNames = bData.femaleNames;
-                    if(bData.chatVariables) chatVariables = bData.chatVariables;
-                    if(bData.flirtTemplates) flirtTemplates = bData.flirtTemplates;
-                    if(bData.replyTemplates) replyTemplates = bData.replyTemplates;
-                }
-            });
         } catch(e) { console.log(e); }
     }
     checkSystemSettings();
@@ -905,7 +870,6 @@
                 }
                 updateUI();
                 
-                // Welcome Message from AI when user data loads for the first time
                 if(!window.hasWelcomed) {
                     window.hasWelcomed = true;
                     setTimeout(() => {
@@ -933,8 +897,6 @@
                     else if(wd.status === 'Rejected') {
                         speakLocalized(`আপনার ${wd.amount} টাকার উইথড্র বাতিল করা হয়েছে এবং আপনার অ্যাকাউন্টে টাকা ফেরত দেওয়া হয়েছে।`);
                         window.showNotify(`৳${wd.amount} উইথড্র বাতিল হয়েছে!`, 'error');
-                        
-                        // Admin panel rejection refund logic is handled directly in Admin Dashboard code.
                     }
                     notifiedWds[id] = true;
                     needsSave = true;
@@ -1138,6 +1100,10 @@
     window.openWithdrawModal = () => { 
         document.getElementById('withdraw-modal').style.display = 'flex'; 
 
+        // ব্যালেন্স আপডেট করে দেখানো
+        document.getElementById('wd-self-bal').innerText = `৳${(currentUserData.balance || 0).toFixed(2)}`;
+        document.getElementById('wd-refer-bal').innerText = `৳${(currentUserData.referBalance || 0).toFixed(2)}`;
+
         if(currentUserData.currentVIP === "Free") {
             document.getElementById('wd-free-warning').style.display = 'block';
             document.getElementById('wd-limit-info').style.display = 'none';
@@ -1158,8 +1124,8 @@
 
         let maxLimit = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
         document.getElementById('wd-vip-name').innerText = currentUserData.currentVIP;
-        document.getElementById('wd-vip-max').innerText = maxLimit;
-        document.getElementById('wd-vip-used').innerText = currentUserData.usedVipLimit || 0;
+        document.getElementById('wd-vip-max').innerText = engToBng(maxLimit);
+        document.getElementById('wd-vip-used').innerText = engToBng(currentUserData.usedVipLimit || 0);
     };
 
     window.submitWithdraw = async (e) => {
@@ -1180,7 +1146,6 @@
         let usedVipLimit = currentUserData.usedVipLimit || 0;
         let totalCutAmount = wdSelectedAmount + wdCharge;
 
-        // Balance Checks based on selected type
         if(wdSelectedType === 'refer') {
             if(totalCutAmount > (currentUserData.referBalance || 0)) { 
                 speakLocalized(`দুঃখিত, আপনার রেফার ব্যালেন্সে পর্যাপ্ত টাকা নেই।`); 
@@ -1197,7 +1162,6 @@
                 return window.showNotify(`আপনি সর্বোচ্চ আর ৳${remaining} রেফার আয় তুলতে পারবেন।`, "error");
             }
         } else {
-            // Self Income
             if(totalCutAmount > (currentUserData.balance || 0)) { 
                 speakLocalized(`দুঃখিত, আপনার নিজস্ব ব্যালেন্সে পর্যাপ্ত টাকা নেই।`); 
                 return window.showNotify(`পর্যাপ্ত নিজস্ব ব্যালেন্স নেই! (উইথড্র+চার্জ: ৳${totalCutAmount})`, 'error'); 
@@ -1216,7 +1180,7 @@
                 
                 if(newUsed >= maxLimit) { 
                     updates.currentVIP = "Free"; 
-                    updates.usedVipLimit = 0; // Reset for next VIP
+                    updates.usedVipLimit = 0; 
                     isLimitExhausted = true; 
                 } else {
                     updates.usedVipLimit = newUsed;
@@ -1232,7 +1196,7 @@
             await addDoc(collection(db, "withdrawals"), { 
                 uid: currentUserData.uid, 
                 method: wdSelectedMethod, 
-                type: wdSelectedType, // Record type (self or refer)
+                type: wdSelectedType, 
                 account: number, 
                 amount: wdSelectedAmount, 
                 charge: wdCharge,
@@ -1307,7 +1271,6 @@
         const btn = document.getElementById('btn-daily-bonus'); btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; btn.disabled = true;
         try {
             let bonus = Math.floor(Math.random() * 2) + 1; 
-            // Daily Bonus gives SELF income (balance)
             await setDoc(doc(db, "users", currentUserData.uid), { balance: (currentUserData.balance || 0) + bonus, lastDailyBonus: todayDate }, { merge: true });
             triggerConfetti(); window.showNotify(`🎉 ৳${bonus} বোনাস পেয়েছেন!`, "success");
         } catch (error) {}
@@ -1354,40 +1317,85 @@
     window.contactSupport = () => { window.open(`https://t.me/Refer_earn08`, '_blank'); };
 
     // ==========================================
-    // 🟢 5. ADVANCED DYNAMIC FAKE CHAT ENGINE
+    // 🟢 5. ADVANCED SMART DYNAMIC FAKE CHAT ENGINE
     // ==========================================
-    function generateDynamicMessage() {
-        let hr = new Date().getHours();
-        let timeContext = (hr < 12) ? "sokal sokal" : (hr < 18 ? "dupore" : "rate");
+    
+    let botTopic = "payment"; 
+    let usedBotMessages = []; 
+
+    setInterval(() => {
+        const topics = ["payment", "vip", "casual", "trust"];
+        botTopic = topics[Math.floor(Math.random() * topics.length)];
+    }, 300000); 
+
+    const smartBotBrain = {
+        payment: [
+            "Bhai ami 500 taka withdraw dilam eimatro 😍",
+            "Alhamdulillah, bkash e payment pelam.",
+            "Admin vai onnek fast. 200 tk withdraw disilam, asche ✅",
+            "Wow! Nagad a 1000 tk dhuke geche.",
+            "Ke ke ajke withdraw diyechen?",
+            "Amar to withdraw dite kono problem hochche na."
+        ],
+        vip: [
+            "Ami VIP 2 nilam ajke. Onek valo income hocche.",
+            "VIP kinle ki beshi income hoy?",
+            "Ami VIP 1 kine ajke 500 tk tulam 🤑",
+            "ভিআইপি ছাড়া কি পেমেন্ট দেয় না?",
+            "আমি কালকে VIP কিনেছি, দারুণ ইনকাম হচ্ছে। 🥰",
+            "Bhai keu bolben kon VIP ta best hobe?"
+        ],
+        casual: [
+            "Mystery box theke ami 10 taka peyechi!",
+            "Ajker kaj sesh. Sobai valovabe kaj koren.",
+            "Keu amar refer code use korben plz?",
+            "EarnPro is the best app in BD 🔥",
+            "Student der jonno best earning app. 💯",
+            "Kaj shuru korlam sobaike salam."
+        ],
+        trust: [
+            "Ami to bhabchi fake, kintu payment pelam! 😍",
+            "এই অ্যাপটা আসলেই সেরা, কোনো সন্দেহ নাই। 💯",
+            "Trust koren bhai, ami age onek dhoka khaisi but ekhane payment pacchi.",
+            "100% real ekta app",
+            "Jara vaben fake tara kaj koiren na, amra income kori 😂"
+        ]
+    };
+
+    const keywordReplies = [
+        { 
+            keywords: ["real", "fake", "trust", "sotti", "mittha", "payment dibe", "fak", "batpar"], 
+            replies: [
+                "<span class='mention'>@name</span> Bhai 100% real, ami nije payment peyechi.", 
+                "<span class='mention'>@name</span> Fake na vai, admin kotha diye kotha rakhe.",
+                "<span class='mention'>@name</span> Ami age vabtam fake, kintu kal 500 tk paise!",
+                "<span class='mention'>@name</span> apni kaj koren niscinte, ami 3 bar withdraw disi."
+            ] 
+        },
+        { 
+            keywords: ["kivabe", "kemne", "taka tulbo", "withdraw dibo", "help"], 
+            replies: [
+                "<span class='mention'>@name</span> VIP kine nilei taka tula jay.", 
+                "<span class='mention'>@name</span> Profile theke withdraw option e jan.",
+                "<span class='mention'>@name</span> vai, admin er sathe kotha bolte paren support e."
+            ] 
+        }
+    ];
+
+    function getSmartBotMessage() {
+        let options = smartBotBrain[botTopic];
+        let available = options.filter(msg => !usedBotMessages.includes(msg));
         
-        const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
-        const templates = [
-            `Bhai ami ${rand(chatVariables.amounts)} taka withdraw dilam ${rand(chatVariables.times)} ${rand(chatVariables.emojis)}`,
-            `Alhamdulillah, ${rand(chatVariables.methods)} e ${rand(chatVariables.amounts)} taka payment pelam ${rand(chatVariables.emojis)}`,
-            `Admin vai onnek fast. ${rand(chatVariables.amounts)} tk withdraw disilam, asche ✅`,
-            `Ami to bhabchi fake, kintu ${rand(chatVariables.times)} payment pelam! ${rand(chatVariables.emojis)}`,
-            `Wow! ${rand(chatVariables.methods)} a ${rand(chatVariables.amounts)} tk dhuke geche.`,
-            `Ami ${rand(chatVariables.vips)} nilam ajke. Onek valo income hocche.`,
-            `${rand(chatVariables.vips)} kinle ki beshi income hoy?`,
-            `Ami ${rand(chatVariables.vips)} kine ajke ${rand(chatVariables.amounts)} tk tulam ${rand(chatVariables.emojis)}`,
-            `ভিআইপি ছাড়া কি পেমেন্ট দেয় না?`,
-            `আমি কালকে ${rand(chatVariables.vips)} কিনেছি, দারুণ ইনকাম হচ্ছে। ${rand(chatVariables.emojis)}`,
-            `Mystery box theke ami ${Math.floor(Math.random() * 10) + 2} taka peyechi!`,
-            `Ajker kaj sesh. Sobai valovabe kaj koren. ${rand(chatVariables.emojis)}`,
-            `Keu amar refer code use korben plz?`,
-            `Ami kal ${Math.floor(Math.random() * 5) + 1} ta refer korechi. ${rand(chatVariables.emojis)}`,
-            `Fake refer korben na, account ban hobe.`,
-            `EarnPro is the best app in BD ${rand(chatVariables.emojis)}`,
-            `Admin bhai amar withdraw ta ektu dekhen.`,
-            `Student der jonno best earning app. ${rand(chatVariables.emojis)}`,
-            `এই অ্যাপটা আসলেই সেরা, কোনো সন্দেহ নাই। 💯`,
-            `${timeContext} ke ke kaj korchen?`,
-            `Ajke amar network ektu problem korche.`,
-            `Hmm`, `Ji`, `Yes`, `Thik`, `Nice`, `Good`, `Best app ${rand(chatVariables.emojis)}`,
-            `ke ke on achen?`, `hlo`, `hi`, `salam`, `kaj shuru korlam`, `done`, 
-            `wait koren peye jaben`, `thank you`, `100% real`
-        ];
-        return rand(templates);
+        if (available.length === 0) {
+            usedBotMessages = []; 
+            available = options;
+        }
+        
+        let chosenMsg = available[Math.floor(Math.random() * available.length)];
+        usedBotMessages.push(chosenMsg);
+        
+        if(usedBotMessages.length > 15) usedBotMessages.shift(); 
+        return chosenMsg;
     }
 
     function appendChatMessage(name, text, isMe) {
@@ -1403,47 +1411,46 @@
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    function triggerBotMessage(forcedReplyTo = null) {
+    function triggerBotMessage(realUserMessage = null, realUserName = null) {
         let botGender = Math.random() > 0.3 ? 'male' : 'female'; 
         let botName = botGender === 'male' ? maleNames[Math.floor(Math.random() * maleNames.length)] : femaleNames[Math.floor(Math.random() * femaleNames.length)];
         let msgText = "";
 
-        if (forcedReplyTo) {
-            let responsesToReal = [
-                `<span class='mention'>@${forcedReplyTo.name}</span> vai, valo vabe kaj koren payment paben.`,
-                `<span class='mention'>@${forcedReplyTo.name}</span> ha ekdom thik.`,
-                `<span class='mention'>@${forcedReplyTo.name}</span> apnar vip koto?`,
-                `<span class='mention'>@${forcedReplyTo.name}</span> ji vai ami onnek din dore kaj kori ekhane.`,
-                `<span class='mention'>@${forcedReplyTo.name}</span> koto withdraw dilen?`
-            ];
-            msgText = responsesToReal[Math.floor(Math.random() * responsesToReal.length)];
-            botGender = 'male'; 
-            botName = maleNames[Math.floor(Math.random() * maleNames.length)];
+        if (realUserMessage && realUserName) {
+            let userTextLower = realUserMessage.toLowerCase();
+            let foundReply = false;
+            
+            for (let item of keywordReplies) {
+                if (item.keywords.some(kw => userTextLower.includes(kw))) {
+                    let rawReply = item.replies[Math.floor(Math.random() * item.replies.length)];
+                    msgText = rawReply.replace('@name', realUserName);
+                    foundReply = true;
+                    break;
+                }
+            }
+            
+            if (!foundReply) {
+                let generalReplies = [
+                    `<span class='mention'>@${realUserName}</span> thik bolsen vai.`,
+                    `<span class='mention'>@${realUserName}</span> ami apnar sathe ekmot.`,
+                    `<span class='mention'>@${realUserName}</span> apnar VIP koto?`
+                ];
+                msgText = generalReplies[Math.floor(Math.random() * generalReplies.length)];
+            }
         } 
-        else if (lastSender.gender === 'female' && botGender === 'male' && Math.random() > 0.4) {
-            let temp = flirtTemplates[Math.floor(Math.random() * flirtTemplates.length)];
-            msgText = temp.replace('@name', lastSender.name);
-        }
-        else if (lastSender.name !== "System" && !lastSender.isReal && Math.random() > 0.6) {
-            let temp = replyTemplates[Math.floor(Math.random() * replyTemplates.length)];
-            msgText = temp.replace('@name', lastSender.name);
-        }
         else {
-            msgText = generateDynamicMessage();
+            msgText = getSmartBotMessage();
         }
 
         appendChatMessage(botName, msgText, false);
-        lastSender = { name: botName, gender: botGender, isReal: false, text: msgText };
     }
 
     function startFakeChatEngine() {
         if(chatInterval) return;
-        
-        for(let i=0; i<3; i++) { triggerBotMessage(); }
-
+        for(let i=0; i<3; i++) { setTimeout(()=> triggerBotMessage(), i*1000); }
         chatInterval = setInterval(() => {
             triggerBotMessage();
-        }, Math.floor(Math.random() * 5000) + 5000); 
+        }, Math.floor(Math.random() * 8000) + 7000); 
     }
 
     window.sendChatMessage = async () => {
@@ -1454,11 +1461,9 @@
         input.value = "";
         appendChatMessage("You", text, true); 
         
-        lastSender = { name: currentUserData.name, gender: "real", isReal: true, text: text };
-
         setTimeout(() => {
-            if(Math.random() > 0.3) { 
-                triggerBotMessage(lastSender);
+            if(Math.random() > 0.1) { 
+                triggerBotMessage(text, currentUserData.name);
             }
         }, Math.floor(Math.random() * 3000) + 2000);
 
@@ -1466,7 +1471,6 @@
             await addDoc(collection(db, "global_chat_logs"), {
                 uid: currentUserData.uid,
                 name: currentUserData.name,
-                phone: currentUserData.phone,
                 text: text,
                 timestamp: serverTimestamp()
             });
