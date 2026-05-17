@@ -6,7 +6,6 @@
     <title>EarnPro - Earning App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Confetti Animation Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         body { background: #05070a; color: #fff; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; height: 100vh; height: 100dvh; overflow: hidden; }
@@ -92,7 +91,7 @@
         #chat-messages::-webkit-scrollbar { display: none; }
         .chat-bubble-left { background: #1f2937; color: #e5e7eb; padding: 10px 14px; border-radius: 18px 18px 18px 4px; max-width: 80%; width: fit-content; font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: relative;}
         .chat-bubble-right { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; padding: 10px 14px; border-radius: 18px 18px 4px 18px; max-width: 80%; align-self: flex-end; font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: relative;}
-        .chat-name { font-size: 10px; color: #9ca3af; margin-bottom: 2px; margin-left: 4px; font-weight: bold; }
+        .chat-name { font-size: 10px; color: #9ca3af; margin-bottom: 2px; margin-left: 4px; font-weight: bold; display: flex; align-items: center; }
         .mention { color: #60a5fa; font-weight: bold; }
         #chat-input-area { position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px; background: rgba(11, 14, 20, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 8px; z-index: 50; }
         #chat-input-field { flex: 1; background: #121822; border: 1px solid #1f2937; border-radius: 20px; padding: 10px 16px; color: #fff; outline: none; font-size: 13px; }
@@ -135,23 +134,69 @@
         <div class="mea-tail"></div>
     </div>
 
+    <div class="mea-container companion-bot" id="ai-cat-bot-2">
+        <div class="mea-head">
+            <div class="mea-ear left"></div>
+            <div class="mea-ear right"></div>
+            <div class="mea-visor">
+                <div class="mea-eyes-wrap">
+                    <div class="mea-eye"></div>
+                    <div class="mea-mouth"></div>
+                    <div class="mea-eye"></div>
+                </div>
+            </div>
+        </div>
+        <div class="mea-body"><div class="mea-collar"></div><div class="mea-arm left"></div><div class="mea-arm right"></div></div>
+        <div class="mea-tail"></div>
+    </div>
+
     <!-- 🚀 PREMIUM CAPCUT STYLE UPDATE OVERLAY 🚀 -->
     <div id="update-screen" class="modal-overlay flex-col items-center justify-center text-left p-4 z-[9999999] bg-black/80 backdrop-blur-sm">
         <div class="bg-[#1a1d24] w-full max-w-[340px] rounded-[24px] p-5 shadow-2xl border border-white/5 relative overflow-hidden">
+            <!-- Header -->
             <div class="flex justify-between items-center mb-5">
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center text-blue-600 text-2xl shadow-sm"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center text-blue-600 text-2xl shadow-sm">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
                     <h2 class="text-white text-[19px] font-bold tracking-wide">EarnPro</h2>
                 </div>
-                <div class="bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded flex items-center gap-1"><i class="fa-solid fa-bolt text-blue-400 text-[10px]"></i><span class="text-blue-400 text-[10px] font-bold">NEW VERSION</span></div>
+                <!-- Banner / Badge -->
+                <div class="bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded flex items-center gap-1">
+                    <i class="fa-solid fa-bolt text-blue-400 text-[10px]"></i>
+                    <span class="text-blue-400 text-[10px] font-bold">NEW VERSION</span>
+                </div>
             </div>
+
+            <!-- Features Box -->
             <div class="bg-[#232732] rounded-2xl p-4 mb-5 shadow-inner border border-white/5">
                 <ul class="space-y-3">
-                    <li class="flex gap-3 items-start"><span class="w-[18px] h-[18px] rounded-full bg-[#40827f] flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5 shadow">1</span><span class="text-gray-300 text-sm">নতুন আপডেট ভার্সন রিলিজ হয়েছে!</span></li>
-                    <li class="flex gap-3 items-start"><span class="w-[18px] h-[18px] rounded-full bg-[#40827f] flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5 shadow">2</span><span class="text-gray-300 text-sm">নতুন ডিজাইন এবং পেমেন্ট সিস্টেম।</span></li>
-                    <li class="flex gap-3 items-start"><span class="w-[18px] h-[18px] rounded-full bg-[#40827f] flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5 shadow">3</span><span class="text-gray-300 text-sm">কাজ করতে এখনই অ্যাপটি আপডেট করুন।</span></li>
+                    <li class="flex gap-3 items-start">
+                        <span class="w-[18px] h-[18px] rounded-full bg-[#40827f] flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5 shadow">1</span>
+                        <span class="text-gray-300 text-sm">নতুন আপডেট ভার্সন রিলিজ হয়েছে!</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <span class="w-[18px] h-[18px] rounded-full bg-[#40827f] flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5 shadow">2</span>
+                        <span class="text-gray-300 text-sm">নতুন ডিজাইন এবং পেমেন্ট সিস্টেম।</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <span class="w-[18px] h-[18px] rounded-full bg-[#40827f] flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5 shadow">3</span>
+                        <span class="text-gray-300 text-sm">কাজ করতে এখনই অ্যাপটি আপডেট করুন।</span>
+                    </li>
                 </ul>
             </div>
+
+            <!-- Bottom Actions -->
+            <div class="flex justify-between items-center mb-4 px-1">
+                <button class="bg-[#2d323e] hover:bg-[#363c4a] text-gray-300 text-xs px-4 py-1.5 rounded-full font-bold transition">More</button>
+                <div class="flex gap-2.5 text-xl">
+                    <i class="fa-brands fa-telegram text-blue-400 cursor-pointer"></i>
+                    <i class="fa-brands fa-facebook text-blue-600 cursor-pointer"></i>
+                    <i class="fa-brands fa-youtube text-red-500 cursor-pointer"></i>
+                </div>
+            </div>
+
+            <!-- Download Button -->
             <button id="btn-download-update" class="w-full bg-gradient-to-b from-[#3b4252] to-[#242832] text-white font-bold py-3.5 rounded-xl border border-white/10 shadow-[0_4px_15px_rgba(0,0,0,0.3)] active:scale-95 transition tracking-widest text-sm hover:from-[#434b5d] hover:to-[#2c313c]">
                 DOWNLOAD
             </button>
@@ -207,18 +252,18 @@
     <!-- MAIN APP -->
     <div id="main-app" class="h-full flex-col w-full relative hidden">
         
-        <!-- FAKE LIVE USERS HEADER -->
+        <!-- LIVE USERS HEADER -->
         <div class="bg-[#0b0e14] border-b border-white/5 py-2 px-4 flex justify-between items-center z-20">
             <div class="flex items-center gap-2 bg-gray-800/50 px-3 py-1 rounded-full border border-gray-700/50">
                 <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
-                <span class="text-[10px] font-bold text-gray-300 tracking-wider">LIVE USERS: <span id="fake-live-count" class="text-green-400 font-mono text-xs ml-1">১,২৪৫</span></span>
+                <span class="text-[10px] font-bold text-gray-300 tracking-wider">LIVE USERS: <span id="fake-live-count" class="text-green-400 font-mono text-xs ml-1">০</span></span>
             </div>
             <div class="text-[10px] text-gray-500 font-bold"><i class="fa-solid fa-shield-halved text-blue-400"></i> Secure</div>
         </div>
 
         <div class="bg-blue-600/20 text-blue-400 text-xs py-1.5 px-3 flex items-center border-b border-blue-500/30 z-10">
             <i class="fa-solid fa-bell mr-2 animate-bounce"></i>
-            <marquee id="app-notice" class="font-bold tracking-wide">EarnPro-তে স্বাগতম! বেশি বেশি রেফার করুন এবং নিশ্চিত পেমেন্ট নিন। কোনো ভিপিএন ব্যবহার করবেন মিলিটারি!</marquee>
+            <marquee id="app-notice" class="font-bold tracking-wide">EarnPro-তে স্বাগতম! বেশি বেশি রেফার করুন এবং নিশ্চিত পেমেন্ট নিন। কোনো ভিপিএন ব্যবহার করবেন না!</marquee>
         </div>
 
         <div class="scrollable-content relative">
@@ -290,7 +335,11 @@
                     <h2 class="text-xl font-bold"><i class="fa-solid fa-comments text-blue-500 mr-2"></i> ইউজার চ্যাট</h2>
                     <span class="text-[10px] bg-green-500/10 border border-green-500/30 text-green-400 px-2 py-1 rounded-full font-bold"><i class="fa-solid fa-circle text-[8px] animate-pulse mr-1"></i>Online</span>
                 </div>
-                <div id="chat-messages"></div>
+                
+                <div id="chat-messages">
+                    <!-- Real Messages and Admin Bot Messages will be injected here -->
+                </div>
+
                 <div id="chat-input-area">
                     <input type="text" id="chat-input-field" placeholder="মেসেজ লিখুন..." onkeypress="if(event.key === 'Enter') window.sendChatMessage()">
                     <button onclick="window.sendChatMessage()" class="chat-btn"><i class="fa-solid fa-paper-plane"></i></button>
@@ -301,7 +350,9 @@
             <div id="box" class="tab-content p-6 text-center hidden">
                 <h2 class="text-2xl font-bold mb-2 pt-2">মিস্ট্রি বক্স 🎁</h2>
                 <p class="text-sm text-gray-400 mb-6">আজকের বাকি বক্স: <b id="box-left-text" class="text-yellow-400">২</b> টি (প্রতিদিন ২টি খুলতে পারবেন)</p>
+                
                 <div class="box-grid" id="box-grid-container"></div>
+
                 <div class="glass p-4 mt-8 rounded-2xl border-l-4 border-yellow-500 text-left">
                     <h4 class="font-bold text-yellow-500 mb-1"><i class="fa-solid fa-medal"></i> মেগা প্রাইস!</h4>
                     <p class="text-xs text-gray-300">বক্সগুলোর ভেতরে ৳১০ বা ৳৫ টাকার হাইড প্রাইস লুকিয়ে আছে! আপনার ভাগ্য পরীক্ষা করুন।</p>
@@ -327,7 +378,7 @@
                     </div>
                 </div>
 
-                <!-- 🟢 REFER RULES SECTION (NEW CLARITY) 🟢 -->
+                <!-- 🟢 REFER RULES SECTION 🟢 -->
                 <div class="glass p-5 rounded-2xl border-l-4 border-green-500 mb-6 bg-green-500/5">
                     <h4 class="font-bold text-green-400 mb-3 text-lg"><i class="fa-solid fa-money-bill-wave"></i> রেফার করে কে কত পাবে?</h4>
                     <ul class="text-[13px] text-gray-300 space-y-3 leading-relaxed">
@@ -390,7 +441,6 @@
                         <i class="fa-solid fa-chevron-right text-yellow-600 text-sm"></i>
                     </button>
                     
-                    <!-- 🟢 RULES BUTTON IN PROFILE 🟢 -->
                     <button onclick="document.getElementById('rules-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-green-500 bg-green-500/5">
                         <div class="flex items-center gap-3"><i class="fa-solid fa-book-open text-green-400 text-lg w-5 text-center"></i><span class="font-bold text-green-400">কাজের নিয়মকানুন (Rules)</span></div>
                         <i class="fa-solid fa-chevron-right text-green-600 text-sm"></i>
@@ -402,6 +452,10 @@
                     </button>
                     <button onclick="window.openHistoryModal()" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
                         <div class="flex items-center gap-3"><i class="fa-solid fa-clock-rotate-left text-blue-400 text-lg w-5 text-center"></i><span>উত্তোলনের হিস্ট্রি</span></div>
+                        <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
+                    </button>
+                    <button onclick="document.getElementById('password-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
+                        <div class="flex items-center gap-3"><i class="fa-solid fa-key text-purple-400 text-lg w-5 text-center"></i><span>পাসওয়ার্ড পরিবর্তন</span></div>
                         <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
                     </button>
                     <button onclick="window.contactSupport()" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
@@ -439,7 +493,7 @@
 
 <!-- MODALS -->
 
-<!-- 🟢 NEW RULES MODAL (CLEAR AND SIMPLE) 🟢 -->
+<!-- 🟢 RULES MODAL 🟢 -->
 <div id="rules-modal" class="modal-overlay">
     <div class="modal-content">
         <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
@@ -685,8 +739,7 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // 🚀 APP VERSION CONTROL 🚀
-    const CURRENT_APP_VERSION = 2;
+    const CURRENT_APP_VERSION = 3;
 
     const engToBng = (num) => num ? num.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]) : "০";
 
@@ -695,7 +748,6 @@
     const adminWhatsApp = "8801600678966";
     let isOpeningBox = false;
     let withdrawListenerUnsubscribe = null;
-    let chatInterval = null;
     window.hasWelcomed = false;
 
     let wdSelectedMethod = "";
@@ -703,21 +755,22 @@
     let wdCharge = 0;
     let wdSelectedType = 'self';
     
-    let maleNames = ["Sabbir", "Rakib", "Akash", "Fahim", "Hridoy", "Jahid", "Siyam", "Raju", "Imran", "Arif", "Touhid", "Rubel", "Emon", "Babu", "Momin", "Tarek", "Shanto", "Omi", "Parvez", "Maruf", "Nayeem", "Karim"];
-    let femaleNames = ["Riya", "Mim", "Sadia", "Kona", "Tanjila", "Nusrat", "Sumaiya", "Liza", "Sonia", "Mitu", "Toma", "Lamia", "Nadia", "Moumita", "Lima", "Poly", "Maha", "Irin", "Sraboni", "Nisha"];
-    
+    // 🟢 1. LIVE USERS COUNTER (1 - 50 Base + Real User) 🟢
     function startFakeLiveUsers() {
-        let currentFakeUsers = Math.floor(Math.random() * (500 - 50) + 50);
+        // Base fake bots will fluctuate strictly between 15 and 50
+        let baseFakeUsers = Math.floor(Math.random() * (50 - 15) + 15);
+        let realUsersCount = 1; // At least the current logged-in user counts as 1
+        
         const countEl = document.getElementById('fake-live-count');
-        if(countEl) countEl.innerText = engToBng(currentFakeUsers);
+        if(countEl) countEl.innerText = engToBng(baseFakeUsers + realUsersCount);
 
         setInterval(() => {
-            let change = Math.floor(Math.random() * 31) - 15; 
-            currentFakeUsers += change;
-            if(currentFakeUsers < 50) currentFakeUsers = Math.floor(Math.random() * 30) + 50;
-            if(currentFakeUsers > 600) currentFakeUsers = 600;
-            if(countEl) countEl.innerText = engToBng(currentFakeUsers);
-        }, 3500); 
+            let change = Math.floor(Math.random() * 5) - 2; 
+            baseFakeUsers += change;
+            if(baseFakeUsers < 10) baseFakeUsers = Math.floor(Math.random() * 15) + 15;
+            if(baseFakeUsers > 50) baseFakeUsers = 50; 
+            if(countEl) countEl.innerText = engToBng(baseFakeUsers + realUsersCount);
+        }, 6000); 
     }
 
     function trackRealtimePresence(user) {
@@ -849,9 +902,9 @@
     onAuthStateChanged(auth, (user) => {
         if (user) {
             listenToUserData(user.uid);
+            listenToGlobalChat(); // Start real chat listener
             generateFakeLeaderboard(); 
             trackRealtimePresence(user); 
-            startFakeChatEngine(); 
             document.getElementById('splash-screen').style.display = 'none';
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
@@ -863,7 +916,6 @@
             document.getElementById('banned-screen').style.display = 'none';
             document.getElementById('auth-screen').style.display = 'flex';
             if(withdrawListenerUnsubscribe) { withdrawListenerUnsubscribe(); withdrawListenerUnsubscribe = null; }
-            if(chatInterval) { clearInterval(chatInterval); chatInterval = null; }
         }
     });
 
@@ -1396,140 +1448,52 @@
     window.contactSupport = () => { window.open(`https://t.me/Refer_earn08`, '_blank'); };
 
     // ==========================================
-    // 🟢 5. ADVANCED SMART DYNAMIC FAKE CHAT ENGINE
+    // 🟢 2. REAL-TIME CHAT ENGINE (NO AUTO-BOTS) 🟢
     // ==========================================
     
-    let botTopic = "payment"; 
-    let usedBotMessages = []; 
+    let dbChatMessages = []; 
 
-    setInterval(() => {
-        const topics = ["payment", "vip", "casual", "trust"];
-        botTopic = topics[Math.floor(Math.random() * topics.length)];
-    }, 300000); 
-
-    const smartBotBrain = {
-        payment: [
-            "Bhai ami 500 taka withdraw dilam eimatro 😍",
-            "Alhamdulillah, bkash e payment pelam.",
-            "Admin vai onnek fast. 200 tk withdraw disilam, asche ✅",
-            "Wow! Nagad a 1000 tk dhuke geche.",
-            "Ke ke ajke withdraw diyechen?",
-            "Amar to withdraw dite kono problem hochche na."
-        ],
-        vip: [
-            "Ami VIP 2 nilam ajke. Onek valo income hocche.",
-            "VIP kinle ki beshi income hoy?",
-            "Ami VIP 1 kine ajke 500 tk tulam 🤑",
-            "ভিআইপি ছাড়া কি পেমেন্ট দেয় না?",
-            "আমি কালকে VIP কিনেছি, দারুণ ইনকাম হচ্ছে। 🥰",
-            "Bhai keu bolben kon VIP ta best hobe?"
-        ],
-        casual: [
-            "Mystery box theke ami 10 taka peyechi!",
-            "Ajker kaj sesh. Sobai valovabe kaj koren.",
-            "Keu amar refer code use korben plz?",
-            "EarnPro is the best app in BD 🔥",
-            "Student der jonno best earning app. 💯",
-            "Kaj shuru korlam sobaike salam."
-        ],
-        trust: [
-            "Ami to bhabchi fake, kintu payment pelam! 😍",
-            "এই অ্যাপটা আসলেই সেরা, কোনো সন্দেহ নাই। 💯",
-            "Trust koren bhai, ami age onek dhoka khaisi but ekhane payment pacchi.",
-            "100% real ekta app",
-            "Jara vaben fake tara kaj koiren na, amra income kori 😂"
-        ]
-    };
-
-    const keywordReplies = [
-        { 
-            keywords: ["real", "fake", "trust", "sotti", "mittha", "payment dibe", "fak", "batpar"], 
-            replies: [
-                "<span class='mention'>@name</span> Bhai 100% real, ami nije payment peyechi.", 
-                "<span class='mention'>@name</span> Fake na vai, admin kotha diye kotha rakhe.",
-                "<span class='mention'>@name</span> Ami age vabtam fake, kintu kal 500 tk paise!",
-                "<span class='mention'>@name</span> apni kaj koren niscinte, ami 3 bar withdraw disi."
-            ] 
-        },
-        { 
-            keywords: ["kivabe", "kemne", "taka tulbo", "withdraw dibo", "help"], 
-            replies: [
-                "<span class='mention'>@name</span> VIP kine nilei taka tula jay.", 
-                "<span class='mention'>@name</span> Profile theke withdraw option e jan.",
-                "<span class='mention'>@name</span> vai, admin er sathe kotha bolte paren support e."
-            ] 
-        }
-    ];
-
-    function getSmartBotMessage() {
-        let options = smartBotBrain[botTopic];
-        let available = options.filter(msg => !usedBotMessages.includes(msg));
-        
-        if (available.length === 0) {
-            usedBotMessages = []; 
-            available = options;
-        }
-        
-        let chosenMsg = available[Math.floor(Math.random() * available.length)];
-        usedBotMessages.push(chosenMsg);
-        
-        if(usedBotMessages.length > 15) usedBotMessages.shift(); 
-        return chosenMsg;
-    }
-
-    function appendChatMessage(name, text, isMe) {
+    function renderAllChatMessages() {
         const chatBox = document.getElementById('chat-messages');
         if(!chatBox) return;
-        const bgClass = isMe ? 'chat-bubble-right' : 'chat-bubble-left';
-        chatBox.innerHTML += `
-            <div style="display: flex; flex-direction: column; width: 100%; animation: fadeIn 0.3s ease-out;">
-                ${!isMe ? `<span class="chat-name">${name}</span>` : ''}
-                <div class="${bgClass}">${text}</div>
-            </div>
-        `;
+        
+        let combined = [...dbChatMessages];
+        combined.sort((a, b) => a.timestamp - b.timestamp); 
+        
+        chatBox.innerHTML = "";
+        
+        combined.forEach(msg => {
+            let isMe = (currentUserData && msg.uid === currentUserData.uid);
+            const bgClass = isMe ? 'chat-bubble-right' : 'chat-bubble-left';
+            
+            chatBox.innerHTML += `
+                <div style="display: flex; flex-direction: column; width: 100%; margin-bottom: 5px; animation: fadeIn 0.3s ease-out;">
+                    ${!isMe ? `<span class="chat-name">${msg.name}</span>` : ''}
+                    <div class="${bgClass}">${msg.text}</div>
+                </div>
+            `;
+        });
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    function triggerBotMessage(realUserMessage = null, realUserName = null) {
-        let botGender = Math.random() > 0.3 ? 'male' : 'female'; 
-        let botName = botGender === 'male' ? maleNames[Math.floor(Math.random() * maleNames.length)] : femaleNames[Math.floor(Math.random() * femaleNames.length)];
-        let msgText = "";
-
-        if (realUserMessage && realUserName) {
-            let userTextLower = realUserMessage.toLowerCase();
-            let foundReply = false;
-            
-            for (let item of keywordReplies) {
-                if (item.keywords.some(kw => userTextLower.includes(kw))) {
-                    let rawReply = item.replies[Math.floor(Math.random() * item.replies.length)];
-                    msgText = rawReply.replace('@name', realUserName);
-                    foundReply = true;
-                    break;
-                }
-            }
-            
-            if (!foundReply) {
-                let generalReplies = [
-                    `<span class='mention'>@${realUserName}</span> thik bolsen vai.`,
-                    `<span class='mention'>@${realUserName}</span> ami apnar sathe ekmot.`,
-                    `<span class='mention'>@${realUserName}</span> apnar VIP koto?`
-                ];
-                msgText = generalReplies[Math.floor(Math.random() * generalReplies.length)];
-            }
-        } 
-        else {
-            msgText = getSmartBotMessage();
-        }
-
-        appendChatMessage(botName, msgText, false);
-    }
-
-    function startFakeChatEngine() {
-        if(chatInterval) return;
-        for(let i=0; i<3; i++) { setTimeout(()=> triggerBotMessage(), i*1000); }
-        chatInterval = setInterval(() => {
-            triggerBotMessage();
-        }, Math.floor(Math.random() * 8000) + 7000); 
+    function listenToGlobalChat() {
+        // Fetch real messages from database (including Admin-Panel Bots when built later)
+        const q = query(collection(db, "global_chat_logs"), orderBy("timestamp", "desc"), limit(50));
+        onSnapshot(q, (snapshot) => {
+            dbChatMessages = [];
+            snapshot.forEach(doc => {
+                let data = doc.data();
+                let time = data.timestamp ? data.timestamp.toMillis() : Date.now();
+                dbChatMessages.push({
+                    id: doc.id,
+                    uid: data.uid,
+                    name: data.name,
+                    text: data.text,
+                    timestamp: time
+                });
+            });
+            renderAllChatMessages();
+        });
     }
 
     window.sendChatMessage = async () => {
@@ -1538,14 +1502,17 @@
         if(!text || !currentUserData) return;
         
         input.value = "";
-        appendChatMessage("You", text, true); 
         
-        setTimeout(() => {
-            if(Math.random() > 0.1) { 
-                triggerBotMessage(text, currentUserData.name);
-            }
-        }, Math.floor(Math.random() * 3000) + 2000);
-
+        // Show immediately locally
+        dbChatMessages.push({
+            id: 'temp_' + Date.now(),
+            uid: currentUserData.uid,
+            name: currentUserData.name,
+            text: text,
+            timestamp: Date.now()
+        });
+        renderAllChatMessages();
+        
         try {
             await addDoc(collection(db, "global_chat_logs"), {
                 uid: currentUserData.uid,
@@ -1553,7 +1520,7 @@
                 text: text,
                 timestamp: serverTimestamp()
             });
-        } catch(err) { console.log(err); }
+        } catch(err) { console.log("Chat sending error:", err); }
     };
 
     const catBot = document.getElementById('ai-cat-bot');
