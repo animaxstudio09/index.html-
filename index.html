@@ -374,7 +374,7 @@
                 </div>
             </div>
 
-            <!-- REFER TAB -->
+            <!-- REFER TAB 🟢 UPDATED UI FOR REFERRALS 🟢 -->
             <div id="refer" class="tab-content p-6 hidden">
                 <h2 class="text-2xl font-bold mb-4 pt-2">রেফার করুন 🤝</h2>
                 
@@ -407,9 +407,27 @@
                     </ul>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="glass p-4 rounded-2xl border-t-2 border-blue-500 text-center shadow-lg"><i class="fa-solid fa-user-group text-blue-400 text-2xl mb-1"></i><p class="text-[10px] text-gray-400 tracking-wide">মোট রেফার</p><h3 class="font-bold text-2xl text-white mt-1" id="total-refers-count">০ <span class="text-xs text-gray-500 font-normal">জন</span></h3></div>
-                    <div class="glass p-4 rounded-2xl border-t-2 border-green-500 text-center shadow-lg"><i class="fa-solid fa-hand-holding-dollar text-green-400 text-2xl mb-1"></i><p class="text-[10px] text-gray-400 tracking-wide">সর্বমোট রেফার ইনকাম</p><h3 class="font-bold text-2xl text-white mt-1">৳ <span id="total-refer-income">0.00</span></h3></div>
+                <!-- 🟢 NEW 4-GRID REFERRAL STATS 🟢 -->
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="glass p-4 rounded-2xl border-t-2 border-blue-500 text-center shadow-lg">
+                        <i class="fa-solid fa-user-group text-blue-400 text-2xl mb-1"></i>
+                        <p class="text-[10px] text-gray-400 tracking-wide">মোট রেফার</p>
+                        <h3 class="font-bold text-2xl text-white mt-1" id="total-refers-count">০ <span class="text-xs text-gray-500 font-normal">জন</span></h3>
+                    </div>
+                    <div class="glass p-4 rounded-2xl border-t-2 border-green-500 text-center shadow-lg">
+                        <i class="fa-solid fa-hand-holding-dollar text-green-400 text-2xl mb-1"></i>
+                        <p class="text-[10px] text-gray-400 tracking-wide">রেফার ইনকাম</p>
+                        <h3 class="font-bold text-2xl text-white mt-1">৳ <span id="total-refer-income">0.00</span></h3>
+                    </div>
+                    
+                    <div class="glass p-3 rounded-xl border-l-4 border-gray-500 text-left shadow-lg flex items-center justify-between col-span-1">
+                        <span class="text-[11px] text-gray-300 font-bold"><i class="fa-solid fa-user text-gray-400 mr-1"></i> ফ্রি ইউজার</span>
+                        <h3 class="font-bold text-lg text-white" id="free-refers-count">০</h3>
+                    </div>
+                    <div class="glass p-3 rounded-xl border-l-4 border-yellow-500 text-left shadow-lg flex items-center justify-between col-span-1 bg-yellow-500/5">
+                        <span class="text-[11px] text-yellow-400 font-bold"><i class="fa-solid fa-crown mr-1"></i> VIP ইউজার</span>
+                        <h3 class="font-bold text-lg text-yellow-400" id="vip-refers-count">০</h3>
+                    </div>
                 </div>
             </div>
 
@@ -844,6 +862,31 @@
         setTimeout(() => { toast.style.transform = 'translateX(120%)'; setTimeout(() => toast.remove(), 500); }, 3500);
     };
 
+    window.fetchReferralStats = async () => {
+        if(!currentUserData || !currentUserData.myReferCode) return;
+        try {
+            const q = query(collection(db, "users"), where("referredBy", "==", currentUserData.myReferCode));
+            const snap = await getDocs(q);
+            let total = snap.size;
+            let freeCount = 0;
+            let vipCount = 0;
+            
+            snap.forEach(doc => {
+                let d = doc.data();
+                if(!d.currentVIP || d.currentVIP === "Free") freeCount++;
+                else vipCount++;
+            });
+            
+            document.getElementById('total-refers-count').innerHTML = engToBng(total) + ' <span class="text-xs text-gray-500 font-normal">জন</span>';
+            document.getElementById('free-refers-count').innerText = engToBng(freeCount);
+            document.getElementById('vip-refers-count').innerText = engToBng(vipCount);
+            
+            if(total !== currentUserData.totalRefers) {
+                setDoc(doc(db, "users", currentUserData.uid), { totalRefers: total }, { merge: true });
+            }
+        } catch(e) { console.log(e); }
+    };
+
     // 🟢 INITIALIZATION & CACHE CHECK 🟢
     if(localStorage.getItem('earnpro_cached_login') === 'true') {
          let splash = document.getElementById('splash-screen');
@@ -1152,14 +1195,31 @@
                 let name = document.getElementById('auth-name').value;
                 if(name.trim() === "") throw new Error("empty_name");
 
-                const userCredential = await createUserWithEmailAndPassword(auth, dummyEmail, pass);
-                const user = userCredential.user;
-                
                 // 🟢 DYNAMIC REFERRAL CODE GENERATION 🟢
                 let baseName = name.replace(/\s+/g, '').toUpperCase().substring(0, 6);
                 let referCode = baseName + Math.floor(1000 + Math.random() * 9000);
                 
-                let appliedRefer = document.getElementById('auth-refer').value;
+                let appliedRefer = document.getElementById('auth-refer').value.trim();
+
+                const userCredential = await createUserWithEmailAndPassword(auth, dummyEmail, pass);
+                const user = userCredential.user;
+
+                // 🟢 NEW: ADD +1 COUNT TO REFERRER (NO MONEY YET) 🟢
+                let initialBal = 0.00;
+                if(appliedRefer) {
+                    initialBal = 5.00;
+                    try {
+                        const referQuery = query(collection(db, "users"), where("myReferCode", "==", appliedRefer));
+                        const referSnap = await getDocs(referQuery);
+                        if(!referSnap.empty) {
+                            let referrerDoc = referSnap.docs[0];
+                            let rData = referrerDoc.data();
+                            await setDoc(doc(db, "users", referrerDoc.id), {
+                                totalRefers: (rData.totalRefers || 0) + 1
+                            }, { merge: true });
+                        }
+                    } catch(e) { console.error("Referral update failed:", e); }
+                }
 
                 await setDoc(doc(db, "users", user.uid), {
                     uid: user.uid,
@@ -1167,7 +1227,7 @@
                     phone: phone,
                     password: pass, 
                     avatar: "",
-                    balance: 5.00,        
+                    balance: initialBal,        
                     referBalance: 0,      
                     totalRefers: 0,
                     referIncome: 0,       
@@ -1191,7 +1251,11 @@
                 });
                 
                 triggerConfetti();
-                window.showNotify("একাউন্ট খোলা সফল! ৫ টাকা বোনাস পেয়েছেন!", "success");
+                if(appliedRefer) {
+                    window.showNotify("একাউন্ট খোলা সফল! ৫ টাকা বোনাস পেয়েছেন!", "success");
+                } else {
+                    window.showNotify("একাউন্ট খোলা সফল হয়েছে!", "success");
+                }
 
             } else {
                 const loginCredential = await signInWithEmailAndPassword(auth, dummyEmail, pass);
@@ -1272,7 +1336,6 @@
         
         document.getElementById('my-refer-code').innerText = currentUserData.myReferCode;
 
-        document.getElementById('total-refers-count').innerHTML = engToBng(currentUserData.totalRefers || 0) + ' <span class="text-xs text-gray-500 font-normal">জন</span>';
         document.getElementById('total-refer-income').innerText = (currentUserData.referIncome || 0).toFixed(2);
 
         let avatarHtml = (currentUserData.avatar && currentUserData.avatar.trim() !== "") 
@@ -1286,6 +1349,9 @@
         let badge = document.getElementById('home-vip-badge');
         badge.innerText = currentUserData.currentVIP === "Free" ? "Free User" : "👑 " + currentUserData.currentVIP;
         
+        // 🟢 DYNAMICALLY FETCH REFERRAL STATS
+        window.fetchReferralStats();
+
         let todayDate = new Date().toLocaleDateString('en-GB');
         let needsUpdate = false;
         let updates = {};
