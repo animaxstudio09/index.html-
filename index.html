@@ -331,7 +331,7 @@
                     </div>
                 </div>
 
-                <!-- 🟢 AD TASK SECTION (NEWLY ADDED AS REQUIRED) 🟢 -->
+                <!-- 🟢 AD TASK SECTION WITH POINTS & EXCHANGE 🟢 -->
                 <div class="px-6 pb-2 mt-2">
                     <div class="p-5 rounded-2xl bg-gradient-to-br from-[#1e1b4b] to-[#312e81] border border-indigo-500/50 shadow-2xl relative overflow-hidden">
                         <div class="absolute -right-5 -top-5 w-20 h-20 bg-indigo-500 opacity-20 rounded-full blur-xl"></div>
@@ -339,7 +339,19 @@
                             <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-play-circle text-indigo-400 mr-2 text-xl animate-pulse"></i> এড টাস্ক</h3>
                             <span class="bg-indigo-500/30 border border-indigo-400/50 text-indigo-200 text-[11px] px-2 py-1 rounded font-bold" id="task-count-ui">Today: 0/20</span>
                         </div>
-                        <p class="text-[11px] text-gray-300 mb-3 leading-relaxed relative z-10">প্রতিটি এড <b class="text-indigo-300">৫ সেকেন্ড</b> দেখুন এবং নিশ্চিত টাকা ইনকাম করুন।</p>
+                        
+                        <!-- NEW POINTS AND EXCHANGE UI -->
+                        <div class="flex justify-between items-center mb-3 bg-[#0b0e14]/50 p-2 rounded-xl border border-indigo-500/30 relative z-10">
+                            <div class="flex flex-col">
+                                <span class="text-[9px] text-gray-400 uppercase tracking-wider font-bold">Total Points</span>
+                                <span class="text-yellow-400 font-bold text-lg leading-none" id="user-points-ui">0</span>
+                            </div>
+                            <button onclick="if(window.exchangePoints) window.exchangePoints()" class="bg-gradient-to-r from-yellow-500 to-orange-500 px-3 py-1.5 rounded-lg text-[10px] font-bold text-white shadow-lg active:scale-95 transition flex items-center gap-1">
+                                <i class="fa-solid fa-right-left"></i> Exchange
+                            </button>
+                        </div>
+
+                        <p class="text-[11px] text-gray-300 mb-3 leading-relaxed relative z-10">প্রতিটি এড <b class="text-indigo-300">৫ সেকেন্ড</b> দেখুন এবং ৫-১০ পয়েন্ট ইনকাম করুন। (১০০ পয়েন্ট = ১ টাকা)</p>
                         <button id="btn-watch-ad" onclick="if(window.startAdTask) window.startAdTask()" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 py-3 rounded-xl font-bold text-white shadow-lg active:scale-95 transition relative z-10 text-sm">এড দেখুন (Watch Ad)</button>
                         <p id="task-cooldown-ui" class="text-center text-[11px] text-red-400 mt-2 font-bold hidden relative z-10">Next ad in 10s</p>
                     </div>
@@ -1086,17 +1098,19 @@
     };
 
     async function processTaskReward() {
-        let bonus = 0.50; // 0.5 Taka per ad
         let currentTasks = currentUserData.dailyTasksCompleted || 0;
+        
+        // 🟢 POINT LOGIC: 5 to 10 points. 15% chance for 10.
+        let earnedPoints = Math.random() < 0.15 ? 10 : Math.floor(Math.random() * 5) + 5; 
         
         try {
             await setDoc(doc(db, "users", currentUserData.uid), { 
-                balance: (currentUserData.balance || 0) + bonus,
+                points: (currentUserData.points || 0) + earnedPoints,
                 dailyTasksCompleted: currentTasks + 1
             }, { merge: true });
             
             triggerConfetti();
-            window.showNotify(`Task Success! ৳${bonus} added.`, "success");
+            window.showNotify(`Task Success! ${earnedPoints} Points added.`, "success");
         } catch (error) {
             window.showNotify("ইন্টারনেট সমস্যা!", "error"); 
         }
@@ -1104,6 +1118,29 @@
         nextTaskTime = Date.now() + 10000;
         localStorage.setItem('next_task_time', nextTaskTime.toString());
     }
+
+    // 🟢 EXCHANGE SYSTEM 🟢
+    window.exchangePoints = async () => {
+        if(!currentUserData) return;
+        let pts = currentUserData.points || 0;
+        if(pts < 100) {
+            return window.showNotify("এক্সচেঞ্জ করতে কমপক্ষে ১০০ পয়েন্ট লাগবে!", "error");
+        }
+        
+        let takaToAdd = Math.floor(pts / 100);
+        let remPoints = pts % 100;
+        
+        try {
+            await setDoc(doc(db, "users", currentUserData.uid), {
+                points: remPoints,
+                balance: (currentUserData.balance || 0) + takaToAdd
+            }, { merge: true });
+            triggerConfetti();
+            window.showNotify(`সাফল্য! ৳${takaToAdd} টাকা মেইন ব্যালেন্সে যোগ হয়েছে।`, "success");
+        } catch(e) {
+            window.showNotify("ইন্টারনেট সমস্যা!", "error");
+        }
+    };
 
     function openAdAndWatch(target, boxId = null) {
         localStorage.setItem('ad_watch_target', target);
@@ -1406,6 +1443,7 @@
                     password: pass, 
                     avatar: "",
                     balance: initialBal,        
+                    points: 0,
                     referBalance: 0,      
                     totalRefers: 0,
                     referIncome: 0,       
@@ -1554,6 +1592,10 @@
         
         if(document.getElementById('task-count-ui')) {
             document.getElementById('task-count-ui').innerText = `Today: ${currentUserData.dailyTasksCompleted || 0}/20`;
+        }
+
+        if(document.getElementById('user-points-ui')) {
+            document.getElementById('user-points-ui').innerText = currentUserData.points || 0;
         }
 
         if(activeChatMode === 'private_list') {
