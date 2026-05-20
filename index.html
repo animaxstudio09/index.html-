@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
 
     <style>
-        body { background: #05070a; color: #fff; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; height: 100vh; height: 100dvh; overflow: hidden; }
+        body { background: #05070a; color: #fff; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; height: 100vh; height: 100dvh; overflow: hidden; top: 0 !important; }
         .app-container { width: 100%; max-width: 450px; background: #0b0e14; height: 100%; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 0 50px rgba(0, 150, 255, 0.1); }
         .scrollable-content { flex: 1; overflow-y: auto; padding-bottom: 140px; } 
         .scrollable-content::-webkit-scrollbar { display: none; }
@@ -143,14 +143,23 @@
         .pay-card { border: 2px solid #1f2937; border-radius: 12px; cursor: pointer; transition: 0.1s; background: #121822; }
         .pay-card.active-bkash { border-color: #e2136e; background: rgba(226, 19, 110, 0.1); box-shadow: 0 0 10px rgba(226, 19, 110, 0.3); }
         .pay-card.active-nagad { border-color: #ed1c24; background: rgba(237, 28, 36, 0.1); box-shadow: 0 0 10px rgba(237, 28, 36, 0.3); }
+        .pay-card.active-recharge { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
         
         .amt-card { border: 2px solid #1f2937; border-radius: 12px; cursor: pointer; transition: 0.1s; background: #121822; text-align: center; padding: 12px 4px; }
         .amt-card.active { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.2); }
 
         .banner-ad-container { position: absolute; bottom: 65px; left: 0; width: 100%; height: 50px; background: #0b0e14; display: flex; justify-content: center; align-items: center; z-index: 40; border-top: 1px solid rgba(255,255,255,0.05); }
+
+        /* Google Translate Hiding Styles */
+        .skiptranslate iframe { display: none !important; }
+        #goog-gt-tt { display: none !important; }
+        .goog-te-banner-frame { display: none !important; }
     </style>
 </head>
 <body onclick="if(window.closeAllReactMenus) window.closeAllReactMenus(event)">
+
+<!-- Hidden Google Translate Element -->
+<div id="google_translate_element" style="display:none;"></div>
 
 <div class="app-container">
     <div id="live-notify"></div>
@@ -322,7 +331,21 @@
                     </div>
                 </div>
 
-                <div class="px-6 pb-4">
+                <!-- 🟢 AD TASK SECTION (NEWLY ADDED AS REQUIRED) 🟢 -->
+                <div class="px-6 pb-2 mt-2">
+                    <div class="p-5 rounded-2xl bg-gradient-to-br from-[#1e1b4b] to-[#312e81] border border-indigo-500/50 shadow-2xl relative overflow-hidden">
+                        <div class="absolute -right-5 -top-5 w-20 h-20 bg-indigo-500 opacity-20 rounded-full blur-xl"></div>
+                        <div class="flex justify-between items-center mb-2 relative z-10">
+                            <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-play-circle text-indigo-400 mr-2 text-xl animate-pulse"></i> এড টাস্ক</h3>
+                            <span class="bg-indigo-500/30 border border-indigo-400/50 text-indigo-200 text-[11px] px-2 py-1 rounded font-bold" id="task-count-ui">Today: 0/20</span>
+                        </div>
+                        <p class="text-[11px] text-gray-300 mb-3 leading-relaxed relative z-10">প্রতিটি এড <b class="text-indigo-300">৫ সেকেন্ড</b> দেখুন এবং নিশ্চিত টাকা ইনকাম করুন।</p>
+                        <button id="btn-watch-ad" onclick="if(window.startAdTask) window.startAdTask()" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 py-3 rounded-xl font-bold text-white shadow-lg active:scale-95 transition relative z-10 text-sm">এড দেখুন (Watch Ad)</button>
+                        <p id="task-cooldown-ui" class="text-center text-[11px] text-red-400 mt-2 font-bold hidden relative z-10">Next ad in 10s</p>
+                    </div>
+                </div>
+
+                <div class="px-6 pb-4 pt-4">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="font-bold text-sm text-gray-400 uppercase tracking-wider">🏆 টপ আর্নারস</h3>
                         <span class="text-xs text-blue-400 flex items-center"><i class="fa-solid fa-circle text-[6px] text-green-500 mr-1 animate-pulse"></i>Live</span>
@@ -374,7 +397,7 @@
                 </div>
             </div>
 
-            <!-- REFER TAB 🟢 UPDATED UI FOR REFERRALS 🟢 -->
+            <!-- REFER TAB -->
             <div id="refer" class="tab-content p-6 hidden">
                 <h2 class="text-2xl font-bold mb-4 pt-2">রেফার করুন 🤝</h2>
                 
@@ -396,7 +419,6 @@
                     </div>
                 </div>
 
-                <!-- 🟢 REFER RULES 🟢 -->
                 <div class="glass p-5 rounded-2xl border-l-4 border-green-500 mb-6 bg-green-500/5">
                     <h4 class="font-bold text-green-400 mb-3 text-lg"><i class="fa-solid fa-money-bill-wave"></i> রেফার করে কে কত পাবে?</h4>
                     <ul class="text-[13px] text-gray-300 space-y-3 leading-relaxed">
@@ -407,7 +429,6 @@
                     </ul>
                 </div>
 
-                <!-- 🟢 NEW 4-GRID REFERRAL STATS 🟢 -->
                 <div class="grid grid-cols-2 gap-3 mb-6">
                     <div class="glass p-4 rounded-2xl border-t-2 border-blue-500 text-center shadow-lg">
                         <i class="fa-solid fa-user-group text-blue-400 text-2xl mb-1"></i>
@@ -470,6 +491,13 @@
                         <div class="flex items-center gap-3"><i class="fa-solid fa-clock-rotate-left text-blue-400 text-lg w-5 text-center"></i><span>উত্তোলনের হিস্ট্রি</span></div>
                         <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
                     </button>
+
+                    <!-- Language Change Option Added Here -->
+                    <button onclick="document.getElementById('lang-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-indigo-500 bg-indigo-500/5">
+                        <div class="flex items-center gap-3"><i class="fa-solid fa-language text-indigo-400 text-lg w-5 text-center"></i><span class="font-bold text-indigo-400">ভাষা পরিবর্তন (Language)</span></div>
+                        <i class="fa-solid fa-chevron-right text-indigo-600 text-sm"></i>
+                    </button>
+
                     <button onclick="document.getElementById('password-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
                         <div class="flex items-center gap-3"><i class="fa-solid fa-key text-purple-400 text-lg w-5 text-center"></i><span>পাসওয়ার্ড পরিবর্তন</span></div>
                         <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
@@ -522,6 +550,22 @@
 </div>
 
 <!-- MODALS -->
+
+<!-- Language Selection Modal Added Here -->
+<div id="lang-modal" class="modal-overlay">
+    <div class="modal-content text-center">
+        <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+            <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-language text-indigo-400 mr-2"></i> ভাষা পরিবর্তন</h3>
+            <button onclick="document.getElementById('lang-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+        <div class="flex flex-col gap-3 mt-4">
+            <button onclick="window.changeLanguage('bn')" class="w-full bg-[#121822] border border-gray-700 py-3 rounded-xl font-bold text-white active:scale-95 hover:bg-gray-800 transition shadow-lg">বাংলা</button>
+            <button onclick="window.changeLanguage('en')" class="w-full bg-[#121822] border border-gray-700 py-3 rounded-xl font-bold text-white active:scale-95 hover:bg-gray-800 transition shadow-lg">English</button>
+            <button onclick="window.changeLanguage('hi')" class="w-full bg-[#121822] border border-gray-700 py-3 rounded-xl font-bold text-white active:scale-95 hover:bg-gray-800 transition shadow-lg">हिंदी</button>
+        </div>
+    </div>
+</div>
+
 <!-- 🟢 RULES MODAL 🟢 -->
 <div id="rules-modal" class="modal-overlay">
     <div class="modal-content">
@@ -544,7 +588,7 @@
             
             <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
                 <h4 class="font-bold text-green-400 mb-1">৩. সাইনআপ বোনাস:</h4>
-                <p>যে ব্যক্তি আপনার রেফার কোড দিয়ে একাউন্ট খুলে VIP কিনবে, সে সাথে সাথে <b>৳৫</b> বোনাস পাবে।</p>
+                <p>যে ব্যক্তি আপনার রেফার কোড দিয়ে একাউন্ট খুলে VIP কিনবে, সে সাথে সাথে <b>৳৫</b> বোনাস পাবে.</p>
             </div>
             
             <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
@@ -631,22 +675,30 @@
         <form id="withdraw-form" onsubmit="if(window.submitWithdraw) window.submitWithdraw(event)">
             
             <label class="text-sm text-gray-300 mb-2 block font-bold">পেমেন্ট মেথড সিলেক্ট করুন</label>
-            <div class="grid grid-cols-2 gap-3 mb-4">
+            <!-- Updated Grid to show Recharge when Refer is selected -->
+            <div class="grid grid-cols-3 gap-2 mb-4">
                 <div id="method-bkash" class="pay-card p-3 flex flex-col items-center justify-center gap-2" onclick="if(window.selectMethod) window.selectMethod('bkash')">
-                    <div class="bg-white p-1.5 rounded-lg shadow-sm"><img src="https://i.ibb.co.com/JWsLQxjp/bkash-logo-png-seeklogo-382709.png" class="w-10 h-10 object-contain" alt="bKash" onerror="this.style.display='none'"></div>
+                    <div class="bg-white p-1.5 rounded-lg shadow-sm"><img src="https://i.ibb.co.com/JWsLQxjp/bkash-logo-png-seeklogo-382709.png" class="w-8 h-8 object-contain" alt="bKash" onerror="this.style.display='none'"></div>
                     <span class="text-sm font-bold text-gray-300">bKash</span>
                 </div>
                 <div id="method-nagad" class="pay-card p-3 flex flex-col items-center justify-center gap-2" onclick="if(window.selectMethod) window.selectMethod('nagad')">
-                    <div class="bg-white p-1.5 rounded-lg shadow-sm"><img src="https://i.ibb.co.com/w1cvHgy/images-2.png" class="w-10 h-10 object-contain" alt="Nagad" onerror="this.style.display='none'"></div>
+                    <div class="bg-white p-1.5 rounded-lg shadow-sm"><img src="https://i.ibb.co.com/w1cvHgy/images-2.png" class="w-8 h-8 object-contain" alt="Nagad" onerror="this.style.display='none'"></div>
                     <span class="text-sm font-bold text-gray-300">Nagad</span>
+                </div>
+                <!-- Recharge Card (Hidden by default, shown when Refer is selected) -->
+                <div id="method-recharge" class="pay-card p-3 flex flex-col items-center justify-center gap-2 hidden" onclick="if(window.selectMethod) window.selectMethod('recharge')">
+                    <div class="bg-white p-1.5 rounded-lg shadow-sm flex items-center justify-center w-11 h-11"><i class="fa-solid fa-mobile-screen-button text-blue-500 text-xl"></i></div>
+                    <span class="text-sm font-bold text-gray-300">Recharge</span>
                 </div>
             </div>
 
-            <label class="text-sm text-gray-300 mb-2 block font-bold">একাউন্ট নম্বর দিন</label>
+            <label class="text-sm text-gray-300 mb-2 block font-bold">একাউন্ট / নাম্বার দিন</label>
             <input type="number" id="wd-number" placeholder="017XXXXXXXX" class="input-style mb-4" required>
 
             <label class="text-sm text-gray-300 mb-2 block font-bold">টাকার পরিমাণ সিলেক্ট করুন</label>
-            <div class="grid grid-cols-3 gap-2 mb-6">
+            
+            <!-- Standard Amount Grid (Bkash/Nagad) -->
+            <div id="amount-grid-standard" class="grid grid-cols-3 gap-2 mb-6">
                 <div id="amt-200" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(200, 0)">
                     <h3 class="font-bold text-lg text-white">৳২০০</h3>
                     <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
@@ -670,6 +722,22 @@
                 <div id="amt-2000" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(2000, 5)">
                     <h3 class="font-bold text-lg text-white">৳২০০০</h3>
                     <p class="text-[10px] text-gray-400 mt-1">চার্জ: ৳৫</p>
+                </div>
+            </div>
+
+            <!-- Recharge Amount Grid (Only shown when Recharge is selected) -->
+            <div id="amount-grid-recharge" class="grid grid-cols-3 gap-2 mb-6 hidden">
+                <div id="amt-20" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(20, 0)">
+                    <h3 class="font-bold text-lg text-white">৳২০</h3>
+                    <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
+                </div>
+                <div id="amt-50" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(50, 0)">
+                    <h3 class="font-bold text-lg text-white">৳৫০</h3>
+                    <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
+                </div>
+                <div id="amt-100" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(100, 0)">
+                    <h3 class="font-bold text-lg text-white">৳১০০</h3>
+                    <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
                 </div>
             </div>
 
@@ -758,6 +826,14 @@
     }
 </script>
 
+<!-- Google Translate Init Script -->
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'bn', includedLanguages: 'bn,en,hi', autoDisplay: false}, 'google_translate_element');
+    }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 <!-- Firebase & Main App Logic -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
@@ -770,6 +846,17 @@
     // ==========================================
     // ALL GLOBAL FUNCTIONS (ZERO-LAG OPTIMIZED)
     // ==========================================
+
+    // Google Translate Function (Language Change)
+    window.changeLanguage = (langCode) => {
+        var selectField = document.querySelector("#google_translate_element select");
+        if (selectField) {
+            selectField.value = langCode;
+            selectField.dispatchEvent(new Event('change'));
+        }
+        document.getElementById('lang-modal').style.display='none';
+        if(window.showNotify) window.showNotify("Language changed successfully!", "success");
+    };
     
     window.switchTab = (tabId) => {
         let currentActive = localStorage.getItem('active_tab');
@@ -938,6 +1025,86 @@
     let wdCharge = 0;
     let wdSelectedType = 'self';
 
+    // ==========================================
+    // 🟢 TASK SYSTEM LOGIC 🟢
+    // ==========================================
+    let nextTaskTime = parseInt(localStorage.getItem('next_task_time') || '0');
+
+    function updateTaskCooldown() {
+        let now = Date.now();
+        let btn = document.getElementById('btn-watch-ad');
+        let cdText = document.getElementById('task-cooldown-ui');
+        if(!btn || !currentUserData) return;
+
+        if (now < nextTaskTime) {
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+            cdText.style.display = 'block';
+            let left = Math.ceil((nextTaskTime - now) / 1000);
+            cdText.innerText = `Next ad in ${left}s`;
+        } else {
+            if((currentUserData.dailyTasksCompleted || 0) >= 20) {
+                btn.disabled = true;
+                btn.classList.add('opacity-50');
+                btn.innerText = "Today's Limit Reached";
+                cdText.style.display = 'block';
+                cdText.innerText = "Come back tomorrow.";
+            } else {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
+                btn.innerText = "এড দেখুন (Watch Ad)";
+                cdText.style.display = 'none';
+            }
+        }
+    }
+    setInterval(updateTaskCooldown, 1000);
+
+    function getRotatedAdLink() {
+        // Rotating logic based on current hour to bypass ad fatigue
+        const links = [
+            "https://www.effectivecpmnetwork.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871",
+            "https://www.effectivecpmnetwork.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871&var=1",
+            "https://www.effectivecpmnetwork.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871&var=2"
+        ];
+        let currentHour = new Date().getHours();
+        return links[currentHour % links.length];
+    }
+
+    window.startAdTask = () => {
+        if(!currentUserData) return;
+        if((currentUserData.dailyTasksCompleted || 0) >= 20) {
+            return window.showNotify("আজকের টাস্ক লিমিট শেষ!", "error");
+        }
+        if(Date.now() < nextTaskTime) {
+            return window.showNotify("একটু অপেক্ষা করুন!", "error");
+        }
+
+        localStorage.setItem('ad_watch_target', 'task');
+        localStorage.setItem('ad_open_time', Date.now().toString());
+        window.open(getRotatedAdLink(), '_blank');
+        window.showNotify("অ্যাড ওপেন হচ্ছে... ৫ সেকেন্ড অপেক্ষা করুন!", "info");
+    };
+
+    async function processTaskReward() {
+        let bonus = 0.50; // 0.5 Taka per ad
+        let currentTasks = currentUserData.dailyTasksCompleted || 0;
+        
+        try {
+            await setDoc(doc(db, "users", currentUserData.uid), { 
+                balance: (currentUserData.balance || 0) + bonus,
+                dailyTasksCompleted: currentTasks + 1
+            }, { merge: true });
+            
+            triggerConfetti();
+            window.showNotify(`Task Success! ৳${bonus} added.`, "success");
+        } catch (error) {
+            window.showNotify("ইন্টারনেট সমস্যা!", "error"); 
+        }
+        // Set Cooldown 10 Seconds
+        nextTaskTime = Date.now() + 10000;
+        localStorage.setItem('next_task_time', nextTaskTime.toString());
+    }
+
     function openAdAndWatch(target, boxId = null) {
         localStorage.setItem('ad_watch_target', target);
         if(boxId) localStorage.setItem('ad_watch_box_id', boxId);
@@ -965,27 +1132,38 @@
         localStorage.removeItem('ad_open_time');
         localStorage.removeItem('ad_watch_box_id');
 
-        if (timeSpent >= 30000) {
+        let requiredTime = (target === 'task') ? 5000 : 30000; // 5 Sec for Task, 30 Sec for Box/Bonus
+
+        if (timeSpent >= requiredTime) {
             if (target === 'box') {
                 processBoxReward(boxId);
             } else if (target === 'bonus') {
                 processDailyBonusReward();
+            } else if (target === 'task') {
+                processTaskReward();
             }
         } else {
-            window.showNotify("আপনি ৩০ সেকেন্ড অপেক্ষা করেননি! আবার চেষ্টা করুন।", "error");
-            setTimeout(() => {
-                speakLocalized("আপনি অ্যাড পুরো দেখার আগেই ব্যাক দিয়েছেন। তাই কোনো টাকা যোগ হয়নি।");
-            }, 1000);
+            if (target === 'task') {
+                window.showNotify("Task Failed: You must watch for 5 seconds", "error");
+                // Start cooldown even on fail to prevent spamming
+                nextTaskTime = Date.now() + 10000;
+                localStorage.setItem('next_task_time', nextTaskTime.toString());
+            } else {
+                window.showNotify("আপনি সম্পূর্ণ সময় অপেক্ষা করেননি! আবার চেষ্টা করুন।", "error");
+                setTimeout(() => {
+                    speakLocalized("আপনি অ্যাড পুরো দেখার আগেই ব্যাক দিয়েছেন। তাই কোনো টাকা যোগ হয়নি।");
+                }, 1000);
 
-            if (target === 'box') {
-                let boxElement = document.getElementById(`box-${boxId}`);
-                if(boxElement) boxElement.innerHTML = '🎁'; 
-                isOpeningBox = false;
-            } else if (target === 'bonus') {
-                const btn = document.getElementById('btn-daily-bonus');
-                if(btn) {
-                    btn.innerHTML = '<i class="fa-solid fa-gift mr-1"></i> দৈনিক বোনাস';
-                    btn.disabled = false;
+                if (target === 'box') {
+                    let boxElement = document.getElementById(`box-${boxId}`);
+                    if(boxElement) boxElement.innerHTML = '🎁'; 
+                    isOpeningBox = false;
+                } else if (target === 'bonus') {
+                    const btn = document.getElementById('btn-daily-bonus');
+                    if(btn) {
+                        btn.innerHTML = '<i class="fa-solid fa-gift mr-1"></i> দৈনিক বোনাস';
+                        btn.disabled = false;
+                    }
                 }
             }
         }
@@ -1243,6 +1421,7 @@
                     lastBoxDate: "",
                     tasksLeft: 2,
                     lastTaskDate: "",
+                    dailyTasksCompleted: 0,
                     isBanned: false, 
                     createdAt: serverTimestamp(),
                     dailyUploads: 0,
@@ -1360,14 +1539,23 @@
             updates.boxesLeft = 2; updates.openedBoxes = []; updates.lastBoxDate = todayDate; needsUpdate = true;
         }
 
+        if (currentUserData.lastTaskDate !== todayDate) {
+            updates.dailyTasksCompleted = 0; updates.lastTaskDate = todayDate; needsUpdate = true;
+        }
+
         if (needsUpdate && currentUserData.uid) {
             setDoc(doc(db, "users", currentUserData.uid), updates, { merge: true });
             if(updates.boxesLeft !== undefined) { currentUserData.boxesLeft = updates.boxesLeft; currentUserData.openedBoxes = updates.openedBoxes; }
+            if(updates.dailyTasksCompleted !== undefined) { currentUserData.dailyTasksCompleted = updates.dailyTasksCompleted; }
         }
 
         document.getElementById('box-left-text').innerText = engToBng(currentUserData.boxesLeft === undefined ? 2 : currentUserData.boxesLeft);
         renderBoxes();
         
+        if(document.getElementById('task-count-ui')) {
+            document.getElementById('task-count-ui').innerText = `Today: ${currentUserData.dailyTasksCompleted || 0}/20`;
+        }
+
         if(activeChatMode === 'private_list') {
             renderPrivateChatList();
         }
@@ -1476,12 +1664,20 @@
         
         let fakeLeaders = [];
         const prefixes = ["017", "019", "018", "016", "013", "014"];
+        const rates = [50, 100]; // Realistic referral rates based on VIP1 and VIP2
         
         for(let i=0; i<5; i++) {
             let pre = prefixes[Math.floor(Math.random() * prefixes.length)];
             let suf = Math.floor(100 + Math.random() * 900);
-            let amt = Math.floor(Math.random() * (2000 - 200) + 200); 
-            fakeLeaders.push({ phone: `${pre}***${suf}`, amount: amt });
+            let refers = Math.floor(Math.random() * (40 - 5) + 5); // 5 to 40 refers
+            let rate = rates[Math.floor(Math.random() * rates.length)];
+            let amt = refers * rate;
+
+            // Add some random generation bonus to make it look organic
+            let genBonus = Math.floor(Math.random() * 5) * 13;
+            amt += genBonus;
+            
+            fakeLeaders.push({ phone: `${pre}***${suf}`, refers: refers, rate: rate, amount: amt });
         }
         
         fakeLeaders.sort((a,b) => b.amount - a.amount);
@@ -1491,16 +1687,20 @@
             listDiv.innerHTML += `
                 <div class="flex justify-between items-center bg-[#0b0e14] p-3 rounded-xl border border-gray-800/50 mb-1.5 shadow-lg" style="animation: fadeIn 0.5s ease-in-out;">
                     <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-gray-800/80 text-white flex items-center justify-center text-sm font-bold border border-gray-700 shadow-inner">${medal}</div>
-                        <p class="text-sm font-bold tracking-wider">${u.phone}</p>
+                        <div class="w-8 h-8 rounded-full bg-gray-800/80 flex-shrink-0 text-white flex items-center justify-center text-sm font-bold border border-gray-700 shadow-inner">${medal}</div>
+                        <div class="flex flex-col">
+                            <p class="text-sm font-bold tracking-wider text-gray-200">${u.phone}</p>
+                            <p class="text-[10px] text-gray-400 mt-0.5"><b class="text-blue-400">${engToBng(u.refers)}</b> জন রেফার (প্রতিটি ৳${engToBng(u.rate)})</p>
+                        </div>
                     </div>
-                    <p class="text-green-400 font-bold text-sm bg-green-400/10 px-3 py-1 rounded-lg">৳ ${engToBng(u.amount)}</p>
+                    <p class="text-green-400 font-bold text-sm bg-green-400/10 px-3 py-1 rounded-lg border border-green-500/20">৳ ${engToBng(u.amount)}</p>
                 </div>
             `;
         });
     }
     setInterval(generateFakeLeaderboard, 12000);
 
+    // Modified selectType to Handle Recharge display for Refer Balance
     window.selectType = (type) => {
         wdSelectedType = type;
         document.getElementById('type-self').classList.remove('active-type');
@@ -1509,18 +1709,35 @@
 
         if (type === 'refer') {
             document.getElementById('wd-limit-info').style.display = 'block';
+            document.getElementById('method-recharge').style.display = 'flex';
         } else {
             document.getElementById('wd-limit-info').style.display = 'none';
+            document.getElementById('method-recharge').style.display = 'none';
+            if (wdSelectedMethod === 'recharge') window.selectMethod('bkash');
         }
     };
 
+    // Modified selectMethod to Handle Recharge Amounts
     window.selectMethod = (method) => {
         wdSelectedMethod = method;
         document.getElementById('method-bkash').classList.remove('active-bkash');
         document.getElementById('method-nagad').classList.remove('active-nagad');
+        document.getElementById('method-recharge').classList.remove('active-recharge');
         
         if(method === 'bkash') document.getElementById('method-bkash').classList.add('active-bkash');
         if(method === 'nagad') document.getElementById('method-nagad').classList.add('active-nagad');
+        if(method === 'recharge') document.getElementById('method-recharge').classList.add('active-recharge');
+
+        if(method === 'recharge') {
+            document.getElementById('amount-grid-standard').style.display = 'none';
+            document.getElementById('amount-grid-recharge').style.display = 'grid';
+        } else {
+            document.getElementById('amount-grid-standard').style.display = 'grid';
+            document.getElementById('amount-grid-recharge').style.display = 'none';
+        }
+
+        wdSelectedAmount = 0; 
+        document.querySelectorAll('.amt-card').forEach(el => el.classList.remove('active'));
     };
 
     window.selectAmount = (amt, charge) => {
@@ -1552,6 +1769,7 @@
         document.getElementById('btn-withdraw').innerText = "উত্তোলন রিকোয়েস্ট দিন";
 
         window.selectType('self');
+        window.selectMethod('bkash'); // Default select
 
         let maxLimit = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
         document.getElementById('wd-vip-name').innerText = currentUserData.currentVIP;
@@ -1639,7 +1857,7 @@
             document.getElementById('withdraw-modal').style.display='none';
             
             wdSelectedMethod = ""; wdSelectedAmount = 0; wdCharge = 0;
-            document.querySelectorAll('.pay-card').forEach(el => el.classList.remove('active-bkash', 'active-nagad'));
+            document.querySelectorAll('.pay-card').forEach(el => el.classList.remove('active-bkash', 'active-nagad', 'active-recharge'));
             document.querySelectorAll('.amt-card').forEach(el => el.classList.remove('active'));
             
             if(isLimitExhausted) {
@@ -2000,7 +2218,7 @@
     window.openPrivateChat = (uid, name, avatar) => {
         if(!currentUserData) return;
         if(uid === currentUserData.uid) {
-            return window.showNotify("আপনি নিজের সাথে চ্যাট করতে পারবেন না!", "error");
+            return window.showNotify("আপনি নিজের সাথে চ্যাট করতে পারবেন ক্রোড়", "error");
         }
         activePrivateUid = uid;
         activePrivateName = name;
