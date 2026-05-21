@@ -4,9 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EarnPro - Earning App</title>
+    
+    <!-- 🟢 NEW: App Icons for Add to Home Screen (Vercel/GitHub) 🟢 -->
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
+    <!-- 🟢 NEW: SweetAlert added for App Image Viewing 🟢 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         body { background: #05070a; color: #fff; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; height: 100vh; height: 100dvh; overflow: hidden; top: 0 !important; }
@@ -660,9 +669,15 @@
         </div>
         
         <div id="wd-free-warning" class="bg-red-500/10 border border-red-500/30 p-3 rounded-xl mb-4 hidden">
-            <p class="text-xs text-red-400 font-bold mb-3 leading-relaxed">⚠️ ফ্রি একাউন্টে টাকা উত্তোলন করা যায় না। টাকা তুলতে হলে আপনাকে আগে VIP প্যাকেজ কিনে একাউন্ট অ্যাক্টিভ করতে হবে।</p>
+            <p class="text-xs text-red-400 font-bold mb-3 leading-relaxed">⚠️ ফ্রি একাউন্টে টাকা উত্তোলন করা যায় অ্যাকাউন্টে হবে না। টাকা তুলতে হলে আপনাকে আগে VIP প্যাকেজ কিনে একাউন্ট অ্যাক্টিভ করতে হবে।</p>
             <button onclick="document.getElementById('withdraw-modal').style.display='none'; if(window.openVipPackages) window.openVipPackages();" class="w-full bg-red-600 py-2 rounded-lg text-sm font-bold text-white shadow-lg active:scale-95">VIP আপগ্রেড করুন</button>
         </div>
+
+        <div id="wd-disabled-notice" class="bg-red-500/10 border border-red-500/30 p-3 rounded-xl mb-4 hidden">
+            <p class="text-xs text-red-400 font-bold text-center" id="wd-disabled-text">উইথড্র সাময়িকভাবে বন্ধ আছে।</p>
+        </div>
+
+        <div id="wd-admin-notice" class="bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs p-2 rounded-lg mb-4 hidden text-center font-bold"></div>
         
         <label class="text-sm text-gray-300 mb-2 block font-bold">ব্যালেন্স টাইপ সিলেক্ট করুন</label>
         <div class="grid grid-cols-2 gap-3 mb-4">
@@ -687,21 +702,9 @@
         <form id="withdraw-form" onsubmit="if(window.submitWithdraw) window.submitWithdraw(event)">
             
             <label class="text-sm text-gray-300 mb-2 block font-bold">পেমেন্ট মেথড সিলেক্ট করুন</label>
-            <!-- Updated Grid to show Recharge when Refer is selected -->
-            <div class="grid grid-cols-3 gap-2 mb-4">
-                <div id="method-bkash" class="pay-card p-3 flex flex-col items-center justify-center gap-2" onclick="if(window.selectMethod) window.selectMethod('bkash')">
-                    <div class="bg-white p-1.5 rounded-lg shadow-sm"><img src="https://i.ibb.co.com/JWsLQxjp/bkash-logo-png-seeklogo-382709.png" class="w-8 h-8 object-contain" alt="bKash" onerror="this.style.display='none'"></div>
-                    <span class="text-sm font-bold text-gray-300">bKash</span>
-                </div>
-                <div id="method-nagad" class="pay-card p-3 flex flex-col items-center justify-center gap-2" onclick="if(window.selectMethod) window.selectMethod('nagad')">
-                    <div class="bg-white p-1.5 rounded-lg shadow-sm"><img src="https://i.ibb.co.com/w1cvHgy/images-2.png" class="w-8 h-8 object-contain" alt="Nagad" onerror="this.style.display='none'"></div>
-                    <span class="text-sm font-bold text-gray-300">Nagad</span>
-                </div>
-                <!-- Recharge Card (Hidden by default, shown when Refer is selected) -->
-                <div id="method-recharge" class="pay-card p-3 flex flex-col items-center justify-center gap-2 hidden" onclick="if(window.selectMethod) window.selectMethod('recharge')">
-                    <div class="bg-white p-1.5 rounded-lg shadow-sm flex items-center justify-center w-11 h-11"><i class="fa-solid fa-mobile-screen-button text-blue-500 text-xl"></i></div>
-                    <span class="text-sm font-bold text-gray-300">Recharge</span>
-                </div>
+            <!-- 🟢 DYNAMIC PAYMENT METHODS CONTAINER 🟢 -->
+            <div id="dynamic-methods-container" class="grid grid-cols-3 gap-2 mb-4">
+                <!-- Javascript will inject methods here -->
             </div>
 
             <label class="text-sm text-gray-300 mb-2 block font-bold">একাউন্ট / নাম্বার দিন</label>
@@ -709,48 +712,9 @@
 
             <label class="text-sm text-gray-300 mb-2 block font-bold">টাকার পরিমাণ সিলেক্ট করুন</label>
             
-            <!-- Standard Amount Grid (Bkash/Nagad) -->
-            <div id="amount-grid-standard" class="grid grid-cols-3 gap-2 mb-6">
-                <div id="amt-200" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(200, 0)">
-                    <h3 class="font-bold text-lg text-white">৳২০০</h3>
-                    <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
-                </div>
-                <div id="amt-300" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(300, 0)">
-                    <h3 class="font-bold text-lg text-white">৳৩০০</h3>
-                    <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
-                </div>
-                <div id="amt-500" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(500, 0)">
-                    <h3 class="font-bold text-lg text-white">৳৫০০</h3>
-                    <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
-                </div>
-                <div id="amt-1000" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(1000, 5)">
-                    <h3 class="font-bold text-lg text-white">৳১০০০</h3>
-                    <p class="text-[10px] text-gray-400 mt-1">চার্জ: ৳৫</p>
-                </div>
-                <div id="amt-1500" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(1500, 5)">
-                    <h3 class="font-bold text-lg text-white">৳১৫০০</h3>
-                    <p class="text-[10px] text-gray-400 mt-1">চার্জ: ৳৫</p>
-                </div>
-                <div id="amt-2000" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(2000, 5)">
-                    <h3 class="font-bold text-lg text-white">৳২০০০</h3>
-                    <p class="text-[10px] text-gray-400 mt-1">চার্জ: ৳৫</p>
-                </div>
-            </div>
-
-            <!-- Recharge Amount Grid (Only shown when Recharge is selected) -->
-            <div id="amount-grid-recharge" class="grid grid-cols-3 gap-2 mb-6 hidden">
-                <div id="amt-20" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(20, 0)">
-                    <h3 class="font-bold text-lg text-white">৳২০</h3>
-                    <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
-                </div>
-                <div id="amt-50" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(50, 0)">
-                    <h3 class="font-bold text-lg text-white">৳৫০</h3>
-                    <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
-                </div>
-                <div id="amt-100" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(100, 0)">
-                    <h3 class="font-bold text-lg text-white">৳১০০</h3>
-                    <p class="text-[10px] text-gray-400 mt-1">চার্জ নেই</p>
-                </div>
+            <!-- 🟢 DYNAMIC AMOUNTS CONTAINER 🟢 -->
+            <div id="dynamic-amounts-container" class="grid grid-cols-3 gap-2 mb-6">
+                <!-- Javascript will inject amounts here -->
             </div>
 
             <button type="submit" id="btn-withdraw" class="w-full bg-blue-600 hover:bg-blue-500 transition py-4 rounded-xl font-bold active:scale-95 shadow-lg shadow-blue-500/30">উত্তোলন রিকোয়েস্ট দিন</button>
@@ -855,11 +819,7 @@
 
     window.isSignupMode = false;
 
-    // ==========================================
-    // ALL GLOBAL FUNCTIONS (ZERO-LAG OPTIMIZED)
-    // ==========================================
-
-    // Google Translate Function (Language Change)
+    // Google Translate Function
     window.changeLanguage = (langCode) => {
         var selectField = document.querySelector("#google_translate_element select");
         if (selectField) {
@@ -869,6 +829,11 @@
         document.getElementById('lang-modal').style.display='none';
         if(window.showNotify) window.showNotify("Language changed successfully!", "success");
     };
+
+    function hexToRgba(hex, opacity) {
+        let r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    }
     
     window.switchTab = (tabId) => {
         let currentActive = localStorage.getItem('active_tab');
@@ -1000,7 +965,6 @@
     let activePrivateUid = null;
     let activePrivateName = "";
     
-    // Chat Caching Variables for Instant Loading
     let globalChatCache = JSON.parse(localStorage.getItem('earnpro_global_chat') || '[]');
     let privateChatCache = []; 
     
@@ -1032,10 +996,108 @@
     let privateChatUnsubscribe = null;
     window.hasWelcomed = false;
 
+    // 🟢 DYNAMIC WITHDRAW SYSTEM VARIABLES 🟢
     let wdSelectedMethod = "";
     let wdSelectedAmount = 0;
     let wdCharge = 0;
     let wdSelectedType = 'self';
+
+    // 🟢 Default Config Backup (In case admin panel isn't set yet)
+    const defaultWithdrawConfig = {
+        methods: [
+            { id: 'bkash', name: 'bKash', icon: 'https://i.ibb.co.com/JWsLQxjp/bkash-logo-png-seeklogo-382709.png', color: '#e2136e' },
+            { id: 'nagad', name: 'Nagad', icon: 'https://i.ibb.co.com/w1cvHgy/images-2.png', color: '#ed1c24' }
+        ],
+        amounts: [
+            { amount: 200, charge: 0 }, { amount: 300, charge: 0 }, { amount: 500, charge: 0 },
+            { amount: 1000, charge: 5 }, { amount: 1500, charge: 5 }, { amount: 2000, charge: 5 }
+        ],
+        rechargeAmounts: [
+            { amount: 20, charge: 0 }, { amount: 50, charge: 0 }, { amount: 100, charge: 0 }
+        ],
+        rechargeEnabled: true,
+        withdrawEnabled: true,
+        notice: ""
+    };
+
+    let currentWithdrawConfig = defaultWithdrawConfig;
+
+    // Fetch dynamic withdraw settings from Firebase
+    function checkWithdrawSettings() {
+        onSnapshot(doc(db, "app_settings", "withdraw_config"), (docSnap) => {
+            if (docSnap.exists()) {
+                let data = docSnap.data();
+                if(data.methods) currentWithdrawConfig.methods = data.methods;
+                if(data.amounts) currentWithdrawConfig.amounts = data.amounts;
+                if(data.rechargeAmounts) currentWithdrawConfig.rechargeAmounts = data.rechargeAmounts;
+                if(data.rechargeEnabled !== undefined) currentWithdrawConfig.rechargeEnabled = data.rechargeEnabled;
+                if(data.withdrawEnabled !== undefined) currentWithdrawConfig.withdrawEnabled = data.withdrawEnabled;
+                if(data.notice !== undefined) currentWithdrawConfig.notice = data.notice;
+            }
+            renderWithdrawUI();
+        });
+    }
+
+    function renderWithdrawUI() {
+        // Admin Notice
+        let noticeEl = document.getElementById('wd-admin-notice');
+        if(currentWithdrawConfig.notice && currentWithdrawConfig.notice.trim() !== "") {
+            noticeEl.style.display = 'block';
+            noticeEl.innerText = currentWithdrawConfig.notice;
+        } else {
+            noticeEl.style.display = 'none';
+        }
+
+        // Disable Withdraw Toggle
+        let form = document.getElementById('withdraw-form');
+        let disabledNotice = document.getElementById('wd-disabled-notice');
+        if(!currentWithdrawConfig.withdrawEnabled) {
+            form.style.opacity = '0.5'; form.style.pointerEvents = 'none';
+            document.getElementById('btn-withdraw').innerText = "বন্ধ আছে";
+            disabledNotice.style.display = 'block';
+        } else if (currentUserData && currentUserData.currentVIP !== "Free") {
+            form.style.opacity = '1'; form.style.pointerEvents = 'auto';
+            document.getElementById('btn-withdraw').innerText = "উত্তোলন রিকোয়েস্ট দিন";
+            disabledNotice.style.display = 'none';
+        }
+
+        // Render Methods
+        let methodsHtml = '';
+        currentWithdrawConfig.methods.forEach(m => {
+            methodsHtml += `
+            <div id="method-${m.id}" class="pay-card p-3 flex flex-col items-center justify-center gap-2" onclick="if(window.selectMethod) window.selectMethod('${m.id}', '${m.color}')">
+                <div class="bg-white p-1.5 rounded-lg shadow-sm"><img src="${m.icon}" class="w-8 h-8 object-contain" alt="${m.name}" onerror="this.style.display='none'"></div>
+                <span class="text-sm font-bold text-gray-300">${m.name}</span>
+            </div>`;
+        });
+        
+        if(wdSelectedType === 'refer' && currentWithdrawConfig.rechargeEnabled) {
+             methodsHtml += `
+            <div id="method-recharge" class="pay-card p-3 flex flex-col items-center justify-center gap-2" onclick="if(window.selectMethod) window.selectMethod('recharge', '#3b82f6')">
+                <div class="bg-white p-1.5 rounded-lg shadow-sm flex items-center justify-center w-8 h-8"><i class="fa-solid fa-mobile-screen-button text-blue-500 text-xl"></i></div>
+                <span class="text-sm font-bold text-gray-300">Recharge</span>
+            </div>`;
+        }
+        document.getElementById('dynamic-methods-container').innerHTML = methodsHtml;
+
+        // Render Amounts
+        let amountsHtml = '';
+        let targetAmounts = (wdSelectedMethod === 'recharge') ? currentWithdrawConfig.rechargeAmounts : currentWithdrawConfig.amounts;
+        
+        targetAmounts.forEach(a => {
+            let chargeText = a.charge > 0 ? `চার্জ: ৳${engToBng(a.charge)}` : `চার্জ নেই`;
+            amountsHtml += `
+            <div id="amt-${a.amount}" class="amt-card" onclick="if(window.selectAmount) window.selectAmount(${a.amount}, ${a.charge})">
+                <h3 class="font-bold text-lg text-white">৳${engToBng(a.amount)}</h3>
+                <p class="text-[10px] text-gray-400 mt-1">${chargeText}</p>
+            </div>`;
+        });
+        document.getElementById('dynamic-amounts-container').innerHTML = amountsHtml;
+
+        // Reselect if possible, otherwise reset
+        if(wdSelectedMethod) window.selectMethod(wdSelectedMethod, currentWithdrawConfig.methods.find(m => m.id === wdSelectedMethod)?.color || '#3b82f6');
+        if(wdSelectedAmount > 0) window.selectAmount(wdSelectedAmount, wdCharge);
+    }
 
     // ==========================================
     // 🟢 TASK SYSTEM LOGIC 🟢
@@ -1072,7 +1134,6 @@
     setInterval(updateTaskCooldown, 1000);
 
     function getRotatedAdLink() {
-        // Rotating logic based on current hour to bypass ad fatigue
         const links = [
             "https://www.effectivecpmnetwork.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871",
             "https://www.effectivecpmnetwork.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871&var=1",
@@ -1099,8 +1160,6 @@
 
     async function processTaskReward() {
         let currentTasks = currentUserData.dailyTasksCompleted || 0;
-        
-        // 🟢 POINT LOGIC: 5 to 10 points. 15% chance for 10.
         let earnedPoints = Math.random() < 0.15 ? 10 : Math.floor(Math.random() * 5) + 5; 
         
         try {
@@ -1114,12 +1173,10 @@
         } catch (error) {
             window.showNotify("ইন্টারনেট সমস্যা!", "error"); 
         }
-        // Set Cooldown 10 Seconds
         nextTaskTime = Date.now() + 10000;
         localStorage.setItem('next_task_time', nextTaskTime.toString());
     }
 
-    // 🟢 EXCHANGE SYSTEM 🟢
     window.exchangePoints = async () => {
         if(!currentUserData) return;
         let pts = currentUserData.points || 0;
@@ -1169,7 +1226,7 @@
         localStorage.removeItem('ad_open_time');
         localStorage.removeItem('ad_watch_box_id');
 
-        let requiredTime = (target === 'task') ? 5000 : 30000; // 5 Sec for Task, 30 Sec for Box/Bonus
+        let requiredTime = (target === 'task') ? 5000 : 30000; 
 
         if (timeSpent >= requiredTime) {
             if (target === 'box') {
@@ -1182,7 +1239,6 @@
         } else {
             if (target === 'task') {
                 window.showNotify("Task Failed: You must watch for 5 seconds", "error");
-                // Start cooldown even on fail to prevent spamming
                 nextTaskTime = Date.now() + 10000;
                 localStorage.setItem('next_task_time', nextTaskTime.toString());
             } else {
@@ -1339,6 +1395,8 @@
                 }
             }
         }, (error) => { console.log(error) });
+        
+        checkWithdrawSettings();
     }
     checkSystemSettings();
 
@@ -1410,7 +1468,6 @@
                 let name = document.getElementById('auth-name').value;
                 if(name.trim() === "") throw new Error("empty_name");
 
-                // 🟢 DYNAMIC REFERRAL CODE GENERATION 🟢
                 let baseName = name.replace(/\s+/g, '').toUpperCase().substring(0, 6);
                 let referCode = baseName + Math.floor(1000 + Math.random() * 9000);
                 
@@ -1419,7 +1476,6 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, dummyEmail, pass);
                 const user = userCredential.user;
 
-                // 🟢 NEW: ADD +1 COUNT TO REFERRER (NO MONEY YET) 🟢
                 let initialBal = 0.00;
                 if(appliedRefer) {
                     initialBal = 5.00;
@@ -2055,7 +2111,8 @@
         
         combined.forEach(msg => {
             let isMe = (currentUserData && msg.uid === currentUserData.uid);
-            let imgHtml = msg.imageUrl ? `<img src="${msg.imageUrl}" class="chat-img" onclick="window.open('${msg.imageUrl}', '_blank')">` : '';
+            // 🟢 FIXED: Using SweetAlert to show the image preview inside the app!
+            let imgHtml = msg.imageUrl ? `<img src="${msg.imageUrl}" class="chat-img hover:opacity-80 transition" onclick="Swal.fire({imageUrl: '${msg.imageUrl}', imageWidth: 400, showConfirmButton: false, background: '#121212', backdrop: 'rgba(0,0,0,0.8)'})">` : '';
             
             let reactHtml = '';
             let totalReacts = 0;
