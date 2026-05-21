@@ -78,7 +78,7 @@
         .mea-mouth::before { content: ''; position: absolute; top: -3px; left: 5px; width: 2px; height: 5px; background: #111; }
         .mea-body { position: absolute; top: 48px; left: 12px; width: 36px; height: 26px; background: linear-gradient(180deg, #f0f3f8 0%, #d9e2ec 100%); border-radius: 10px 10px 15px 15px; z-index: 5; }
         .mea-collar { position: absolute; top: 0; left: 6px; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 8px solid #00d2ff; z-index: 6; }
-        .mea-arm { position: absolute; top: 2px; width: 12px; height: 20px; background: linear-gradient(180deg, #ffffff 0%, #e0e5ec 100%); border-radius: 10px; box-shadow: inset -1px -1px 3px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.2); z-index: 7; }
+        .mea-arm { position: absolute top: 2px; width: 12px; height: 20px; background: linear-gradient(180deg, #ffffff 0%, #e0e5ec 100%); border-radius: 10px; box-shadow: inset -1px -1px 3px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.2); z-index: 7; }
         .mea-arm.left { left: 6px; transform: rotate(35deg); }
         .mea-arm.right { right: 6px; transform: rotate(-35deg); }
         .mea-tail { position: absolute; bottom: 12px; right: -10px; width: 22px; height: 12px; border-bottom: 6px solid #fff; border-right: 6px solid #fff; border-radius: 0 0 15px 0; z-index: 4; }
@@ -517,7 +517,6 @@
                         <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
                     </button>
 
-                    <!-- Language Change Option Added Here -->
                     <button onclick="document.getElementById('lang-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-indigo-500 bg-indigo-500/5">
                         <div class="flex items-center gap-3"><i class="fa-solid fa-language text-indigo-400 text-lg w-5 text-center"></i><span class="font-bold text-indigo-400">ভাষা পরিবর্তন (Language)</span></div>
                         <i class="fa-solid fa-chevron-right text-indigo-600 text-sm"></i>
@@ -1959,7 +1958,9 @@
             document.getElementById('withdraw-modal').style.display='none';
             
             wdSelectedMethod = ""; wdSelectedAmount = 0; wdCharge = 0;
-            document.querySelectorAll('.pay-card').forEach(el => el.classList.remove('active-bkash', 'active-nagad', 'active-recharge'));
+            document.querySelectorAll('.pay-card').forEach(el => {
+                el.style.borderColor = '#1f2937'; el.style.background = '#121822'; el.style.boxShadow = 'none';
+            });
             document.querySelectorAll('.amt-card').forEach(el => el.classList.remove('active'));
             
             if(isLimitExhausted) {
@@ -2115,8 +2116,9 @@
         
         combined.forEach(msg => {
             let isMe = (currentUserData && msg.uid === currentUserData.uid);
-            // 🟢 FIXED: Using SweetAlert to show the image preview inside the app!
-            let imgHtml = msg.imageUrl ? `<img src="${msg.imageUrl}" class="chat-img hover:opacity-80 transition" onclick="Swal.fire({imageUrl: '${msg.imageUrl}', imageWidth: 400, showConfirmButton: false, background: '#121212', backdrop: 'rgba(0,0,0,0.8)'})">` : '';
+            
+            // 🟢 FIXED: Using SweetAlert to show image + Download Button
+            let imgHtml = msg.imageUrl ? `<img src="${msg.imageUrl}" class="chat-img hover:opacity-80 transition" onclick="Swal.fire({imageUrl: '${msg.imageUrl}', imageAlt: 'Proof', showConfirmButton: true, confirmButtonText: '<i class=\\'fa-solid fa-download\\'></i> Download', confirmButtonColor: '#3b82f6', showCancelButton: true, cancelButtonText: 'Close', background: '#121212', color: '#fff', backdrop: 'rgba(0,0,0,0.85)'}).then((result) => { if(result.isConfirmed) { const a = document.createElement('a'); a.href = '${msg.imageUrl}'; a.download = 'EarnPro_Proof_' + Date.now() + '.jpg'; document.body.appendChild(a); a.click(); document.body.removeChild(a); } })">` : '';
             
             let reactHtml = '';
             let totalReacts = 0;
