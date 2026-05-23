@@ -370,7 +370,7 @@
                             </button>
                         </div>
 
-                        <p class="text-[11px] text-gray-300 mb-3 leading-relaxed relative z-10">প্রতিটি এড <b class="text-indigo-300">৫ সেকেন্ড</b> দেখুন এবং ৫-১০ পয়েন্ট ইনকাম করুন।</p>
+                        <p class="text-[11px] text-gray-300 mb-3 leading-relaxed relative z-10">প্রতিটি এড <b class="text-indigo-300">৫ সেকেন্ড</b> দেখুন এবং পয়েন্ট ইনকাম করুন।</p>
                         <button id="btn-watch-ad" onclick="if(window.startAdTask) window.startAdTask()" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 py-3 rounded-xl font-bold text-white shadow-lg active:scale-95 transition relative z-10 text-sm">এড দেখুন (Watch Ad)</button>
                         <p id="task-cooldown-ui" class="text-center text-[11px] text-red-400 mt-2 font-bold hidden relative z-10">Next ad in 10s</p>
                     </div>
@@ -437,7 +437,7 @@
                         <i class="fa-solid fa-share-nodes"></i>
                     </div>
                     <h3 class="text-lg font-bold mb-1">আপনার বন্ধুদের ইনভাইট করুন</h3>
-                    <p class="text-[11px] text-gray-400 mb-4 px-2">আপনার রেফার করা বন্ধু ১০টি এড টাস্ক সম্পূর্ণ করলেই আপনি পেয়ে যাবেন <b class="text-yellow-400">৫০ পয়েন্ট</b> নিশ্চিত বোনাস!</p>
+                    <p class="text-[11px] text-gray-400 mb-4 px-2">আপনার রেফার করা বন্ধুকে VIP কিনতে বলুন এবং নিশ্চিত রেফার কমিশন উপভোগ করুন!</p>
                     
                     <div class="bg-[#05070a] p-3 rounded-xl flex justify-between items-center border border-gray-700">
                         <div class="flex flex-col text-left truncate flex-1 pr-2">
@@ -453,10 +453,10 @@
                 <div class="glass p-5 rounded-2xl border-l-4 border-green-500 mb-6 bg-green-500/5">
                     <h4 class="font-bold text-green-400 mb-3 text-lg"><i class="fa-solid fa-money-bill-wave"></i> রেফার করে কে কত পাবে?</h4>
                     <ul class="text-[13px] text-gray-300 space-y-3 leading-relaxed">
-                        <li class="flex gap-2 items-start"><i class="fa-solid fa-check text-green-400 mt-1"></i><span><b>VIP 1 কমিশন:</b> আপনি <b>VIP 1</b> হলে, আপনার বন্ধু যেই প্যাকেজই কিনুক, আপনি পাবেন <b>৫০৳</b>।</span></li>
-                        <li class="flex gap-2 items-start"><i class="fa-solid fa-check text-green-400 mt-1"></i><span><b>VIP 2 কমিশন:</b> আপনি <b>VIP 2</b> হলে এবং বন্ধু VIP 1 কিনলে পাবেন <b>৫০৳</b>। কিন্তু বন্ধুও <b>VIP 2</b> কিনলে পাবেন পুরো <b>১০০৳</b>!</span></li>
-                        <li class="flex gap-2 items-start"><i class="fa-solid fa-bolt text-yellow-400 mt-1"></i><span><b>জেনারেশন (২য় লেভেল):</b> আপনার বন্ধুর রেফার করা মেম্বার VIP 1 কিনলে আপনি বসে বসে <b>৭.৫৳</b> এবং VIP 2 কিনলে <b>১৩৳</b> পাবেন।</span></li>
-                        <li class="flex gap-2 items-start"><i class="fa-solid fa-triangle-exclamation text-red-400 mt-1"></i><span><b>শর্ত:</b> এই রেফার কমিশনগুলো পেতে হলে আপনাকে অবশ্যই যেকোনো একটি VIP প্যাকেজ কিনে এক্টিভ থাকতে হবে।</span></li>
+                        <li class="flex gap-2 items-start"><i class="fa-solid fa-check text-green-400 mt-1"></i><span><b>VIP 1 (Basic):</b> আপনার বন্ধু VIP 1 কিনলে পাবেন <b id="rule-v1l1">২৫৳</b>। ২য় লেভেল থেকে পাবেন <b id="rule-v1l2">৫৳</b>।</span></li>
+                        <li class="flex gap-2 items-start"><i class="fa-solid fa-check text-green-400 mt-1"></i><span><b>VIP 2 (Pro):</b> আপনার বন্ধু VIP 2 কিনলে পাবেন <b id="rule-v2l1">৫০৳</b>। ২য় লেভেল থেকে পাবেন <b id="rule-v2l2">১০৳</b>।</span></li>
+                        <li class="flex gap-2 items-start"><i class="fa-solid fa-check text-green-400 mt-1"></i><span><b>VIP 3 (Premium):</b> আপনার বন্ধু VIP 3 কিনলে পাবেন <b id="rule-v3l1">১০০৳</b>। ২য় লেভেল থেকে পাবেন <b id="rule-v3l2">২০৳</b>।</span></li>
+                        <li class="flex gap-2 items-start"><i class="fa-solid fa-triangle-exclamation text-red-400 mt-1"></i><span><b>শর্ত:</b> এই ক্যাশ রেফার কমিশনগুলো পেতে হলে আপনাকেও অবশ্যই যেকোনো একটি VIP প্যাকেজ কিনে এক্টিভ থাকতে হবে।</span></li>
                     </ul>
                 </div>
 
@@ -503,8 +503,8 @@
                 <div class="glass p-5 rounded-3xl mb-6 relative overflow-hidden">
                     <div class="absolute right-0 top-0 w-24 h-24 bg-yellow-500/10 rounded-bl-full"></div>
                     <div class="flex justify-between text-xs mb-2 relative z-10">
-                        <span class="text-gray-300 font-bold"><i class="fa-solid fa-arrow-trend-up text-yellow-400"></i> VIP Upgrade Progress</span>
-                        <span class="text-yellow-400 font-bold"><span id="prog-pts">0</span> / <span id="prog-target">1000</span> Pts</span>
+                        <span class="text-gray-300 font-bold"><i class="fa-solid fa-arrow-trend-up text-yellow-400"></i> VIP 1 Progress</span>
+                        <span class="text-yellow-400 font-bold"><span id="prog-pts">0</span> / <span id="prog-target">10000</span> Pts</span>
                     </div>
                     <div class="w-full bg-gray-800 rounded-full h-2.5 relative z-10 shadow-inner">
                         <div id="vip-progress-bar" class="bg-gradient-to-r from-yellow-400 to-orange-500 h-2.5 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.5)] transition-all duration-1000" style="width: 0%"></div>
@@ -616,25 +616,26 @@
         </div>
         <div class="text-[13px] text-gray-300 pr-2 my-2 space-y-4">
             <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
-                <h4 class="font-bold text-blue-400 mb-1">১. রেফার কমিশন (Direct):</h4>
-                <p><b>১০০ টাকা রেফার কমিশন পেতে হলে আপনাকে এবং আপনার বন্ধু দুজনকেই VIP 2 (২০০৳) হতে হবে।</b> বিস্তারিত:
-                <br>- আপনি <b>VIP 1</b> হলে: আপনার বন্ধু VIP 1 বা VIP 2 যাই কিনুক, আপনি পাবেন <b>৫০৳</b>।
-                <br>- আপনি <b>VIP 2</b> হলে: আপনার বন্ধু VIP 1 কিনলে পাবেন <b>৫০৳</b>। কিন্তু বন্ধুও <b>VIP 2</b> কিনলে পাবেন পুরো <b>১০০৳</b>!</p>
+                <h4 class="font-bold text-blue-400 mb-1">১. রেফার কমিশন (Direct Level 1):</h4>
+                <p>রেফার কমিশন পেতে হলে আপনাকে অবশ্যই যেকোনো একটি VIP কিনে এক্টিভ থাকতে হবে। 
+                <br>- আপনার রেফার <b>VIP 1</b> কিনলে আপনি পাবেন <b id="rules-l1-v1">২৫৳</b>।
+                <br>- আপনার রেফার <b>VIP 2</b> কিনলে পাবেন <b id="rules-l1-v2">৫০৳</b>।
+                <br>- আপনার রেফার <b>VIP 3</b> কিনলে পাবেন <b id="rules-l1-v3">১০০৳</b>!</p>
             </div>
             
             <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
                 <h4 class="font-bold text-yellow-400 mb-1">২. জেনারেশন বোনাস (Level 2):</h4>
-                <p>আপনার রেফার করা বন্ধু যখন অন্য কাউকে রেফার করে VIP 1 সেল করবে, তখন আপনি ঘরে বসে পাবেন <b>৳৭.৫</b> এবং VIP 2 সেল করলে পাবেন <b>৳১৩</b>।</p>
+                <p>আপনার রেফার করা বন্ধু যখন অন্য কাউকে রেফার করে, তখন আপনি ঘরে বসে Level 2 বোনাস পাবেন। VIP 1 এ <b id="rules-l2-v1">৫৳</b>, VIP 2 এ <b id="rules-l2-v2">১০৳</b>, এবং VIP 3 এ <b id="rules-l2-v3">২০৳</b>।</p>
             </div>
             
             <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
-                <h4 class="font-bold text-green-400 mb-1">৩. সাইনআপ বোনাস:</h4>
-                <p>যে ব্যক্তি আপনার রেফার কোড দিয়ে একাউন্ট খুলে VIP কিনবে, সে সাথে সাথে <b>৳৫</b> বোনাস পাবে.</p>
+                <h4 class="font-bold text-green-400 mb-1">৩. ফ্রি ইউজার রেফার বোনাস:</h4>
+                <p>আপনার রেফার করা বন্ধু যদি VIP না কিনে ফ্রিতে কাজ করে, সে যখন <b id="rules-free-ads">৫০</b> টি এড দেখা সম্পূর্ণ করবে, তখন আপনি <b id="rules-free-pts">৫০</b> পয়েন্ট সরাসরি বোনাস পাবেন!</p>
             </div>
             
             <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
-                <h4 class="font-bold text-pink-400 mb-1">৪. ইনকাম লিমিট:</h4>
-                <p><b>VIP 1</b> (৳১০০) দিয়ে সর্বোচ্চ <b>৳১০০০</b> এবং <b>VIP 2</b> (৳২০০) দিয়ে সর্বোচ্চ <b>৳২০০০</b> রেফার ইনকাম করা যাবে। লিমিট শেষ হলে আবার প্যাকেজ কিনতে হবে।</p>
+                <h4 class="font-bold text-pink-400 mb-1">৪. উইথড্র লিমিট:</h4>
+                <p>আপনি পয়েন্ট এক্সচেঞ্জ করে যে টাকা আয় করবেন (নিজস্ব আয়), তা তোলার কোনো লিমিট নেই। তবে রেফার ইনকাম তোলার লিমিট প্যাকেজ অনুযায়ী নির্দিষ্ট। লিমিট শেষ হলে আবার প্যাকেজ কিনতে হবে।</p>
             </div>
         </div>
         <button onclick="document.getElementById('rules-modal').style.display='none'" class="w-full bg-green-600 py-3 rounded-xl font-bold text-white shadow-lg active:scale-95 mt-4">বুঝতে পেরেছি</button>
@@ -747,42 +748,43 @@
             <button id="tab-buy-deposit" onclick="window.switchVipTab('deposit')" class="flex-1 py-2 text-sm font-bold text-gray-400 hover:text-white rounded-lg transition">Manual Deposit</button>
         </div>
 
+        <!-- POINTS TAB (VIP 1 Only) -->
         <div id="vip-points-section">
             <p class="text-xs text-yellow-400 bg-yellow-500/10 p-2 rounded border border-yellow-500/20 font-bold mb-3"><i class="fa-solid fa-coins mr-1"></i> আপনার পয়েন্ট দিয়ে সরাসরি VIP কিনুন।</p>
             
             <div class="space-y-3">
-                <div class="bg-[#05070a] p-4 rounded-xl border border-blue-500/30 flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold text-blue-400">VIP 1</h4>
+                <div class="bg-[#05070a] p-4 rounded-xl border border-blue-500/30 flex justify-between items-center relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-24 h-24 bg-blue-500/10 rounded-bl-full"></div>
+                    <div class="relative z-10">
+                        <h4 class="font-bold text-blue-400 flex items-center gap-2">VIP 1 (Basic)</h4>
                         <p class="text-[10px] text-gray-400 mt-1">লিমিট ১০০০ ৳</p>
+                        <span id="promo-badge" class="text-[9px] bg-red-500 text-white px-1.5 py-0.5 rounded font-bold mt-1 inline-block animate-pulse shadow-lg hidden">Launch Promo!</span>
                     </div>
-                    <button onclick="window.buyVipWithPoints('VIP 1')" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg font-bold shadow-lg text-sm transition">
-                        <span id="vip1-point-cost">1000</span> Pts
-                    </button>
-                </div>
-
-                <div class="bg-[#05070a] p-4 rounded-xl border border-purple-500/30 flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold text-purple-400">VIP 2</h4>
-                        <p class="text-[10px] text-gray-400 mt-1">লিমিট ২০০০ ৳</p>
-                    </div>
-                    <button onclick="window.buyVipWithPoints('VIP 2')" class="bg-purple-600 hover:bg-purple-500 px-4 py-2 rounded-lg font-bold shadow-lg text-sm transition">
-                        <span id="vip2-point-cost">2000</span> Pts
+                    <button onclick="window.buyVipWithPoints('VIP 1')" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg font-bold shadow-lg transition relative z-10 flex flex-col items-center leading-tight active:scale-95">
+                        <span class="line-through text-[10px] text-blue-200 hidden" id="vip1-reg-cost">10000 Pts</span>
+                        <span class="text-sm"><span id="vip1-point-cost">10000</span> Pts</span>
                     </button>
                 </div>
             </div>
+            
+            <div class="bg-gray-800/50 p-3 rounded-xl mt-4 border border-gray-700 text-xs text-gray-300">
+                <i class="fa-solid fa-circle-info text-blue-400 mr-1"></i> VIP 2 এবং VIP 3 শুধুমাত্র Manual Deposit এর মাধ্যমে কেনা যাবে।
+            </div>
+
             <p class="text-center mt-4 text-xs text-gray-500">Your Balance: <b class="text-yellow-400" id="vip-modal-user-points">0</b> Points</p>
         </div>
 
+        <!-- DEPOSIT TAB -->
         <div id="vip-deposit-section" class="hidden">
             <p class="text-xs text-green-400 bg-green-500/10 p-2 rounded border border-green-500/20 font-bold mb-3">✅ বিকাশ/নগদে টাকা পাঠিয়ে ম্যানুয়ালি কিনুন।</p>
             <label class="text-sm text-gray-400 mb-1 block">প্যাকেজ নির্বাচন করুন</label>
             <select id="vip-select" class="input-style bg-gray-800 text-white font-bold" onchange="if(window.updateVipInfo) window.updateVipInfo()">
-                <option value="VIP 1" data-price="100">VIP 1 (মূল্য: ৳১০০) - লিমিট ১০০০ ৳</option>
-                <option value="VIP 2" data-price="200">VIP 2 (মূল্য: ৳২০০) - লিমিট ২০০০ ৳</option>
+                <option value="VIP 1" data-price="50">VIP 1 (Basic) - ৳৫০ - লিমিট ১০০০৳</option>
+                <option value="VIP 2" data-price="100">VIP 2 (Pro) - ৳১০০ - লিমিট ২০০০৳</option>
+                <option value="VIP 3" data-price="200">VIP 3 (Premium) - ৳২০০ - লিমিট ৫০০০৳</option>
             </select>
             <div class="bg-blue-500/10 border border-blue-500/30 p-4 rounded-xl mb-4 mt-2">
-                <p class="text-sm text-gray-300">নিচের নাম্বারে <b id="vip-price-display" class="text-green-400 text-lg">৳১০০</b> সেন্ড মানি করুন।</p>
+                <p class="text-sm text-gray-300">নিচের নাম্বারে <b id="vip-price-display" class="text-green-400 text-lg">৳৫০</b> সেন্ড মানি করুন।</p>
                 <div class="flex justify-between items-center mt-2 bg-[#05070a] p-2 rounded border border-gray-700">
                     <span class="font-bold text-lg tracking-wider" id="admin-number">01600678966</span>
                     <button onclick="if(window.copyText) window.copyText('01600678966', 'নাম্বার কপি হয়েছে')" class="bg-gray-800 px-3 py-1 rounded text-xs">কপি</button>
@@ -1050,11 +1052,27 @@
     let wdCharge = 0;
     let wdSelectedType = 'self';
 
-    // 🟢 DYNAMIC SITE CONFIG (POINTS & REWARDS) 🟢
+    // 🟢 DYNAMIC SITE CONFIG (POINTS, REWARDS, MLM) 🟢
     let siteConfig = {
-        vip1Offer: 1000, vip1Reg: 1500,
-        vip2Offer: 2000, vip2Reg: 2500,
-        pointRate: 2, 
+        adPoints: 5,
+        pointsPerTaka: 500,  
+        minWithdraw: 50,
+        
+        vip1PromoActive: true,
+        vip1PromoCost: 1000,
+        vip1RegCost: 10000,
+        
+        vip1Price: 50,
+        vip2Price: 100,
+        vip3Price: 200,
+
+        vip1L1: 25, vip1L2: 5,
+        vip2L1: 50, vip2L2: 10,
+        vip3L1: 100, vip3L2: 20,
+
+        freeRefPoints: 50,
+        freeRefTargetAds: 50,
+        
         bonusPhase1: 50, bonusPhase2: 10
     };
 
@@ -1063,9 +1081,49 @@
             if (docSnap.exists()) {
                 siteConfig = { ...siteConfig, ...docSnap.data() };
             }
-            document.getElementById('vip1-point-cost').innerText = siteConfig.vip1Offer;
-            document.getElementById('vip2-point-cost').innerText = siteConfig.vip2Offer;
-            document.getElementById('prog-target').innerText = siteConfig.vip1Offer;
+            
+            // Updating VIP Modal UI
+            if(siteConfig.vip1PromoActive) {
+                document.getElementById('vip1-point-cost').innerText = siteConfig.vip1PromoCost;
+                document.getElementById('vip1-reg-cost').style.display = 'block';
+                document.getElementById('vip1-reg-cost').innerText = siteConfig.vip1RegCost + " Pts";
+                document.getElementById('promo-badge').style.display = 'inline-block';
+            } else {
+                document.getElementById('vip1-point-cost').innerText = siteConfig.vip1RegCost;
+                document.getElementById('vip1-reg-cost').style.display = 'none';
+                document.getElementById('promo-badge').style.display = 'none';
+            }
+            
+            // Updating Rules Texts
+            if(document.getElementById('rules-l1-v1')) {
+                document.getElementById('rules-l1-v1').innerText = engToBng(siteConfig.vip1L1) + '৳';
+                document.getElementById('rules-l2-v1').innerText = engToBng(siteConfig.vip1L2) + '৳';
+                document.getElementById('rules-l1-v2').innerText = engToBng(siteConfig.vip2L1) + '৳';
+                document.getElementById('rules-l2-v2').innerText = engToBng(siteConfig.vip2L2) + '৳';
+                document.getElementById('rules-l1-v3').innerText = engToBng(siteConfig.vip3L1) + '৳';
+                document.getElementById('rules-l2-v3').innerText = engToBng(siteConfig.vip3L2) + '৳';
+                
+                document.getElementById('rules-free-ads').innerText = engToBng(siteConfig.freeRefTargetAds);
+                document.getElementById('rules-free-pts').innerText = engToBng(siteConfig.freeRefPoints);
+
+                document.getElementById('rule-v1l1').innerText = engToBng(siteConfig.vip1L1) + '৳';
+                document.getElementById('rule-v1l2').innerText = engToBng(siteConfig.vip1L2) + '৳';
+                document.getElementById('rule-v2l1').innerText = engToBng(siteConfig.vip2L1) + '৳';
+                document.getElementById('rule-v2l2').innerText = engToBng(siteConfig.vip2L2) + '৳';
+                document.getElementById('rule-v3l1').innerText = engToBng(siteConfig.vip3L1) + '৳';
+                document.getElementById('rule-v3l2').innerText = engToBng(siteConfig.vip3L2) + '৳';
+            }
+
+            document.getElementById('prog-target').innerText = siteConfig.vip1PromoActive ? siteConfig.vip1PromoCost : siteConfig.vip1RegCost;
+            
+            // Apply price values to select options dynamically
+            let sel = document.getElementById('vip-select');
+            if(sel) {
+                sel.options[0].setAttribute('data-price', siteConfig.vip1Price);
+                sel.options[1].setAttribute('data-price', siteConfig.vip2Price);
+                sel.options[2].setAttribute('data-price', siteConfig.vip3Price);
+            }
+
             updateUI(); 
         });
     }
@@ -1076,8 +1134,8 @@
             { id: 'nagad', name: 'Nagad', icon: 'https://i.ibb.co.com/w1cvHgy/images-2.png', color: '#ed1c24' }
         ],
         amounts: [
-            { amount: 200, charge: 0 }, { amount: 300, charge: 0 }, { amount: 500, charge: 0 },
-            { amount: 1000, charge: 5 }, { amount: 1500, charge: 5 }, { amount: 2000, charge: 5 }
+            { amount: 50, charge: 0 }, { amount: 100, charge: 0 }, { amount: 200, charge: 0 },
+            { amount: 500, charge: 5 }, { amount: 1000, charge: 5 }, { amount: 2000, charge: 5 }
         ],
         rechargeAmounts: [
             { amount: 20, charge: 0 }, { amount: 50, charge: 0 }, { amount: 100, charge: 0 }
@@ -1224,7 +1282,7 @@
         let currentTotalTasks = currentUserData.totalTasksCompleted || 0;
         let newTotalTasks = currentTotalTasks + 1;
         
-        let earnedPoints = Math.random() < 0.15 ? 10 : Math.floor(Math.random() * 5) + 5; 
+        let earnedPoints = siteConfig.adPoints || 5; 
         
         try {
             await setDoc(doc(db, "users", currentUserData.uid), { 
@@ -1233,13 +1291,17 @@
                 totalTasksCompleted: newTotalTasks
             }, { merge: true });
 
-            if(newTotalTasks === 10 && currentUserData.referredBy && currentUserData.referredBy !== "None") {
+            // 🟢 FREE USER ANTI-FAKE REFERRAL LOGIC
+            let targetFreeAds = siteConfig.freeRefTargetAds || 50;
+            let freePointsReward = siteConfig.freeRefPoints || 50;
+
+            if(newTotalTasks === targetFreeAds && currentUserData.currentVIP === "Free" && currentUserData.referredBy && currentUserData.referredBy !== "None") {
                 const refQuery = query(collection(db, "users"), where("myReferCode", "==", currentUserData.referredBy));
                 const refSnap = await getDocs(refQuery);
                 if(!refSnap.empty) {
                     let refDoc = refSnap.docs[0];
                     await setDoc(doc(db, "users", refDoc.id), {
-                        points: (refDoc.data().points || 0) + 50
+                        points: (refDoc.data().points || 0) + freePointsReward
                     }, { merge: true });
                 }
             }
@@ -1257,13 +1319,16 @@
     window.exchangePoints = async () => {
         if(!currentUserData) return;
         let pts = currentUserData.points || 0;
-        if(pts < 100) {
-            return window.showNotify("এক্সচেঞ্জ করতে কমপক্ষে ১০০ পয়েন্ট লাগবে!", "error");
+        let pRate = siteConfig.pointsPerTaka || 500; 
+        
+        let minRequired = pRate * 10; 
+
+        if(pts < minRequired) {
+            return window.showNotify(`এক্সচেঞ্জ করতে কমপক্ষে ${engToBng(minRequired)} পয়েন্ট লাগবে!`, "error");
         }
         
-        let rate = siteConfig.pointRate || 2;
-        let takaToAdd = Math.floor(pts / 100) * rate;
-        let remPoints = pts % 100;
+        let takaToAdd = Math.floor(pts / pRate);
+        let remPoints = pts % pRate;
         
         try {
             await setDoc(doc(db, "users", currentUserData.uid), {
@@ -1423,10 +1488,11 @@
             let isVip = Math.random() > 0.6;
             
             if(isVip) {
-                let pkg = Math.random() > 0.5 ? "VIP 1" : "VIP 2";
+                let pkgList = ["VIP 1", "VIP 2", "VIP 3"];
+                let pkg = pkgList[Math.floor(Math.random() * pkgList.length)];
                 showTrustNotification(fakePhone, `সদ্য ${pkg} প্যাকেজ কিনেছেন!`, true);
             } else {
-                let amounts = [200, 300, 400, 500, 1000];
+                let amounts = [100, 200, 300, 400, 500, 1000];
                 let randAmount = amounts[Math.floor(Math.random() * amounts.length)];
                 let method = Math.random() > 0.5 ? "বিকাশ" : "নগদ";
                 showTrustNotification(fakePhone, `সদ্য ৳${engToBng(randAmount)} ${method}-এ উত্তোলন করেছেন!`, false);
@@ -1558,9 +1624,7 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, dummyEmail, pass);
                 const user = userCredential.user;
 
-                let initialBal = 0.00;
                 if(appliedRefer) {
-                    initialBal = 5.00;
                     try {
                         const referQuery = query(collection(db, "users"), where("myReferCode", "==", appliedRefer));
                         const referSnap = await getDocs(referQuery);
@@ -1580,7 +1644,7 @@
                     phone: phone,
                     password: pass, 
                     avatar: "",
-                    balance: initialBal,        
+                    balance: 0,        
                     points: 0,
                     referBalance: 0,      
                     totalRefers: 0,
@@ -1609,11 +1673,7 @@
                 });
                 
                 triggerConfetti();
-                if(appliedRefer) {
-                    window.showNotify("একাউন্ট খোলা সফল! ৫ টাকা বোনাস পেয়েছেন!", "success");
-                } else {
-                    window.showNotify("একাউন্ট খোলা সফল হয়েছে!", "success");
-                }
+                window.showNotify("একাউন্ট খোলা সফল হয়েছে!", "success");
 
             } else {
                 const loginCredential = await signInWithEmailAndPassword(auth, dummyEmail, pass);
@@ -1630,7 +1690,7 @@
     };
 
     // ==========================================
-    // 🟢 AUTO-HEALING COMMISSION SYSTEM 🟢
+    // 🟢 AUTO-HEALING COMMISSION SYSTEM (UPDATED 3 TIER) 🟢
     // ==========================================
     window.runCommissionCheck = async (uid) => {
         try {
@@ -1641,6 +1701,17 @@
 
             // 1. আমি যদি VIP হই, তাহলে আমার আপলাইনদের টাকা দিয়ে দিই (যদি বাকি থাকে)
             if (myData.currentVIP && myData.currentVIP !== "Free") {
+                
+                let l1Comm = 0; let l2Comm = 0;
+                
+                if (myData.currentVIP.includes("VIP 1")) {
+                    l1Comm = siteConfig.vip1L1; l2Comm = siteConfig.vip1L2;
+                } else if (myData.currentVIP.includes("VIP 2")) {
+                    l1Comm = siteConfig.vip2L1; l2Comm = siteConfig.vip2L2;
+                } else if (myData.currentVIP.includes("VIP 3")) {
+                    l1Comm = siteConfig.vip3L1; l2Comm = siteConfig.vip3L2;
+                }
+
                 if (myData.referredBy && myData.referredBy !== "None" && !myData.commissionPaidToL1) {
                     let q1 = query(collection(db, "users"), where("myReferCode", "==", myData.referredBy));
                     let snap1 = await getDocs(q1);
@@ -1648,12 +1719,8 @@
                         let l1Doc = snap1.docs[0];
                         let l1Data = l1Doc.data();
 
-                        // আপলাইনকে অবশ্যই VIP হতে হবে টাকা পাওয়ার জন্য
+                        // L1 must be VIP to receive cash commission
                         if (l1Data.currentVIP && l1Data.currentVIP !== "Free") {
-                            let l1Comm = 0;
-                            if (l1Data.currentVIP.includes("VIP 1")) l1Comm = 50;
-                            else if (l1Data.currentVIP.includes("VIP 2")) l1Comm = myData.currentVIP.includes("VIP 2") ? 100 : 50;
-
                             if (l1Comm > 0) {
                                 await setDoc(doc(db, "users", l1Doc.id), {
                                     referBalance: (l1Data.referBalance || 0) + l1Comm,
@@ -1671,12 +1738,15 @@
                             if (!snap2.empty) {
                                 let l2Doc = snap2.docs[0];
                                 let l2Data = l2Doc.data();
+                                
+                                // L2 must also be VIP to receive generation commission
                                 if (l2Data.currentVIP && l2Data.currentVIP !== "Free") {
-                                    let l2Comm = myData.currentVIP.includes("VIP 2") ? 13 : 7.5;
-                                    await setDoc(doc(db, "users", l2Doc.id), {
-                                        referBalance: (l2Data.referBalance || 0) + l2Comm,
-                                        referIncome: (l2Data.referIncome || 0) + l2Comm
-                                    }, { merge: true });
+                                    if (l2Comm > 0) {
+                                        await setDoc(doc(db, "users", l2Doc.id), {
+                                            referBalance: (l2Data.referBalance || 0) + l2Comm,
+                                            referIncome: (l2Data.referIncome || 0) + l2Comm
+                                        }, { merge: true });
+                                    }
                                 }
                                 await setDoc(myDocRef, { commissionPaidToL2: true }, { merge: true });
                             }
@@ -1695,8 +1765,9 @@
                     let refData = refDoc.data();
                     if (refData.currentVIP && refData.currentVIP !== "Free" && !refData.commissionPaidToL1) {
                         let amt = 0;
-                        if (myData.currentVIP.includes("VIP 1")) amt = 50;
-                        else if (myData.currentVIP.includes("VIP 2")) amt = refData.currentVIP.includes("VIP 2") ? 100 : 50;
+                        if (refData.currentVIP.includes("VIP 1")) amt = siteConfig.vip1L1;
+                        else if (refData.currentVIP.includes("VIP 2")) amt = siteConfig.vip2L1;
+                        else if (refData.currentVIP.includes("VIP 3")) amt = siteConfig.vip3L1;
 
                         if (amt > 0) {
                             pendingSelfBal += amt;
@@ -1851,7 +1922,7 @@
 
         // Update Profile Progress Bar
         let currentPts = currentUserData.points || 0;
-        let targetPts = siteConfig.vip1Offer;
+        let targetPts = siteConfig.vip1PromoActive ? siteConfig.vip1PromoCost : siteConfig.vip1RegCost;
         document.getElementById('prog-pts').innerText = currentPts;
         document.getElementById('vip-modal-user-points').innerText = currentPts;
         let percentage = Math.min((currentPts / targetPts) * 100, 100);
@@ -2071,7 +2142,10 @@
         window.selectType('self');
         window.selectMethod('bkash'); 
 
-        let maxLimit = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
+        let maxLimit = 1000;
+        if(currentUserData.currentVIP.includes("VIP 2")) maxLimit = 2000;
+        if(currentUserData.currentVIP.includes("VIP 3")) maxLimit = 5000;
+
         document.getElementById('wd-vip-name').innerText = currentUserData.currentVIP;
         document.getElementById('wd-vip-max').innerText = engToBng(maxLimit);
         document.getElementById('wd-vip-used').innerText = engToBng(currentUserData.usedVipLimit || 0);
@@ -2091,7 +2165,10 @@
         let number = document.getElementById('wd-number').value; 
         if(number.length < 10) return window.showNotify("সঠিক একাউন্ট নাম্বার দিন!", "error");
 
-        let maxLimit = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
+        let maxLimit = 1000;
+        if(currentUserData.currentVIP.includes("VIP 2")) maxLimit = 2000;
+        if(currentUserData.currentVIP.includes("VIP 3")) maxLimit = 5000;
+
         let usedVipLimit = currentUserData.usedVipLimit || 0;
         let totalCutAmount = wdSelectedAmount + wdCharge;
 
@@ -2195,7 +2272,7 @@
 
     window.buyVipWithPoints = async (vipLevel) => {
         if(!currentUserData) return;
-        let cost = (vipLevel === 'VIP 1') ? siteConfig.vip1Offer : siteConfig.vip2Offer;
+        let cost = siteConfig.vip1PromoActive ? siteConfig.vip1PromoCost : siteConfig.vip1RegCost;
         let userPoints = currentUserData.points || 0;
 
         if(userPoints < cost) {
@@ -2943,7 +3020,10 @@
         else if(t.match(/(লিমিট|limit|কত টাকা তুলতে পারব|বাকি আছে|লিমিট কত)/)) {
             if(!currentUserData || currentUserData.currentVIP === "Free") { reply = "আপনার একাউন্টটি ফ্রি। টাকা তোলার জন্য ভিআইপি প্যাকেজ কিনে নিন।"; } 
             else {
-                let max = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
+                let max = 1000;
+                if(currentUserData.currentVIP.includes("VIP 2")) max = 2000;
+                if(currentUserData.currentVIP.includes("VIP 3")) max = 5000;
+                
                 let used = currentUserData.usedVipLimit || 0; let rem = max - used;
                 reply = `আপনার ${currentUserData.currentVIP} প্যাকেজে আর ${rem} টাকা রেফার ইনকাম তোলার লিমিট বাকি আছে। নিজস্ব আয় তুলতে কোনো লিমিট নেই।`;
             }
