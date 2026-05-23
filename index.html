@@ -735,7 +735,6 @@
     </div>
 </div>
 
-<!-- 🟢 MODIFIED: VIP Modal to support both Points and Deposit 🟢 -->
 <div id="vip-modal" class="modal-overlay">
     <div class="modal-content !p-5">
         <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
@@ -1001,6 +1000,7 @@
         } catch(e) { console.log(e); }
     };
 
+    // 🟢 INITIALIZATION & CACHE CHECK 🟢
     if(localStorage.getItem('earnpro_cached_login') === 'true') {
          let splash = document.getElementById('splash-screen');
          splash.style.opacity = '0';
@@ -1224,7 +1224,6 @@
         let currentTotalTasks = currentUserData.totalTasksCompleted || 0;
         let newTotalTasks = currentTotalTasks + 1;
         
-        // 🟢 POINT LOGIC: 5 to 10 points. 15% chance for 10.
         let earnedPoints = Math.random() < 0.15 ? 10 : Math.floor(Math.random() * 5) + 5; 
         
         try {
@@ -1234,7 +1233,6 @@
                 totalTasksCompleted: newTotalTasks
             }, { merge: true });
 
-            // 🟢 NEW REFERRAL RULE: Give 50 points to referrer ONLY when 10 tasks are completed
             if(newTotalTasks === 10 && currentUserData.referredBy && currentUserData.referredBy !== "None") {
                 const refQuery = query(collection(db, "users"), where("myReferCode", "==", currentUserData.referredBy));
                 const refSnap = await getDocs(refQuery);
@@ -1263,7 +1261,6 @@
             return window.showNotify("এক্সচেঞ্জ করতে কমপক্ষে ১০০ পয়েন্ট লাগবে!", "error");
         }
         
-        // Use dynamic point rate
         let rate = siteConfig.pointRate || 2;
         let takaToAdd = Math.floor(pts / 100) * rate;
         let remPoints = pts % 100;
@@ -1561,7 +1558,6 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, dummyEmail, pass);
                 const user = userCredential.user;
 
-                // 🟢 NEW: ADD +1 COUNT TO REFERRER (NO MONEY YET) 🟢
                 let initialBal = 0.00;
                 if(appliedRefer) {
                     initialBal = 5.00;
@@ -1607,7 +1603,9 @@
                     createdAt: serverTimestamp(),
                     dailyUploads: 0,
                     lastUploadDate: "",
-                    recent_chats: {}
+                    recent_chats: {},
+                    commissionPaidToL1: false,
+                    commissionPaidToL2: false
                 });
                 
                 triggerConfetti();
@@ -1631,6 +1629,95 @@
         btn.innerText = window.isSignupMode ? "সাইন আপ" : "লগইন করুন"; btn.disabled = false;
     };
 
+    // ==========================================
+    // 🟢 AUTO-HEALING COMMISSION SYSTEM 🟢
+    // ==========================================
+    window.runCommissionCheck = async (uid) => {
+        try {
+            let myDocRef = doc(db, "users", uid);
+            let myDoc = await getDoc(myDocRef);
+            if(!myDoc.exists()) return;
+            let myData = myDoc.data();
+
+            // 1. আমি যদি VIP হই, তাহলে আমার আপলাইনদের টাকা দিয়ে দিই (যদি বাকি থাকে)
+            if (myData.currentVIP && myData.currentVIP !== "Free") {
+                if (myData.referredBy && myData.referredBy !== "None" && !myData.commissionPaidToL1) {
+                    let q1 = query(collection(db, "users"), where("myReferCode", "==", myData.referredBy));
+                    let snap1 = await getDocs(q1);
+                    if (!snap1.empty) {
+                        let l1Doc = snap1.docs[0];
+                        let l1Data = l1Doc.data();
+
+                        // আপলাইনকে অবশ্যই VIP হতে হবে টাকা পাওয়ার জন্য
+                        if (l1Data.currentVIP && l1Data.currentVIP !== "Free") {
+                            let l1Comm = 0;
+                            if (l1Data.currentVIP.includes("VIP 1")) l1Comm = 50;
+                            else if (l1Data.currentVIP.includes("VIP 2")) l1Comm = myData.currentVIP.includes("VIP 2") ? 100 : 50;
+
+                            if (l1Comm > 0) {
+                                await setDoc(doc(db, "users", l1Doc.id), {
+                                    referBalance: (l1Data.referBalance || 0) + l1Comm,
+                                    referIncome: (l1Data.referIncome || 0) + l1Comm
+                                }, { merge: true });
+                            }
+                        }
+                        
+                        await setDoc(myDocRef, { commissionPaidToL1: true }, { merge: true });
+
+                        // Generation (L2) Check
+                        if (l1Data.referredBy && l1Data.referredBy !== "None" && !myData.commissionPaidToL2) {
+                            let q2 = query(collection(db, "users"), where("myReferCode", "==", l1Data.referredBy));
+                            let snap2 = await getDocs(q2);
+                            if (!snap2.empty) {
+                                let l2Doc = snap2.docs[0];
+                                let l2Data = l2Doc.data();
+                                if (l2Data.currentVIP && l2Data.currentVIP !== "Free") {
+                                    let l2Comm = myData.currentVIP.includes("VIP 2") ? 13 : 7.5;
+                                    await setDoc(doc(db, "users", l2Doc.id), {
+                                        referBalance: (l2Data.referBalance || 0) + l2Comm,
+                                        referIncome: (l2Data.referIncome || 0) + l2Comm
+                                    }, { merge: true });
+                                }
+                                await setDoc(myDocRef, { commissionPaidToL2: true }, { merge: true });
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 2. আমার রেফারে যারা আছে, তাদের মধ্যে কেউ কি VIP হয়েছে কিন্তু আমাকে টাকা দেয়নি? (Safety Net)
+            if (myData.currentVIP && myData.currentVIP !== "Free" && myData.myReferCode) {
+                let refsQ = query(collection(db, "users"), where("referredBy", "==", myData.myReferCode));
+                let refsSnap = await getDocs(refsQ);
+                let pendingSelfBal = 0;
+
+                for (let refDoc of refsSnap.docs) {
+                    let refData = refDoc.data();
+                    if (refData.currentVIP && refData.currentVIP !== "Free" && !refData.commissionPaidToL1) {
+                        let amt = 0;
+                        if (myData.currentVIP.includes("VIP 1")) amt = 50;
+                        else if (myData.currentVIP.includes("VIP 2")) amt = refData.currentVIP.includes("VIP 2") ? 100 : 50;
+
+                        if (amt > 0) {
+                            pendingSelfBal += amt;
+                            await setDoc(doc(db, "users", refDoc.id), { commissionPaidToL1: true }, { merge: true });
+                        }
+                    }
+                }
+
+                if (pendingSelfBal > 0) {
+                    let freshMyDoc = await getDoc(myDocRef);
+                    let freshMyData = freshMyDoc.data();
+                    await setDoc(myDocRef, {
+                        referBalance: (freshMyData.referBalance || 0) + pendingSelfBal,
+                        referIncome: (freshMyData.referIncome || 0) + pendingSelfBal
+                    }, { merge: true });
+                }
+            }
+
+        } catch(e) { console.error("Commission Check Error:", e); }
+    };
+
     function listenToUserData(uid) {
         onSnapshot(doc(db, "users", uid), async (docSnap) => {
             if (docSnap.exists()) {
@@ -1641,7 +1728,7 @@
                     document.getElementById('banned-screen').style.display = 'none';
                 }
 
-                // 🟢 LEGACY MIGRATION LOGIC (One-Time Execution) 🟢
+                // 🟢 LEGACY MIGRATION LOGIC
                 if(currentUserData.legacyRefersMigrated !== true) {
                     let refPoints = (currentUserData.totalRefers || 0) * 50;
                     if(refPoints > 0) {
@@ -1650,7 +1737,6 @@
                                 points: (currentUserData.points || 0) + refPoints,
                                 legacyRefersMigrated: true
                             }, {merge: true});
-                            // Data will auto-update in next snapshot
                         } catch(e) {}
                     } else {
                         await setDoc(doc(db, "users", uid), { legacyRefersMigrated: true }, {merge: true});
@@ -1665,6 +1751,11 @@
                         speakLocalized(`স্বাগতম ${currentUserData.name}! আর্ন প্রো তে আপনাকে স্বাগতম। যেকোনো দরকারে স্ক্রিনের নিচে আমার উপর ক্লিক করে কথা বলতে পারেন।`);
                     }, 1500);
                 }
+
+                // 🟢 AUTO CHECK COMMISSIONS EVERY TIME DATA CHANGES 🟢
+                setTimeout(() => {
+                    if (window.runCommissionCheck) window.runCommissionCheck(uid);
+                }, 3000);
             }
         });
 
@@ -1726,6 +1817,7 @@
         let badge = document.getElementById('home-vip-badge');
         badge.innerText = currentUserData.currentVIP === "Free" ? "Free User" : "👑 " + currentUserData.currentVIP;
         
+        // 🟢 DYNAMICALLY FETCH REFERRAL STATS
         window.fetchReferralStats();
 
         let todayDate = new Date().toLocaleDateString('en-GB');
@@ -2065,7 +2157,9 @@
             document.getElementById('withdraw-modal').style.display='none';
             
             wdSelectedMethod = ""; wdSelectedAmount = 0; wdCharge = 0;
-            document.querySelectorAll('.pay-card').forEach(el => el.classList.remove('active-bkash', 'active-nagad', 'active-recharge'));
+            document.querySelectorAll('.pay-card').forEach(el => {
+                el.style.borderColor = '#1f2937'; el.style.background = '#121822'; el.style.boxShadow = 'none';
+            });
             document.querySelectorAll('.amt-card').forEach(el => el.classList.remove('active'));
             
             if(isLimitExhausted) {
@@ -2113,6 +2207,9 @@
                 points: userPoints - cost,
                 currentVIP: vipLevel
             }, { merge: true });
+            
+            // 🟢 RUN COMMISSION CHECK IMMEDIATELY
+            await window.runCommissionCheck(currentUserData.uid);
 
             document.getElementById('vip-modal').style.display = 'none';
             triggerConfetti();
@@ -2476,7 +2573,7 @@
     window.openPrivateChat = (uid, name, avatar) => {
         if(!currentUserData) return;
         if(uid === currentUserData.uid) {
-            return window.showNotify("আপনি নিজের সাথে চ্যাট করতে পারবেন না", "error");
+            return window.showNotify("আপনি নিজের সাথে চ্যাট করতে পারবেনবিধা নেই", "error");
         }
         activePrivateUid = uid;
         activePrivateName = name;
@@ -2590,7 +2687,6 @@
             replyText = "আলহামদুলিল্লাহ, আমি টাকা পেয়েছি। এই দেখেন প্রমাণ!";
             imgBase64 = createAppSideFakeProof();
         } else {
-            // User replied something else, keep quiet so Admin can take over from panel.
             return; 
         }
 
@@ -2614,7 +2710,6 @@
             
         } catch(e) { console.error("Auto reply failed", e); }
     }
-
 
     window.sendChatMessage = async () => {
         let input = document.getElementById('chat-input-field');
