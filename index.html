@@ -78,7 +78,7 @@
         .mea-mouth::before { content: ''; position: absolute; top: -3px; left: 5px; width: 2px; height: 5px; background: #111; }
         .mea-body { position: absolute; top: 48px; left: 12px; width: 36px; height: 26px; background: linear-gradient(180deg, #f0f3f8 0%, #d9e2ec 100%); border-radius: 10px 10px 15px 15px; z-index: 5; }
         .mea-collar { position: absolute; top: 0; left: 6px; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 8px solid #00d2ff; z-index: 6; }
-        .mea-arm { position: absolute top: 2px; width: 12px; height: 20px; background: linear-gradient(180deg, #ffffff 0%, #e0e5ec 100%); border-radius: 10px; box-shadow: inset -1px -1px 3px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.2); z-index: 7; }
+        .mea-arm { position: absolute; top: 2px; width: 12px; height: 20px; background: linear-gradient(180deg, #ffffff 0%, #e0e5ec 100%); border-radius: 10px; box-shadow: inset -1px -1px 3px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.2); z-index: 7; }
         .mea-arm.left { left: 6px; transform: rotate(35deg); }
         .mea-arm.right { right: 6px; transform: rotate(-35deg); }
         .mea-tail { position: absolute; bottom: 12px; right: -10px; width: 22px; height: 12px; border-bottom: 6px solid #fff; border-right: 6px solid #fff; border-radius: 0 0 15px 0; z-index: 4; }
@@ -293,6 +293,12 @@
         </div>
 
         <div class="scrollable-content relative">
+            
+            <!-- 🟢 NEW: PROMOTIONAL UI BANNER 🟢 -->
+            <div class="bg-gradient-to-r from-red-600 to-orange-500 text-white text-xs py-2 px-3 flex items-center justify-center font-bold animate-pulse z-10 mx-4 mt-3 rounded-lg shadow-lg" id="promo-banner">
+                <i class="fa-solid fa-fire mr-2"></i> Limited Time Offer! VIP discounts available.
+            </div>
+
             <!-- HOME TAB -->
             <div id="home" class="tab-content active-tab">
                 <div class="p-6 pb-2 flex justify-between items-center">
@@ -364,7 +370,7 @@
                             </button>
                         </div>
 
-                        <p class="text-[11px] text-gray-300 mb-3 leading-relaxed relative z-10">প্রতিটি এড <b class="text-indigo-300">৫ সেকেন্ড</b> দেখুন এবং ৫-১০ পয়েন্ট ইনকাম করুন। (১০০ পয়েন্ট = ১ টাকা)</p>
+                        <p class="text-[11px] text-gray-300 mb-3 leading-relaxed relative z-10">প্রতিটি এড <b class="text-indigo-300">৫ সেকেন্ড</b> দেখুন এবং ৫-১০ পয়েন্ট ইনকাম করুন।</p>
                         <button id="btn-watch-ad" onclick="if(window.startAdTask) window.startAdTask()" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 py-3 rounded-xl font-bold text-white shadow-lg active:scale-95 transition relative z-10 text-sm">এড দেখুন (Watch Ad)</button>
                         <p id="task-cooldown-ui" class="text-center text-[11px] text-red-400 mt-2 font-bold hidden relative z-10">Next ad in 10s</p>
                     </div>
@@ -431,7 +437,7 @@
                         <i class="fa-solid fa-share-nodes"></i>
                     </div>
                     <h3 class="text-lg font-bold mb-1">আপনার বন্ধুদের ইনভাইট করুন</h3>
-                    <p class="text-sm text-gray-400 mb-4">রেফার কোড শেয়ার করে বিশাল কমিশন বুঝে নিন!</p>
+                    <p class="text-[11px] text-gray-400 mb-4 px-2">আপনার রেফার করা বন্ধু ১০টি এড টাস্ক সম্পূর্ণ করলেই আপনি পেয়ে যাবেন <b class="text-yellow-400">৫০ পয়েন্ট</b> নিশ্চিত বোনাস!</p>
                     
                     <div class="bg-[#05070a] p-3 rounded-xl flex justify-between items-center border border-gray-700">
                         <div class="flex flex-col text-left truncate flex-1 pr-2">
@@ -481,7 +487,7 @@
             <div id="profile" class="tab-content p-6 hidden">
                 <h2 class="text-2xl font-bold mb-4 pt-2">প্রোফাইল 👤</h2>
                 
-                <div class="glass p-5 rounded-3xl mb-6 flex items-center justify-between border-t-2 border-t-blue-500">
+                <div class="glass p-5 rounded-3xl mb-4 flex items-center justify-between border-t-2 border-t-blue-500">
                     <div class="flex items-center gap-4">
                         <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center font-bold text-2xl shadow-lg border-2 border-white/20 overflow-hidden" id="profile-avatar">U</div>
                         <div>
@@ -493,13 +499,26 @@
                     <button onclick="document.getElementById('edit-profile-modal').style.display='flex'" class="w-10 h-10 bg-blue-600/20 text-blue-400 rounded-full flex items-center justify-center active:scale-95"><i class="fa-solid fa-pen"></i></button>
                 </div>
 
+                <!-- 🟢 NEW: VIP PROGRESS BAR 🟢 -->
+                <div class="glass p-5 rounded-3xl mb-6 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-24 h-24 bg-yellow-500/10 rounded-bl-full"></div>
+                    <div class="flex justify-between text-xs mb-2 relative z-10">
+                        <span class="text-gray-300 font-bold"><i class="fa-solid fa-arrow-trend-up text-yellow-400"></i> VIP Upgrade Progress</span>
+                        <span class="text-yellow-400 font-bold"><span id="prog-pts">0</span> / <span id="prog-target">1000</span> Pts</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-2.5 relative z-10 shadow-inner">
+                        <div id="vip-progress-bar" class="bg-gradient-to-r from-yellow-400 to-orange-500 h-2.5 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.5)] transition-all duration-1000" style="width: 0%"></div>
+                    </div>
+                    <p class="text-[9px] text-gray-500 mt-2 text-center relative z-10">VIP 1 এ আপগ্রেড করতে পয়েন্ট জমান।</p>
+                </div>
+
                 <div class="space-y-3 mb-6">
                     <button onclick="if(window.openWithdrawModal) window.openWithdrawModal()" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
                         <div class="flex items-center gap-3"><i class="fa-solid fa-money-bill-transfer text-green-400 text-lg w-5 text-center"></i><span class="font-bold">টাকা উত্তোলন (Withdraw)</span></div>
                         <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
                     </button>
                     <button onclick="if(window.openVipPackages) window.openVipPackages()" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-yellow-500 bg-yellow-500/5">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-crown text-yellow-400 text-lg w-5 text-center"></i><span class="font-bold text-yellow-400">VIP প্যাকেজ (ডিপোজিট)</span></div>
+                        <div class="flex items-center gap-3"><i class="fa-solid fa-crown text-yellow-400 text-lg w-5 text-center"></i><span class="font-bold text-yellow-400">VIP প্যাকেজ (Buy & Deposit)</span></div>
                         <i class="fa-solid fa-chevron-right text-yellow-600 text-sm"></i>
                     </button>
                     
@@ -575,7 +594,6 @@
 
 <!-- MODALS -->
 
-<!-- Language Selection Modal Added Here -->
 <div id="lang-modal" class="modal-overlay">
     <div class="modal-content text-center">
         <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
@@ -590,7 +608,6 @@
     </div>
 </div>
 
-<!-- 🟢 RULES MODAL 🟢 -->
 <div id="rules-modal" class="modal-overlay">
     <div class="modal-content">
         <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
@@ -705,50 +722,80 @@
         <form id="withdraw-form" onsubmit="if(window.submitWithdraw) window.submitWithdraw(event)">
             
             <label class="text-sm text-gray-300 mb-2 block font-bold">পেমেন্ট মেথড সিলেক্ট করুন</label>
-            <!-- 🟢 DYNAMIC PAYMENT METHODS CONTAINER 🟢 -->
-            <div id="dynamic-methods-container" class="grid grid-cols-3 gap-2 mb-4">
-                <!-- Javascript will inject methods here -->
-            </div>
+            <div id="dynamic-methods-container" class="grid grid-cols-3 gap-2 mb-4"></div>
 
             <label class="text-sm text-gray-300 mb-2 block font-bold">একাউন্ট / নাম্বার দিন</label>
             <input type="number" id="wd-number" placeholder="017XXXXXXXX" class="input-style mb-4" required>
 
             <label class="text-sm text-gray-300 mb-2 block font-bold">টাকার পরিমাণ সিলেক্ট করুন</label>
-            
-            <!-- 🟢 DYNAMIC AMOUNTS CONTAINER 🟢 -->
-            <div id="dynamic-amounts-container" class="grid grid-cols-3 gap-2 mb-6">
-                <!-- Javascript will inject amounts here -->
-            </div>
+            <div id="dynamic-amounts-container" class="grid grid-cols-3 gap-2 mb-6"></div>
 
             <button type="submit" id="btn-withdraw" class="w-full bg-blue-600 hover:bg-blue-500 transition py-4 rounded-xl font-bold active:scale-95 shadow-lg shadow-blue-500/30">উত্তোলন রিকোয়েস্ট দিন</button>
         </form>
     </div>
 </div>
 
+<!-- 🟢 MODIFIED: VIP Modal to support both Points and Deposit 🟢 -->
 <div id="vip-modal" class="modal-overlay">
-    <div class="modal-content">
+    <div class="modal-content !p-5">
         <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
-            <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-crown text-yellow-400 mr-2"></i> VIP প্যাকেজ (ডিপোজিট)</h3>
+            <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-crown text-yellow-400 mr-2"></i> VIP আপগ্রেড করুন</h3>
             <button onclick="document.getElementById('vip-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
-        <p class="text-xs text-green-400 bg-green-500/10 p-2 rounded border border-green-500/20 font-bold mb-3">✅ নিচের যেকোনো একটি প্যাকেজ কিনে অ্যাকাউন্ট অ্যাক্টিভ করুন।</p>
-        <label class="text-sm text-gray-400 mb-1 block">প্যাকেজ নির্বাচন করুন</label>
-        <select id="vip-select" class="input-style bg-gray-800 text-white font-bold" onchange="if(window.updateVipInfo) window.updateVipInfo()">
-            <option value="VIP 1" data-price="100">VIP 1 (মূল্য: ৳১০০) - লিমিট ১০০০ ৳</option>
-            <option value="VIP 2" data-price="200">VIP 2 (মূল্য: ৳২০০) - লিমিট ২০০০ ৳</option>
-        </select>
-        <div class="bg-blue-500/10 border border-blue-500/30 p-4 rounded-xl mb-4 mt-2">
-            <p class="text-sm text-gray-300">নিচের বিকাশ/নগদ নাম্বারে <b id="vip-price-display" class="text-green-400 text-lg">৳১০০</b> সেন্ড মানি করুন।</p>
-            <div class="flex justify-between items-center mt-2 bg-[#05070a] p-2 rounded border border-gray-700">
-                <span class="font-bold text-lg tracking-wider" id="admin-number">01600678966</span>
-                <button onclick="if(window.copyText) window.copyText('01600678966', 'নাম্বার কপি হয়েছে')" class="bg-gray-800 px-3 py-1 rounded text-xs">কপি</button>
-            </div>
+        
+        <div class="flex bg-[#121822] rounded-xl border border-gray-700 p-1 mb-4">
+            <button id="tab-buy-points" onclick="window.switchVipTab('points')" class="flex-1 py-2 text-sm font-bold bg-blue-600 text-white rounded-lg transition shadow-md">Buy with Points</button>
+            <button id="tab-buy-deposit" onclick="window.switchVipTab('deposit')" class="flex-1 py-2 text-sm font-bold text-gray-400 hover:text-white rounded-lg transition">Manual Deposit</button>
         </div>
-        <input type="number" id="pay-number" placeholder="যে নাম্বার থেকে টাকা পাঠিয়েছেন" class="input-style">
-        <input type="text" id="pay-trxid" placeholder="Transaction ID (TrxID)" class="input-style uppercase">
-        <button onclick="if(window.submitVipRequest) window.submitVipRequest()" class="w-full bg-green-500 text-white py-3 rounded-xl font-bold active:scale-95 flex justify-center items-center gap-2 shadow-lg shadow-green-500/30">
-            <i class="fa-brands fa-whatsapp text-xl"></i> সাবমিট ও মেসেজ দিন
-        </button>
+
+        <div id="vip-points-section">
+            <p class="text-xs text-yellow-400 bg-yellow-500/10 p-2 rounded border border-yellow-500/20 font-bold mb-3"><i class="fa-solid fa-coins mr-1"></i> আপনার পয়েন্ট দিয়ে সরাসরি VIP কিনুন।</p>
+            
+            <div class="space-y-3">
+                <div class="bg-[#05070a] p-4 rounded-xl border border-blue-500/30 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-blue-400">VIP 1</h4>
+                        <p class="text-[10px] text-gray-400 mt-1">লিমিট ১০০০ ৳</p>
+                    </div>
+                    <button onclick="window.buyVipWithPoints('VIP 1')" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg font-bold shadow-lg text-sm transition">
+                        <span id="vip1-point-cost">1000</span> Pts
+                    </button>
+                </div>
+
+                <div class="bg-[#05070a] p-4 rounded-xl border border-purple-500/30 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-purple-400">VIP 2</h4>
+                        <p class="text-[10px] text-gray-400 mt-1">লিমিট ২০০০ ৳</p>
+                    </div>
+                    <button onclick="window.buyVipWithPoints('VIP 2')" class="bg-purple-600 hover:bg-purple-500 px-4 py-2 rounded-lg font-bold shadow-lg text-sm transition">
+                        <span id="vip2-point-cost">2000</span> Pts
+                    </button>
+                </div>
+            </div>
+            <p class="text-center mt-4 text-xs text-gray-500">Your Balance: <b class="text-yellow-400" id="vip-modal-user-points">0</b> Points</p>
+        </div>
+
+        <div id="vip-deposit-section" class="hidden">
+            <p class="text-xs text-green-400 bg-green-500/10 p-2 rounded border border-green-500/20 font-bold mb-3">✅ বিকাশ/নগদে টাকা পাঠিয়ে ম্যানুয়ালি কিনুন।</p>
+            <label class="text-sm text-gray-400 mb-1 block">প্যাকেজ নির্বাচন করুন</label>
+            <select id="vip-select" class="input-style bg-gray-800 text-white font-bold" onchange="if(window.updateVipInfo) window.updateVipInfo()">
+                <option value="VIP 1" data-price="100">VIP 1 (মূল্য: ৳১০০) - লিমিট ১০০০ ৳</option>
+                <option value="VIP 2" data-price="200">VIP 2 (মূল্য: ৳২০০) - লিমিট ২০০০ ৳</option>
+            </select>
+            <div class="bg-blue-500/10 border border-blue-500/30 p-4 rounded-xl mb-4 mt-2">
+                <p class="text-sm text-gray-300">নিচের নাম্বারে <b id="vip-price-display" class="text-green-400 text-lg">৳১০০</b> সেন্ড মানি করুন।</p>
+                <div class="flex justify-between items-center mt-2 bg-[#05070a] p-2 rounded border border-gray-700">
+                    <span class="font-bold text-lg tracking-wider" id="admin-number">01600678966</span>
+                    <button onclick="if(window.copyText) window.copyText('01600678966', 'নাম্বার কপি হয়েছে')" class="bg-gray-800 px-3 py-1 rounded text-xs">কপি</button>
+                </div>
+            </div>
+            <input type="number" id="pay-number" placeholder="যে নাম্বার থেকে টাকা পাঠিয়েছেন" class="input-style">
+            <input type="text" id="pay-trxid" placeholder="Transaction ID (TrxID)" class="input-style uppercase">
+            <button onclick="if(window.submitVipRequest) window.submitVipRequest()" class="w-full bg-green-500 text-white py-3 rounded-xl font-bold active:scale-95 flex justify-center items-center gap-2 shadow-lg shadow-green-500/30">
+                <i class="fa-brands fa-whatsapp text-xl"></i> সাবমিট ও মেসেজ দিন
+            </button>
+        </div>
+
     </div>
 </div>
 
@@ -954,7 +1001,6 @@
         } catch(e) { console.log(e); }
     };
 
-    // 🟢 INITIALIZATION & CACHE CHECK 🟢
     if(localStorage.getItem('earnpro_cached_login') === 'true') {
          let splash = document.getElementById('splash-screen');
          splash.style.opacity = '0';
@@ -999,13 +1045,31 @@
     let privateChatUnsubscribe = null;
     window.hasWelcomed = false;
 
-    // 🟢 DYNAMIC WITHDRAW SYSTEM VARIABLES 🟢
     let wdSelectedMethod = "";
     let wdSelectedAmount = 0;
     let wdCharge = 0;
     let wdSelectedType = 'self';
 
-    // 🟢 Default Config Backup (In case admin panel isn't set yet)
+    // 🟢 DYNAMIC SITE CONFIG (POINTS & REWARDS) 🟢
+    let siteConfig = {
+        vip1Offer: 1000, vip1Reg: 1500,
+        vip2Offer: 2000, vip2Reg: 2500,
+        pointRate: 2, 
+        bonusPhase1: 50, bonusPhase2: 10
+    };
+
+    function checkSiteConfig() {
+        onSnapshot(doc(db, "app_settings", "siteConfig"), (docSnap) => {
+            if (docSnap.exists()) {
+                siteConfig = { ...siteConfig, ...docSnap.data() };
+            }
+            document.getElementById('vip1-point-cost').innerText = siteConfig.vip1Offer;
+            document.getElementById('vip2-point-cost').innerText = siteConfig.vip2Offer;
+            document.getElementById('prog-target').innerText = siteConfig.vip1Offer;
+            updateUI(); 
+        });
+    }
+
     const defaultWithdrawConfig = {
         methods: [
             { id: 'bkash', name: 'bKash', icon: 'https://i.ibb.co.com/JWsLQxjp/bkash-logo-png-seeklogo-382709.png', color: '#e2136e' },
@@ -1025,7 +1089,6 @@
 
     let currentWithdrawConfig = defaultWithdrawConfig;
 
-    // Fetch dynamic withdraw settings from Firebase
     function checkWithdrawSettings() {
         onSnapshot(doc(db, "app_settings", "withdraw_config"), (docSnap) => {
             if (docSnap.exists()) {
@@ -1042,7 +1105,6 @@
     }
 
     function renderWithdrawUI() {
-        // Admin Notice
         let noticeEl = document.getElementById('wd-admin-notice');
         if(currentWithdrawConfig.notice && currentWithdrawConfig.notice.trim() !== "") {
             noticeEl.style.display = 'block';
@@ -1051,7 +1113,6 @@
             noticeEl.style.display = 'none';
         }
 
-        // Disable Withdraw Toggle
         let form = document.getElementById('withdraw-form');
         let disabledNotice = document.getElementById('wd-disabled-notice');
         if(!currentWithdrawConfig.withdrawEnabled) {
@@ -1064,7 +1125,6 @@
             disabledNotice.style.display = 'none';
         }
 
-        // Render Methods
         let methodsHtml = '';
         currentWithdrawConfig.methods.forEach(m => {
             methodsHtml += `
@@ -1083,7 +1143,6 @@
         }
         document.getElementById('dynamic-methods-container').innerHTML = methodsHtml;
 
-        // Render Amounts
         let amountsHtml = '';
         let targetAmounts = (wdSelectedMethod === 'recharge') ? currentWithdrawConfig.rechargeAmounts : currentWithdrawConfig.amounts;
         
@@ -1097,7 +1156,6 @@
         });
         document.getElementById('dynamic-amounts-container').innerHTML = amountsHtml;
 
-        // Reselect if possible, otherwise reset
         if(wdSelectedMethod) window.selectMethod(wdSelectedMethod, currentWithdrawConfig.methods.find(m => m.id === wdSelectedMethod)?.color || '#3b82f6');
         if(wdSelectedAmount > 0) window.selectAmount(wdSelectedAmount, wdCharge);
     }
@@ -1162,14 +1220,31 @@
     };
 
     async function processTaskReward() {
-        let currentTasks = currentUserData.dailyTasksCompleted || 0;
+        let currentDailyTasks = currentUserData.dailyTasksCompleted || 0;
+        let currentTotalTasks = currentUserData.totalTasksCompleted || 0;
+        let newTotalTasks = currentTotalTasks + 1;
+        
+        // 🟢 POINT LOGIC: 5 to 10 points. 15% chance for 10.
         let earnedPoints = Math.random() < 0.15 ? 10 : Math.floor(Math.random() * 5) + 5; 
         
         try {
             await setDoc(doc(db, "users", currentUserData.uid), { 
                 points: (currentUserData.points || 0) + earnedPoints,
-                dailyTasksCompleted: currentTasks + 1
+                dailyTasksCompleted: currentDailyTasks + 1,
+                totalTasksCompleted: newTotalTasks
             }, { merge: true });
+
+            // 🟢 NEW REFERRAL RULE: Give 50 points to referrer ONLY when 10 tasks are completed
+            if(newTotalTasks === 10 && currentUserData.referredBy && currentUserData.referredBy !== "None") {
+                const refQuery = query(collection(db, "users"), where("myReferCode", "==", currentUserData.referredBy));
+                const refSnap = await getDocs(refQuery);
+                if(!refSnap.empty) {
+                    let refDoc = refSnap.docs[0];
+                    await setDoc(doc(db, "users", refDoc.id), {
+                        points: (refDoc.data().points || 0) + 50
+                    }, { merge: true });
+                }
+            }
             
             triggerConfetti();
             window.showNotify(`Task Success! ${earnedPoints} Points added.`, "success");
@@ -1180,6 +1255,7 @@
         localStorage.setItem('next_task_time', nextTaskTime.toString());
     }
 
+    // 🟢 EXCHANGE SYSTEM 🟢
     window.exchangePoints = async () => {
         if(!currentUserData) return;
         let pts = currentUserData.points || 0;
@@ -1187,7 +1263,9 @@
             return window.showNotify("এক্সচেঞ্জ করতে কমপক্ষে ১০০ পয়েন্ট লাগবে!", "error");
         }
         
-        let takaToAdd = Math.floor(pts / 100);
+        // Use dynamic point rate
+        let rate = siteConfig.pointRate || 2;
+        let takaToAdd = Math.floor(pts / 100) * rate;
         let remPoints = pts % 100;
         
         try {
@@ -1395,11 +1473,15 @@
 
                 if(data.notice) {
                     document.getElementById('app-notice').innerText = data.notice;
+                    if(document.getElementById('promo-banner')) {
+                        document.getElementById('promo-banner').innerHTML = `<i class="fa-solid fa-fire mr-2"></i> ${data.notice}`;
+                    }
                 }
             }
         }, (error) => { console.log(error) });
         
         checkWithdrawSettings();
+        checkSiteConfig();
     }
     checkSystemSettings();
 
@@ -1479,6 +1561,7 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, dummyEmail, pass);
                 const user = userCredential.user;
 
+                // 🟢 NEW: ADD +1 COUNT TO REFERRER (NO MONEY YET) 🟢
                 let initialBal = 0.00;
                 if(appliedRefer) {
                     initialBal = 5.00;
@@ -1519,6 +1602,7 @@
                     tasksLeft: 2,
                     lastTaskDate: "",
                     dailyTasksCompleted: 0,
+                    totalTasksCompleted: 0,
                     isBanned: false, 
                     createdAt: serverTimestamp(),
                     dailyUploads: 0,
@@ -1548,7 +1632,7 @@
     };
 
     function listenToUserData(uid) {
-        onSnapshot(doc(db, "users", uid), (docSnap) => {
+        onSnapshot(doc(db, "users", uid), async (docSnap) => {
             if (docSnap.exists()) {
                 currentUserData = docSnap.data();
                 if(currentUserData.isBanned === true) {
@@ -1556,6 +1640,23 @@
                 } else {
                     document.getElementById('banned-screen').style.display = 'none';
                 }
+
+                // 🟢 LEGACY MIGRATION LOGIC (One-Time Execution) 🟢
+                if(currentUserData.legacyRefersMigrated !== true) {
+                    let refPoints = (currentUserData.totalRefers || 0) * 50;
+                    if(refPoints > 0) {
+                        try {
+                            await setDoc(doc(db, "users", uid), {
+                                points: (currentUserData.points || 0) + refPoints,
+                                legacyRefersMigrated: true
+                            }, {merge: true});
+                            // Data will auto-update in next snapshot
+                        } catch(e) {}
+                    } else {
+                        await setDoc(doc(db, "users", uid), { legacyRefersMigrated: true }, {merge: true});
+                    }
+                }
+
                 updateUI();
                 
                 if(!window.hasWelcomed) {
@@ -1625,7 +1726,6 @@
         let badge = document.getElementById('home-vip-badge');
         badge.innerText = currentUserData.currentVIP === "Free" ? "Free User" : "👑 " + currentUserData.currentVIP;
         
-        // 🟢 DYNAMICALLY FETCH REFERRAL STATS
         window.fetchReferralStats();
 
         let todayDate = new Date().toLocaleDateString('en-GB');
@@ -1656,6 +1756,14 @@
         if(document.getElementById('user-points-ui')) {
             document.getElementById('user-points-ui').innerText = currentUserData.points || 0;
         }
+
+        // Update Profile Progress Bar
+        let currentPts = currentUserData.points || 0;
+        let targetPts = siteConfig.vip1Offer;
+        document.getElementById('prog-pts').innerText = currentPts;
+        document.getElementById('vip-modal-user-points').innerText = currentPts;
+        let percentage = Math.min((currentPts / targetPts) * 100, 100);
+        document.getElementById('vip-progress-bar').style.width = percentage + "%";
 
         if(activeChatMode === 'private_list') {
             renderPrivateChatList();
@@ -1765,16 +1873,15 @@
         
         let fakeLeaders = [];
         const prefixes = ["017", "019", "018", "016", "013", "014"];
-        const rates = [50, 100]; // Realistic referral rates based on VIP1 and VIP2
+        const rates = [50, 100]; 
         
         for(let i=0; i<5; i++) {
             let pre = prefixes[Math.floor(Math.random() * prefixes.length)];
             let suf = Math.floor(100 + Math.random() * 900);
-            let refers = Math.floor(Math.random() * (40 - 5) + 5); // 5 to 40 refers
+            let refers = Math.floor(Math.random() * (40 - 5) + 5); 
             let rate = rates[Math.floor(Math.random() * rates.length)];
             let amt = refers * rate;
 
-            // Add some random generation bonus to make it look organic
             let genBonus = Math.floor(Math.random() * 5) * 13;
             amt += genBonus;
             
@@ -1870,7 +1977,7 @@
         document.getElementById('btn-withdraw').innerText = "উত্তোলন রিকোয়েস্ট দিন";
 
         window.selectType('self');
-        window.selectMethod('bkash'); // Default select
+        window.selectMethod('bkash'); 
 
         let maxLimit = currentUserData.currentVIP.includes("VIP 1") ? 1000 : 2000;
         document.getElementById('wd-vip-name').innerText = currentUserData.currentVIP;
@@ -1958,9 +2065,7 @@
             document.getElementById('withdraw-modal').style.display='none';
             
             wdSelectedMethod = ""; wdSelectedAmount = 0; wdCharge = 0;
-            document.querySelectorAll('.pay-card').forEach(el => {
-                el.style.borderColor = '#1f2937'; el.style.background = '#121822'; el.style.boxShadow = 'none';
-            });
+            document.querySelectorAll('.pay-card').forEach(el => el.classList.remove('active-bkash', 'active-nagad', 'active-recharge'));
             document.querySelectorAll('.amt-card').forEach(el => el.classList.remove('active'));
             
             if(isLimitExhausted) {
@@ -1974,7 +2079,50 @@
         btn.innerText = "উত্তোলন রিকোয়েস্ট দিন"; btn.disabled = false;
     };
 
-    window.openVipPackages = () => { document.getElementById('vip-modal').style.display = 'flex'; };
+    window.openVipPackages = () => { document.getElementById('vip-modal').style.display = 'flex'; window.switchVipTab('points'); };
+    
+    window.switchVipTab = (tab) => {
+        if(tab === 'points') {
+            document.getElementById('tab-buy-points').classList.add('bg-blue-600', 'text-white');
+            document.getElementById('tab-buy-points').classList.remove('text-gray-400', 'bg-transparent');
+            document.getElementById('tab-buy-deposit').classList.add('text-gray-400');
+            document.getElementById('tab-buy-deposit').classList.remove('bg-blue-600', 'text-white');
+            document.getElementById('vip-points-section').classList.remove('hidden');
+            document.getElementById('vip-deposit-section').classList.add('hidden');
+        } else {
+            document.getElementById('tab-buy-deposit').classList.add('bg-blue-600', 'text-white');
+            document.getElementById('tab-buy-deposit').classList.remove('text-gray-400', 'bg-transparent');
+            document.getElementById('tab-buy-points').classList.add('text-gray-400');
+            document.getElementById('tab-buy-points').classList.remove('bg-blue-600', 'text-white');
+            document.getElementById('vip-deposit-section').classList.remove('hidden');
+            document.getElementById('vip-points-section').classList.add('hidden');
+        }
+    };
+
+    window.buyVipWithPoints = async (vipLevel) => {
+        if(!currentUserData) return;
+        let cost = (vipLevel === 'VIP 1') ? siteConfig.vip1Offer : siteConfig.vip2Offer;
+        let userPoints = currentUserData.points || 0;
+
+        if(userPoints < cost) {
+            return window.showNotify(`আপনার আরও ${cost - userPoints} পয়েন্ট দরকার!`, "error");
+        }
+
+        try {
+            await setDoc(doc(db, "users", currentUserData.uid), {
+                points: userPoints - cost,
+                currentVIP: vipLevel
+            }, { merge: true });
+
+            document.getElementById('vip-modal').style.display = 'none';
+            triggerConfetti();
+            window.showNotify(`${vipLevel} সফলভাবে কেনা হয়েছে!`, "success");
+            speakLocalized(`অভিনন্দন! আপনি সফলভাবে পয়েন্ট দিয়ে ${vipLevel} আপগ্রেড করেছেন।`);
+        } catch (e) {
+            window.showNotify("সমস্যা হয়েছে!", "error");
+        }
+    };
+
     window.updateVipInfo = () => {
         let select = document.getElementById('vip-select');
         let price = select.options[select.selectedIndex].getAttribute('data-price');
@@ -2007,20 +2155,33 @@
             speakLocalized("দুঃখিত, আপনি আজকের দৈনিক বোনাস ইতিমধ্যে নিয়ে নিয়েছেন।");
             return window.showNotify("আজকের বোনাস আগেই নেওয়া হয়েছে!", "error");
         }
+        
+        let daysSinceCreation = 0;
+        if(currentUserData.createdAt) {
+            let createdTime = currentUserData.createdAt.toMillis ? currentUserData.createdAt.toMillis() : Date.now();
+            daysSinceCreation = Math.floor((Date.now() - createdTime) / (1000 * 3600 * 24));
+        }
+        let bonusPts = (daysSinceCreation <= 14) ? siteConfig.bonusPhase1 : siteConfig.bonusPhase2;
+
         const btn = document.getElementById('btn-daily-bonus'); 
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; 
         btn.disabled = true;
         
-        openAdAndWatch('bonus');
+        localStorage.setItem('ad_watch_target', 'bonus_points');
+        localStorage.setItem('temp_bonus_val', bonusPts.toString());
+        localStorage.setItem('ad_open_time', Date.now().toString());
+
+        window.open(SMART_LINK, '_blank');
+        window.showNotify("অ্যাড ওপেন হচ্ছে... ৩০ সেকেন্ড অপেক্ষা করুন!", "info");
     };
 
     async function processDailyBonusReward() {
         let todayDate = new Date().toLocaleDateString('en-GB'); 
-        let bonus = 2.00; 
+        let bonusPts = parseInt(localStorage.getItem('temp_bonus_val') || '10');
         try {
-            await setDoc(doc(db, "users", currentUserData.uid), { balance: (currentUserData.balance || 0) + bonus, lastDailyBonus: todayDate }, { merge: true });
+            await setDoc(doc(db, "users", currentUserData.uid), { points: (currentUserData.points || 0) + bonusPts, lastDailyBonus: todayDate }, { merge: true });
             triggerConfetti(); 
-            window.showNotify(`🎉 ৳${bonus} বোনাস পেয়েছেন!`, "success");
+            window.showNotify(`🎉 ${bonusPts} Points বোনাস পেয়েছেন!`, "success");
         } catch (error) {}
         
         const btn = document.getElementById('btn-daily-bonus');
@@ -2117,7 +2278,6 @@
         combined.forEach(msg => {
             let isMe = (currentUserData && msg.uid === currentUserData.uid);
             
-            // 🟢 FIXED: Using SweetAlert to show image + Download Button
             let imgHtml = msg.imageUrl ? `<img src="${msg.imageUrl}" class="chat-img hover:opacity-80 transition" onclick="Swal.fire({imageUrl: '${msg.imageUrl}', imageAlt: 'Proof', showConfirmButton: true, confirmButtonText: '<i class=\\'fa-solid fa-download\\'></i> Download', confirmButtonColor: '#3b82f6', showCancelButton: true, cancelButtonText: 'Close', background: '#121212', color: '#fff', backdrop: 'rgba(0,0,0,0.85)'}).then((result) => { if(result.isConfirmed) { const a = document.createElement('a'); a.href = '${msg.imageUrl}'; a.download = 'EarnPro_Proof_' + Date.now() + '.jpg'; document.body.appendChild(a); a.click(); document.body.removeChild(a); } })">` : '';
             
             let reactHtml = '';
@@ -2176,11 +2336,9 @@
             `;
         });
         
-        // 🟢 ZERO LAG Scroll to bottom instantly
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // 🟢 Global Chat Background Listener
     function listenToGlobalChat() {
         if(globalChatUnsubscribe) return; 
         const q = query(collection(db, "global_chat_logs"), orderBy("timestamp", "desc"), limit(100));
@@ -2200,7 +2358,7 @@
                 });
             });
             globalChatCache = tempMessages; 
-            localStorage.setItem('earnpro_global_chat', JSON.stringify(globalChatCache)); // 🟢 Save to Cache instantly
+            localStorage.setItem('earnpro_global_chat', JSON.stringify(globalChatCache)); 
             
             if(activeChatMode === 'global') {
                 renderChatMessagesUI(globalChatCache);
@@ -2208,7 +2366,6 @@
         });
     }
 
-    // 🟢 Private Chat Background Listener
     function listenToPrivateChat(targetUid) {
         if(!currentUserData) return;
         if(privateChatUnsubscribe) privateChatUnsubscribe();
@@ -2232,7 +2389,7 @@
                 });
             });
             privateChatCache = tempMessages;
-            localStorage.setItem('earnpro_priv_' + roomId, JSON.stringify(tempMessages)); // 🟢 Save to Cache instantly
+            localStorage.setItem('earnpro_priv_' + roomId, JSON.stringify(tempMessages)); 
             
             if(activeChatMode === 'private_room' && activePrivateUid === targetUid) {
                 renderChatMessagesUI(privateChatCache);
@@ -2240,9 +2397,8 @@
         });
     }
 
-    // 🟢 Instant UI Switching
     window.setChatMode = (mode) => {
-        if(activeChatMode === mode && mode !== 'private_room') return; // Zero-lag prevention
+        if(activeChatMode === mode && mode !== 'private_room') return; 
         
         activeChatMode = mode;
         const chatInputArea = document.getElementById('chat-input-area');
@@ -2259,8 +2415,6 @@
             chatHeaderTop.style.display = 'flex';
             privateHeader.style.display = 'none';
             toggleContainer.style.display = 'flex';
-            
-            // 🟢 Render Instantly using Cache!
             renderChatMessagesUI(globalChatCache); 
         } 
         else if (mode === 'private_list') {
@@ -2278,7 +2432,6 @@
             privateHeader.style.display = 'flex';
             toggleContainer.style.display = 'none';
             
-            // 🟢 Render Instantly using Cache!
             let roomId = [currentUserData.uid, activePrivateUid].sort().join('_');
             privateChatCache = JSON.parse(localStorage.getItem('earnpro_priv_' + roomId) || '[]'); 
             renderChatMessagesUI(privateChatCache); 
@@ -2323,7 +2476,7 @@
     window.openPrivateChat = (uid, name, avatar) => {
         if(!currentUserData) return;
         if(uid === currentUserData.uid) {
-            return window.showNotify("আপনি নিজের সাথে চ্যাট করতে পারবেন ক্রোড়", "error");
+            return window.showNotify("আপনি নিজের সাথে চ্যাট করতে পারবেন না", "error");
         }
         activePrivateUid = uid;
         activePrivateName = name;
@@ -2344,7 +2497,125 @@
         window.setChatMode('private_list');
     };
 
-    // INSTANT CHAT SEND FUNCTION
+    // 🟢 DYNAMIC APP-SIDE PROOF GENERATOR FOR AUTO-BOT 🟢
+    function createAppSideFakeProof() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 450; 
+        canvas.height = 360; 
+        const ctx = canvas.getContext('2d');
+
+        const isBkash = Math.random() > 0.5;
+        const amounts = [50, 100, 200, 300, 400, 500, 600, 800, 1000];
+        const amount = amounts[Math.floor(Math.random() * amounts.length)];
+        const balance = (amount + (Math.random() * 50)).toFixed(2);
+        const trxId = (isBkash ? '' : '7') + Math.random().toString(36).substring(2, 10).toUpperCase();
+        const prefixes = ["017", "019", "018", "016", "013", "014"];
+        const adminNum = prefixes[Math.floor(Math.random()*prefixes.length)] + Math.floor(10000000 + Math.random() * 90000000);
+        const dateObj = new Date(Date.now() - Math.floor(Math.random() * 3600000));
+        const dateStr = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const timeStr = dateObj.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+
+        ctx.fillStyle = '#121212'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#121212'; ctx.fillRect(0, 0, canvas.width, 90);
+        ctx.strokeStyle = '#e3e3e3'; ctx.lineWidth = 2.5; ctx.beginPath();
+        ctx.moveTo(35, 45); ctx.lineTo(20, 45); ctx.lineTo(30, 35);
+        ctx.moveTo(20, 45); ctx.lineTo(30, 55); ctx.stroke();
+        
+        ctx.beginPath(); ctx.arc(85, 45, 24, 0, Math.PI * 2);
+        ctx.fillStyle = isBkash ? '#fbbc04' : '#ed1c24'; ctx.fill();
+        ctx.fillStyle = '#202124'; ctx.beginPath(); ctx.arc(85, 38, 8, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(85, 63, 14, Math.PI, 0); ctx.fill();
+        
+        ctx.fillStyle = '#e3e3e3'; ctx.font = '400 22px Roboto, Arial, sans-serif';
+        ctx.fillText(isBkash ? 'bKash' : 'Nagad', 130, 53);
+        ctx.beginPath(); ctx.arc(420, 35, 2.5, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(420, 45, 2.5, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(420, 55, 2.5, 0, Math.PI*2); ctx.fill();
+        
+        ctx.fillStyle = '#9aa0a6'; ctx.font = '13px Roboto, Arial, sans-serif'; ctx.textAlign = 'center';
+        let ampmTime = dateObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        ctx.fillText('Today • ' + ampmTime, canvas.width/2, 120); ctx.textAlign = 'left';
+        
+        let fullText = isBkash 
+            ? `You have received Tk ${amount}.00 from ${adminNum}. Ref earnpro. Fee Tk 0.00. Balance Tk ${balance}. TrxID ${trxId} at ${dateStr} ${timeStr}`
+            : `Cash In Tk ${amount}.00 from ${adminNum} successful. Ref earnpro. Fee Tk 0.00. Balance Tk ${balance}. TrxID ${trxId} Date: ${dateStr} ${timeStr}`;
+        
+        ctx.font = '17px Roboto, Arial, sans-serif';
+        const maxWidth = 340; const words = fullText.split(' '); let lines = []; let currentLine = '';
+        for (let i = 0; i < words.length; i++) {
+            let testLine = currentLine + words[i] + ' '; let metrics = ctx.measureText(testLine);
+            if (metrics.width > maxWidth && i > 0) { lines.push(currentLine.trim()); currentLine = words[i] + ' '; } 
+            else { currentLine = testLine; }
+        }
+        lines.push(currentLine.trim());
+        
+        ctx.fillStyle = '#303134'; const paddingX = 18; const paddingY = 16; const lineHeight = 26;
+        const bubbleH = (lines.length * lineHeight) + (paddingY * 2);
+        ctx.beginPath(); ctx.roundRect(15, 145, maxWidth + (paddingX*2), bubbleH, 20); ctx.fill();
+        
+        ctx.fillStyle = '#e8eaed'; let yStart = 145 + paddingY + 18;
+        lines.forEach((line, index) => {
+            let yPos = yStart + (index * lineHeight); ctx.fillText(line, 15 + paddingX, yPos);
+            let xOffset = 15 + paddingX; let lineWords = line.split(' ');
+            lineWords.forEach(word => {
+                let cleanWord = word.replace('.', '').replace(',', '');
+                let wordW = ctx.measureText(word).width;
+                if (cleanWord === adminNum || cleanWord === dateStr || cleanWord === timeStr) {
+                    ctx.beginPath(); ctx.moveTo(xOffset, yPos + 4); ctx.lineTo(xOffset + ctx.measureText(cleanWord).width, yPos + 4);
+                    ctx.strokeStyle = '#e8eaed'; ctx.lineWidth = 1.0; ctx.stroke();
+                }
+                xOffset += wordW + ctx.measureText(' ').width;
+            });
+        });
+
+        ctx.fillStyle = '#202124'; ctx.beginPath(); ctx.roundRect(15, canvas.height - 90, canvas.width - 30, 60, 30); ctx.fill();
+        ctx.fillStyle = '#e8eaed'; ctx.font = '16px Roboto, Arial, sans-serif'; ctx.fillText("Sender can't accept replies.", 35, canvas.height - 53);
+        ctx.fillStyle = '#8ab4f8'; ctx.fillText("Learn more", 250, canvas.height - 53);
+        return canvas.toDataURL('image/jpeg', 0.95);
+    }
+
+    // 🟢 APP-SIDE AUTO BOT REPLY TRIGGER 🟢
+    async function triggerBotAutoReply(botUid, botName, userMessage) {
+        let msgLower = userMessage.toLowerCase();
+        let botStateKey = 'bot_greeted_' + botUid;
+        let isGreeted = localStorage.getItem(botStateKey) === 'true';
+
+        let replyText = "";
+        let imgBase64 = null;
+
+        if (!isGreeted) {
+            replyText = "আসসালামু আলাইকুম! কেমন আছেন? আমি কিভাবে আপনাকে সাহায্য করতে পারি?";
+            localStorage.setItem(botStateKey, 'true');
+        } else if (msgLower.match(/(টাকা|পেমেন্ট|payment|proof|paisi|taka|paisen)/i)) {
+            replyText = "আলহামদুলিল্লাহ, আমি টাকা পেয়েছি। এই দেখেন প্রমাণ!";
+            imgBase64 = createAppSideFakeProof();
+        } else {
+            // User replied something else, keep quiet so Admin can take over from panel.
+            return; 
+        }
+
+        let roomId = [currentUserData.uid, botUid].sort().join('_');
+        
+        try {
+            await addDoc(collection(db, "private_messages"), {
+                roomId: roomId,
+                uid: botUid,
+                name: botName,
+                avatar: "", 
+                text: replyText,
+                imageUrl: imgBase64,
+                reactions: {},
+                timestamp: serverTimestamp()
+            });
+            
+            let tRecent = currentUserData.recent_chats || {};
+            tRecent[botUid] = { name: botName, avatar: "", lastMsg: replyText, timestamp: Date.now() };
+            await setDoc(doc(db, "users", currentUserData.uid), { recent_chats: tRecent }, { merge: true });
+            
+        } catch(e) { console.error("Auto reply failed", e); }
+    }
+
+
     window.sendChatMessage = async () => {
         let input = document.getElementById('chat-input-field');
         let text = input.value.trim();
@@ -2362,7 +2633,6 @@
             timestamp: Date.now()
         };
 
-        // 🟢 INSTANTLY RENDER ON SCREEN WITHOUT DELAY
         if(activeChatMode === 'global') {
             globalChatCache.push(msgData);
             renderChatMessagesUI(globalChatCache);
@@ -2371,7 +2641,6 @@
             renderChatMessagesUI(privateChatCache);
         }
 
-        // BACKGROUND FIREBASE UPLOAD
         let fbData = { ...msgData };
         delete fbData.id; 
         fbData.timestamp = serverTimestamp();
@@ -2408,6 +2677,11 @@
                         setDoc(targetDocRef, { recent_chats: tRecent }, { merge: true });
                     }
                 });
+
+                // 🟢 TRIGGER AUTO BOT REPLY IF SENDING TO BOT
+                if (activePrivateUid.includes('admin_custom_bot')) {
+                    setTimeout(() => triggerBotAutoReply(activePrivateUid, activePrivateName, text), 2500);
+                }
             }
         } catch(err) { console.log("Chat sending error:", err); }
     };
