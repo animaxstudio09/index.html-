@@ -21,18 +21,21 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        body { background: #05070a; color: #fff; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; height: 100vh; height: 100dvh; overflow: hidden; top: 0 !important; }
-        .app-container { width: 100%; max-width: 450px; background: #0b0e14; height: 100%; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 0 50px rgba(0, 150, 255, 0.1); }
+        :root { --bg-main: #05070a; --bg-container: #0b0e14; --text-main: #fff; --glass-bg: rgba(255, 255, 255, 0.03); --border-color: rgba(255,255,255,0.05); }
+        .light-mode { --bg-main: #f1f5f9; --bg-container: #ffffff; --text-main: #0f172a; --glass-bg: rgba(0, 0, 0, 0.03); --border-color: rgba(0,0,0,0.1); }
+        
+        body { background: var(--bg-main); color: var(--text-main); margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; height: 100vh; height: 100dvh; overflow: hidden; top: 0 !important; transition: background 0.3s, color 0.3s; }
+        .app-container { width: 100%; max-width: 450px; background: var(--bg-container); height: 100%; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 0 50px rgba(0, 150, 255, 0.1); transition: background 0.3s; }
         .scrollable-content { flex: 1; overflow-y: auto; padding-bottom: 140px; } 
         .scrollable-content::-webkit-scrollbar { display: none; }
         
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        .glass { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-color); }
         .input-style { width: 100%; background: #121822; border: 1px solid #1f2937; border-radius: 12px; padding: 14px; outline: none; transition: all 0.3s ease; color: #fff; font-size: 14px; margin-bottom: 15px;}
         .input-style:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
         
         .gradient-text { background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        #splash-screen { display: flex; transition: opacity 0.4s ease-out; }
+        #splash-screen { display: flex; transition: opacity 0.4s ease-out; background: var(--bg-container); }
         #auth-screen, #main-app { display: none; }
         .tab-content { display: none; }
         .active-tab { display: flex !important; flex-direction: column; animation: fadeIn 0.3s ease-out; }
@@ -49,7 +52,18 @@
         @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(59, 130, 246, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px;}
-        .modal-content { background: #121822; width: 100%; max-width: 400px; padding: 24px; border-radius: 24px; border: 1px solid #1f2937; animation: fadeIn 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: #121822; width: 100%; max-width: 400px; padding: 24px; border-radius: 24px; border: 1px solid #1f2937; animation: fadeIn 0.3s ease-out; max-height: 90vh; overflow-y: auto; color: white; }
+
+        /* 🟢 UPDATED REFERRAL NETWORK TREE CSS 🟢 */
+        .network-tree { display: flex; flex-direction: column; align-items: center; padding: 10px 0; width: 100%; }
+        .network-root { z-index: 2; margin-bottom: 20px; position: relative; display: flex; justify-content: center; }
+        .network-root::after { content: ''; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); width: 2px; height: 20px; background: #3b82f6; }
+        .network-children { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; border-top: 2px solid #3b82f6; padding-top: 20px; position: relative; width: 95%; margin: 0 auto; }
+        .network-node { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #121822; border: 2px solid #1f2937; padding: 10px; border-radius: 12px; min-width: 65px; text-decoration: none; color: white; position: relative; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s; }
+        .network-node:hover { transform: scale(1.05); border-color: #3b82f6; }
+        .network-node.root { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+        .network-node img { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #3b82f6; margin-bottom: 4px; object-fit: cover; }
+        .network-node span { font-size: 10px; font-weight: bold; color: #cbd5e1; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         .box-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 300px; margin: 0 auto; }
         .mystery-box { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-radius: 16px; height: 85px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; cursor: pointer; transition: all 0.2s ease; border: 2px solid #3b82f6; box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); }
@@ -61,6 +75,7 @@
         input[type="file"]::file-selector-button { background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-right: 12px; transition: 0.3s; }
         input[type="file"]::file-selector-button:hover { background: #2563eb; }
 
+        /* AI CAT BOT STYLES */
         .mea-container { position: fixed; bottom: 130px; left: 15px; width: 60px; height: 80px; z-index: 9990; cursor: pointer; user-select: none; touch-action: none; filter: drop-shadow(0 10px 15px rgba(0, 210, 255, 0.3)); animation: floatMea 3s ease-in-out infinite; }
         .mea-head { position: absolute; top: 10px; left: 0; width: 60px; height: 42px; background: linear-gradient(180deg, #ffffff 0%, #e0e5ec 100%); border-radius: 25px 25px 20px 20px; z-index: 10; box-shadow: inset 0 -3px 5px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.2); }
         .mea-ear { position: absolute; top: -12px; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 20px solid #fff; z-index: 9; }
@@ -97,6 +112,7 @@
         #ai-cat-bot-2 .mea-collar { border-top-color: #ff0055; }
         #ai-cat-bot-2 .mea-ear::after { border-bottom-color: #ff0055; }
 
+        /* CHAT STYLES */
         .chat-container { display: flex; flex-direction: column; height: 100%; position: relative; }
         #chat-main-area { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 80px; display: flex; flex-direction: column; scroll-behavior: smooth;}
         #chat-main-area::-webkit-scrollbar { display: none; }
@@ -154,16 +170,35 @@
         .amt-card { border: 2px solid #1f2937; border-radius: 12px; cursor: pointer; transition: 0.1s; background: #121822; text-align: center; padding: 12px 4px; }
         .amt-card.active { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.2); }
 
-        .banner-ad-container { position: absolute; bottom: 65px; left: 0; width: 100%; height: 50px; background: #0b0e14; display: flex; justify-content: center; align-items: center; z-index: 40; border-top: 1px solid rgba(255,255,255,0.05); }
+        .banner-ad-container { position: absolute; bottom: 65px; left: 0; width: 100%; height: 50px; background: var(--bg-container); display: flex; justify-content: center; align-items: center; z-index: 40; border-top: 1px solid var(--border-color); }
 
         .skiptranslate iframe { display: none !important; }
         #goog-gt-tt { display: none !important; }
         .goog-te-banner-frame { display: none !important; }
         
-        /* New Nav adjustments for 6 items */
-        .bottom-nav { display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(11, 14, 20, 0.95); z-index: 50; }
-        .nav-btn { flex: 1; text-align: center; color: #6b7280; font-size: 9px; display: flex; flex-direction: column; align-items: center; transition: 0.2s; }
-        .nav-btn i { font-size: 18px; margin-bottom: 2px; }
+        /* BOTTOM NAV */
+        .bottom-nav { display: flex; justify-content: space-between; padding: 10px 12px; background: rgba(11, 14, 20, 0.95); z-index: 50; }
+        .nav-btn { flex: 1; text-align: center; color: #6b7280; font-size: 10px; display: flex; flex-direction: column; align-items: center; transition: 0.2s; font-weight: bold; }
+        .nav-btn i { font-size: 20px; margin-bottom: 3px; }
+
+        /* SIDEBAR (DRAWER MENU) */
+        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(3px); z-index: 99999; display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .sidebar { position: absolute; top: 0; left: 0; bottom: 0; width: 280px; background: #121822; z-index: 100000; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; border-right: 1px solid rgba(255,255,255,0.05); box-shadow: 5px 0 25px rgba(0,0,0,0.5); }
+        .sidebar.open { transform: translateX(0); }
+        .sidebar-overlay.show { display: block; opacity: 1; }
+        
+        .sidebar-item { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.02); cursor: pointer; transition: background 0.2s; color: #cbd5e1; font-size: 14px; font-weight: 600; }
+        .sidebar-item:hover, .sidebar-item:active { background: rgba(59, 130, 246, 0.1); color: #fff; }
+        .sidebar-item i.left-icon { width: 24px; text-align: center; margin-right: 12px; font-size: 18px; }
+
+        .toggle-switch { position: relative; width: 42px; height: 24px; appearance: none; background: #374151; outline: none; border-radius: 20px; cursor: pointer; transition: 0.3s; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
+        .toggle-switch:checked { background: #3b82f6; }
+        .toggle-switch::before { content: ''; position: absolute; width: 20px; height: 20px; border-radius: 50%; top: 2px; left: 2px; background: #fff; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .toggle-switch:checked::before { left: 20px; }
+
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
     </style>
 </head>
 <body onclick="if(window.closeAllReactMenus) window.closeAllReactMenus(event)">
@@ -171,6 +206,80 @@
 <div id="google_translate_element" style="display:none;"></div>
 
 <div class="app-container">
+    
+    <!-- 🟢 PROFESSIONAL SIDEBAR MENU 🟢 -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="window.closeSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <!-- Sidebar Header (Profile Info) -->
+        <div class="p-6 bg-gradient-to-b from-[#1e293b] to-[#121822] relative border-b border-white/5 flex flex-col items-center">
+            <button onclick="window.closeSidebar()" class="absolute top-4 right-4 w-8 h-8 bg-black/30 rounded-full text-gray-400 hover:text-white flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="w-20 h-20 rounded-full border-4 border-[#3b82f6] p-1 mb-3 relative shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+                <div id="side-avatar" class="w-full h-full rounded-full bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-3xl font-bold overflow-hidden text-white">U</div>
+                <div id="side-vip-tick" class="absolute bottom-0 right-0 w-6 h-6 bg-blue-500 rounded-full border-2 border-[#1e293b] flex items-center justify-center text-white text-[10px] hidden shadow-sm"><i class="fa-solid fa-check"></i></div>
+            </div>
+            
+            <h3 class="text-lg font-bold text-white flex items-center gap-1 text-center leading-tight" id="side-name">User Name</h3>
+            
+            <div id="side-account-type" class="bg-gradient-to-r from-gray-600 to-gray-500 text-white text-[10px] font-bold px-4 py-1.5 rounded-full mt-2 mb-2 tracking-wider shadow-md">BASIC ACCOUNT</div>
+            
+            <p class="text-xs text-gray-400">Affiliate ID: <span id="side-refer-code" class="text-white font-mono font-bold tracking-widest">...</span> <i class="fa-regular fa-copy cursor-pointer text-blue-400 ml-1 text-sm hover:scale-110 transition" onclick="window.copyReferCode()"></i></p>
+            <p class="text-[10px] text-gray-500 mt-1" id="side-join-date">জয়েন করেছেন: Loading...</p>
+            
+            <div class="w-full mt-5">
+                <div class="flex justify-between text-[10px] text-orange-400 font-bold mb-1.5">
+                    <span>Profile Completed</span>
+                    <span>100%</span>
+                </div>
+                <div class="w-full bg-gray-800 rounded-full h-2 shadow-inner"><div class="bg-gradient-to-r from-orange-400 to-orange-500 h-2 rounded-full shadow-[0_0_8px_rgba(249,115,22,0.5)]" style="width: 100%"></div></div>
+            </div>
+        </div>
+        
+        <!-- Sidebar Links -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar py-2">
+            <div class="sidebar-item" onclick="window.closeSidebar(); window.switchTab('home')">
+                <div class="flex items-center"><i class="fa-solid fa-home left-icon text-orange-400"></i> Home</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); window.switchTab('profile')">
+                <div class="flex items-center"><i class="fa-solid fa-user left-icon text-green-400"></i> Profile</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); window.openWithdrawModal()">
+                <div class="flex items-center"><i class="fa-solid fa-wallet left-icon text-emerald-400"></i> Wallet / Withdraw</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); window.openVipPackages()">
+                <div class="flex items-center"><i class="fa-solid fa-crown left-icon text-yellow-400"></i> VIP Packages</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); window.open('https://chat.whatsapp.com/GhB0TPp1XFs7HFZ9bK01NT', '_blank')">
+                <div class="flex items-center"><i class="fa-brands fa-whatsapp left-icon text-green-500 text-xl"></i> WhatsApp</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); window.open('https://t.me/Refer_earn08', '_blank')">
+                <div class="flex items-center"><i class="fa-brands fa-telegram left-icon text-[#0088cc] text-xl"></i> Telegram</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); window.open('https://t.me/roni_vai12', '_blank')">
+                <div class="flex items-center"><i class="fa-solid fa-headset left-icon text-teal-400"></i> Support</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); document.getElementById('privacy-modal').style.display='flex'">
+                <div class="flex items-center"><i class="fa-solid fa-shield-halved left-icon text-purple-400"></i> Privacy And Policy</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); document.getElementById('rules-modal').style.display='flex'">
+                <div class="flex items-center"><i class="fa-solid fa-book-open left-icon text-green-400"></i> Rules / নিয়মকানুন</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); document.getElementById('about-modal').style.display='flex'">
+                <div class="flex items-center"><i class="fa-solid fa-circle-info left-icon text-blue-400"></i> About Us</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); window.open('https://play.google.com/store', '_blank')">
+                <div class="flex items-center"><i class="fa-solid fa-star left-icon text-yellow-400"></i> Review And Rating</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); document.getElementById('settings-modal').style.display='flex'">
+                <div class="flex items-center"><i class="fa-solid fa-gear left-icon text-gray-400"></i> Settings</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item mt-2 border-t border-white/5" onclick="window.closeSidebar(); window.logout()">
+                <div class="flex items-center"><i class="fa-solid fa-arrow-right-from-bracket left-icon text-red-400"></i> Logout</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+        </div>
+    </div>
+    <!-- 🟢 END OF SIDEBAR 🟢 -->
+
     <div id="live-notify"></div>
 
     <div class="mea-container" id="ai-cat-bot" onclick="if(window.handleCatBotClick) window.handleCatBotClick(event)">
@@ -228,15 +337,8 @@
         <button onclick="if(window.logout) window.logout()" class="bg-gray-800 px-6 py-3 rounded-xl font-bold text-gray-300 shadow-lg active:scale-95 w-full">লগআউট করুন</button>
     </div>
 
-    <!-- MAINTENANCE OVERLAY -->
-    <div id="maintenance-screen" class="modal-overlay flex-col items-center justify-center text-center p-6 z-[99999]">
-        <i class="fa-solid fa-person-digging text-6xl text-yellow-500 mb-4"></i>
-        <h2 class="text-3xl font-bold text-white mb-2">কাজ চলছে!</h2>
-        <p class="text-gray-400">অ্যাপের আপডেটের কাজ চলছে। কিছুক্ষন পর আবার চেষ্টা করুন।</p>
-    </div>
-
     <!-- SPLASH SCREEN -->
-    <div id="splash-screen" class="flex-col items-center justify-center h-full w-full bg-[#0b0e14] absolute z-[100]">
+    <div id="splash-screen" class="flex-col items-center justify-center h-full w-full absolute z-[100]">
         <div class="w-24 h-24 rounded-3xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center font-bold text-5xl pulse-logo shadow-2xl shadow-blue-500/50 mb-6 border-2 border-white/20"><i class="fa-solid fa-wallet"></i></div>
         <h1 class="text-3xl font-bold tracking-widest">EARN<span class="text-blue-500">PRO</span></h1>
         <p class="text-gray-500 text-sm mt-2 font-mono" id="splash-text">Connecting to Server...</p>
@@ -254,7 +356,7 @@
             <input type="number" id="auth-phone" placeholder="ফোন নম্বর (যেমন: 017XXXXXX)" class="input-style">
             <input type="password" id="auth-pass" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" class="input-style">
             <input type="text" id="auth-refer" placeholder="রেফার কোড (যদি থাকে)" class="input-style hidden">
-            <button id="btn-auth" onclick="if(window.submitAuth) window.submitAuth()" class="w-full bg-gradient-to-r from-blue-600 to-cyan-500 py-4 rounded-xl font-bold text-lg shadow-lg active:scale-95 transition mt-2">লগইন করুন</button>
+            <button id="btn-auth" onclick="if(window.submitAuth) window.submitAuth()" class="w-full bg-gradient-to-r from-blue-600 to-cyan-500 py-4 rounded-xl font-bold text-lg shadow-lg active:scale-95 transition mt-2 text-white">লগইন করুন</button>
             <p class="text-center text-gray-400 text-sm mt-6 cursor-pointer" onclick="if(window.toggleAuthMode) window.toggleAuthMode()">
                 <span id="auth-toggle-text">নতুন ইউজার? <b class="text-blue-400">একাউন্ট তৈরি করুন</b></span>
             </p>
@@ -264,12 +366,21 @@
     <!-- MAIN APP -->
     <div id="main-app" class="h-full flex-col w-full relative hidden">
         
-        <div class="bg-[#0b0e14] border-b border-white/5 py-2 px-4 flex justify-between items-center z-20">
-            <div class="flex items-center gap-2 bg-gray-800/50 px-3 py-1 rounded-full border border-gray-700/50">
-                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
-                <span class="text-[10px] font-bold text-gray-300 tracking-wider">LIVE USERS: <span id="fake-live-count" class="text-green-400 font-mono text-xs ml-1">০</span></span>
+        <div class="bg-[#0b0e14] border-b border-white/5 py-2.5 px-4 flex justify-between items-center z-20 shadow-md">
+            <div class="flex items-center gap-3">
+                <button onclick="window.openSidebar()" class="text-gray-300 hover:text-white text-2xl transition"><i class="fa-solid fa-bars"></i></button>
+                <div class="flex items-center gap-2 bg-gray-800/50 px-3 py-1 rounded-full border border-gray-700/50">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
+                    <span class="text-[10px] font-bold text-gray-300 tracking-wider">LIVE: <span id="fake-live-count" class="text-green-400 font-mono text-xs ml-1">০</span></span>
+                </div>
             </div>
-            <div class="text-[10px] text-gray-500 font-bold" id="admin-badge-container"><i class="fa-solid fa-shield-halved text-blue-400"></i> Secure</div>
+            <div class="flex items-center gap-4">
+                <div class="text-[10px] text-gray-500 font-bold hidden md:block" id="admin-badge-container"><i class="fa-solid fa-shield-halved text-blue-400"></i> Secure</div>
+                <div class="relative cursor-pointer" onclick="window.openNotificationsModal()">
+                    <i class="fa-solid fa-bell text-gray-300 text-xl hover:text-white transition"></i>
+                    <span id="unread-notify-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-lg shadow-red-500/50 hidden border border-[#0b0e14]">0</span>
+                </div>
+            </div>
         </div>
 
         <div class="bg-blue-600/20 text-blue-400 text-xs py-1.5 px-3 flex items-center border-b border-blue-500/30 z-10">
@@ -279,7 +390,7 @@
 
         <div class="scrollable-content relative">
             
-            <div class="bg-gradient-to-r from-red-600 to-orange-500 text-white text-xs py-2 px-3 flex items-center justify-center font-bold animate-pulse z-10 mx-4 mt-3 rounded-lg shadow-lg" id="promo-banner">
+            <div class="bg-gradient-to-r from-red-600 to-orange-500 text-white text-xs py-2 px-3 flex items-center justify-center font-bold animate-pulse z-10 mx-4 mt-3 rounded-lg shadow-lg cursor-pointer" id="promo-banner" onclick="window.openVipPackages()">
                 <i class="fa-solid fa-fire mr-2"></i> Limited Time Offer! VIP discounts available.
             </div>
 
@@ -314,8 +425,8 @@
                         <span class="bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-1 rounded text-xs font-bold">রেফার আয়: ৳<span id="refer-balance">0.00</span></span>
                     </div>
                     
-                    <button onclick="if(window.openWithdrawModal) window.openWithdrawModal()" class="absolute right-5 top-5 bg-gradient-to-r from-red-500 to-orange-500 px-4 py-2 rounded-lg text-sm font-bold shadow-lg active:scale-95">উত্তোলন</button>
-                    <button onclick="if(window.claimDailyBonus) window.claimDailyBonus()" id="btn-daily-bonus" class="absolute right-5 top-16 bg-gradient-to-r from-green-500 to-emerald-600 px-4 py-2 rounded-lg text-xs font-bold shadow-lg shadow-green-500/30 active:scale-95 btn-shine mt-1">
+                    <button onclick="if(window.openWithdrawModal) window.openWithdrawModal()" class="absolute right-5 top-5 bg-gradient-to-r from-red-500 to-orange-500 px-4 py-2 rounded-lg text-sm font-bold shadow-lg active:scale-95 text-white">উত্তোলন</button>
+                    <button onclick="if(window.claimDailyBonus) window.claimDailyBonus()" id="btn-daily-bonus" class="absolute right-5 top-16 bg-gradient-to-r from-green-500 to-emerald-600 px-4 py-2 rounded-lg text-xs font-bold shadow-lg shadow-green-500/30 active:scale-95 btn-shine mt-1 text-white">
                         <i class="fa-solid fa-gift mr-1"></i> দৈনিক বোনাস
                     </button>
                 </div>
@@ -359,7 +470,7 @@
                 </div>
             </div>
 
-            <!-- LEADERBOARD TAB (NEW) -->
+            <!-- LEADERBOARD TAB -->
             <div id="leaderboard" class="tab-content p-6 hidden">
                 <h2 class="text-2xl font-bold mb-4 pt-2 flex items-center gap-2"><i class="fa-solid fa-trophy text-yellow-400"></i> টপ লিডারবোর্ড</h2>
                 <p class="text-xs text-gray-400 mb-4">সবচেয়ে বেশি পয়েন্ট অর্জনকারী ১০০ জন ইউজার। (রিয়েল-টাইম আপডেট)</p>
@@ -409,7 +520,7 @@
                 </div>
             </div>
 
-            <!-- REFER TAB -->
+            <!-- 🟢 REFER TAB WITH NETWORK TREE 🟢 -->
             <div id="refer" class="tab-content p-6 hidden">
                 <h2 class="text-2xl font-bold mb-4 pt-2">রেফার করুন 🤝</h2>
                 
@@ -425,7 +536,7 @@
                             <span class="text-xs text-gray-500 mb-1">আপনার রেফার কোড:</span>
                             <span class="text-blue-400 font-mono text-[14px] font-bold truncate" id="my-refer-code">...</span>
                         </div>
-                        <button onclick="if(window.copyReferCode) window.copyReferCode()" class="bg-blue-600 px-4 py-3 rounded-lg text-sm font-bold active:scale-95 flex items-center gap-2 flex-shrink-0">
+                        <button onclick="if(window.copyReferCode) window.copyReferCode()" class="bg-blue-600 px-4 py-3 rounded-lg text-sm font-bold active:scale-95 flex items-center gap-2 flex-shrink-0 text-white">
                             <i class="fa-regular fa-copy"></i> কপি কোড
                         </button>
                     </div>
@@ -462,22 +573,46 @@
                         <h3 class="font-bold text-lg text-yellow-400" id="vip-refers-count">০</h3>
                     </div>
                 </div>
+
+                <!-- 🟢 VISUAL REFERRAL NETWORK TREE (AT THE BOTTOM) 🟢 -->
+                <div class="glass p-4 rounded-2xl border-l-4 border-blue-500 mb-6 bg-blue-900/10">
+                    <h4 class="font-bold text-blue-400 mb-2 text-sm text-center"><i class="fa-solid fa-network-wired"></i> আপনার রেফার নেটওয়ার্ক</h4>
+                    <div id="referral-tree-container">
+                        <p class="text-center text-xs text-gray-500 py-4">Loading Network...</p>
+                    </div>
+                </div>
             </div>
 
             <!-- PROFILE TAB -->
             <div id="profile" class="tab-content p-6 hidden">
-                <h2 class="text-2xl font-bold mb-4 pt-2">প্রোফাইল 👤</h2>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold pt-2">আমার প্রোফাইল 👤</h2>
+                    <button onclick="document.getElementById('edit-profile-modal').style.display='flex'" class="w-10 h-10 bg-blue-600/20 text-blue-400 rounded-full flex items-center justify-center active:scale-95 transition"><i class="fa-solid fa-pen"></i></button>
+                </div>
                 
-                <div class="glass p-5 rounded-3xl mb-4 flex items-center justify-between border-t-2 border-t-blue-500">
-                    <div class="flex items-center gap-4">
-                        <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center font-bold text-2xl shadow-lg border-2 border-white/20 overflow-hidden" id="profile-avatar">U</div>
-                        <div>
-                            <h3 class="text-xl font-bold" id="profile-name">...</h3>
-                            <p class="text-gray-400 text-sm" id="profile-phone">...</p>
-                            <span id="profile-vip" class="text-xs text-blue-400 mt-1 font-bold block bg-blue-500/10 px-2 py-1 rounded inline-block">Status: Free</span>
-                        </div>
+                <div class="glass p-6 rounded-3xl mb-6 border-t-2 border-t-blue-500 text-center relative shadow-lg shadow-blue-500/10">
+                    <div class="w-24 h-24 rounded-full border-4 border-[#121822] bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center font-bold text-4xl shadow-xl overflow-hidden text-white mx-auto mb-3" id="profile-avatar">U</div>
+                    <h3 class="text-2xl font-bold text-white mb-1" id="profile-name">...</h3>
+                    <p class="text-gray-400 text-sm font-mono mb-2" id="profile-phone">...</p>
+                    <span id="profile-vip" class="text-xs text-yellow-400 font-bold bg-yellow-500/10 px-3 py-1 rounded-full border border-yellow-500/30 inline-block shadow-sm">Status: Free</span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                    <div class="glass p-3 rounded-2xl text-center">
+                        <i class="fa-solid fa-users text-blue-400 text-xl mb-1"></i>
+                        <p class="text-lg font-bold text-white" id="my-friends-stat">0</p>
+                        <p class="text-[9px] text-gray-400 uppercase tracking-widest">Friends</p>
                     </div>
-                    <button onclick="document.getElementById('edit-profile-modal').style.display='flex'" class="w-10 h-10 bg-blue-600/20 text-blue-400 rounded-full flex items-center justify-center active:scale-95"><i class="fa-solid fa-pen"></i></button>
+                    <div onclick="if(window.openPointHistoryModal) window.openPointHistoryModal()" class="glass p-3 rounded-2xl text-center cursor-pointer active:scale-95 transition bg-orange-500/5 border-orange-500/30 border">
+                        <i class="fa-solid fa-coins text-orange-400 text-xl mb-1"></i>
+                        <p class="text-lg font-bold text-orange-400" id="my-points-stat">0</p>
+                        <p class="text-[9px] text-gray-400 uppercase tracking-widest">History</p>
+                    </div>
+                    <div class="glass p-3 rounded-2xl text-center">
+                        <i class="fa-solid fa-heart text-pink-400 text-xl mb-1"></i>
+                        <p class="text-lg font-bold text-white" id="my-likes-stat">0</p>
+                        <p class="text-[9px] text-gray-400 uppercase tracking-widest">Likes</p>
+                    </div>
                 </div>
 
                 <div class="glass p-5 rounded-3xl mb-6 relative overflow-hidden">
@@ -492,68 +627,15 @@
                     <p class="text-[9px] text-gray-500 mt-2 text-center relative z-10">VIP 1 এ আপগ্রেড করতে পয়েন্ট জমান।</p>
                 </div>
 
-                <div class="space-y-3 mb-6">
-                    <button onclick="if(window.openWithdrawModal) window.openWithdrawModal()" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-money-bill-transfer text-green-400 text-lg w-5 text-center"></i><span class="font-bold">টাকা উত্তোলন (Withdraw)</span></div>
-                        <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
-                    </button>
-                    
-                    <button onclick="if(window.openVipPackages) window.openVipPackages()" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-yellow-500 bg-yellow-500/5">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-crown text-yellow-400 text-lg w-5 text-center"></i><span class="font-bold text-yellow-400">VIP প্যাকেজ (Buy & Deposit)</span></div>
-                        <i class="fa-solid fa-chevron-right text-yellow-600 text-sm"></i>
-                    </button>
-
-                    <!-- NEW: Point History Button -->
-                    <button onclick="if(window.openPointHistoryModal) window.openPointHistoryModal()" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-orange-500 bg-orange-500/5">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-coins text-orange-400 text-lg w-5 text-center"></i><span class="font-bold text-orange-400">পয়েন্ট হিস্ট্রি (Earning Details)</span></div>
-                        <i class="fa-solid fa-chevron-right text-orange-600 text-sm"></i>
-                    </button>
-                    
-                    <!-- NEW: Friend Requests Button -->
-                    <button onclick="if(window.openFriendRequestsModal) window.openFriendRequestsModal()" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-pink-500 bg-pink-500/5">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-user-plus text-pink-400 text-lg w-5 text-center"></i><span class="font-bold text-pink-400">ফ্রেন্ড রিকোয়েস্ট (Friends)</span></div>
-                        <i class="fa-solid fa-chevron-right text-pink-600 text-sm"></i>
-                    </button>
-                    
-                    <button onclick="document.getElementById('rules-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-green-500 bg-green-500/5">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-book-open text-green-400 text-lg w-5 text-center"></i><span class="font-bold text-green-400">কাজের নিয়মকানুন (Rules)</span></div>
-                        <i class="fa-solid fa-chevron-right text-green-600 text-sm"></i>
-                    </button>
-
-                    <button onclick="document.getElementById('ai-guide-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-[#00d2ff]">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-robot text-[#00d2ff] text-lg w-5 text-center"></i><span class="font-bold text-[#00d2ff]">এআই গাইড (AI Assistant)</span></div>
-                        <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
-                    </button>
-                    <button onclick="if(window.openHistoryModal) window.openHistoryModal()" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-clock-rotate-left text-blue-400 text-lg w-5 text-center"></i><span>উত্তোলনের হিস্ট্রি</span></div>
-                        <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
-                    </button>
-
-                    <button onclick="document.getElementById('lang-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition border-l-2 border-indigo-500 bg-indigo-500/5">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-language text-indigo-400 text-lg w-5 text-center"></i><span class="font-bold text-indigo-400">ভাষা পরিবর্তন (Language)</span></div>
-                        <i class="fa-solid fa-chevron-right text-indigo-600 text-sm"></i>
-                    </button>
-
-                    <button onclick="document.getElementById('password-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-key text-purple-400 text-lg w-5 text-center"></i><span>পাসওয়ার্ড পরিবর্তন</span></div>
-                        <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
-                    </button>
-                    <button onclick="if(window.contactSupport) window.contactSupport()" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
-                        <div class="flex items-center gap-3"><i class="fa-brands fa-telegram text-[#0088cc] text-xl w-5 text-center"></i><span class="text-blue-400 font-bold">সাপোর্ট / এডমিন</span></div>
-                        <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
-                    </button>
-                    <button onclick="document.getElementById('privacy-modal').style.display='flex'" class="w-full glass p-4 rounded-xl flex justify-between items-center active:bg-gray-800 transition">
-                        <div class="flex items-center gap-3"><i class="fa-solid fa-shield text-gray-400 text-lg w-5 text-center"></i><span>প্রাইভেসি পলিসি</span></div>
-                        <i class="fa-solid fa-chevron-right text-gray-600 text-sm"></i>
-                    </button>
-                </div>
-                
-                <button onclick="if(window.logout) window.logout()" class="w-full bg-red-500/10 border border-red-500/30 text-red-400 py-4 rounded-xl font-bold active:scale-95 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i> লগআউট করুন
-                </button>
-                
-                <div class="text-center mt-6">
-                    <p class="text-[10px] text-gray-500">EarnPro App Version 1.1.0 (Advanced)</p>
+                <!-- Friend Requests Inside Profile -->
+                <div class="glass rounded-2xl border border-gray-800 overflow-hidden mb-6">
+                    <div class="bg-gray-800/50 p-3 border-b border-gray-700 flex justify-between items-center">
+                        <h4 class="font-bold text-white text-sm"><i class="fa-solid fa-user-plus text-pink-400 mr-1"></i> Friend Requests</h4>
+                        <span class="bg-pink-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow-md" id="friend-req-count">0</span>
+                    </div>
+                    <div id="friend-requests-list" class="p-2 space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
+                        <p class="text-center text-xs text-gray-500 py-3">No pending requests.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -571,22 +653,32 @@
             <script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></script>
         </div>
 
-        <!-- UPDATED BOTTOM NAV (6 Items) -->
+        <!-- 🟢 BOTTOM NAV 🟢 -->
         <nav class="absolute bottom-0 left-0 w-full glass border-t border-white/10 bottom-nav">
-            <button id="nav-home" onclick="if(window.switchTab) window.switchTab('home')" class="nav-btn text-blue-400 transform scale-110"><i class="fa-solid fa-house"></i> Home</button>
+            <button id="nav-home" onclick="if(window.switchTab) window.switchTab('home')" class="nav-btn text-blue-400 transform scale-110"><i class="fa-solid fa-home"></i> Home</button>
             <button id="nav-leaderboard" onclick="if(window.switchTab) window.switchTab('leaderboard')" class="nav-btn"><i class="fa-solid fa-trophy"></i> Rank</button>
-            <button id="nav-chat" onclick="if(window.switchTab) window.switchTab('chat')" class="nav-btn"><i class="fa-solid fa-comments"></i> Chat</button>
             <button id="nav-box" onclick="if(window.switchTab) window.switchTab('box')" class="nav-btn relative">
-                <span class="absolute top-0 right-3 flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span>
+                <span class="absolute top-0 right-[25%] flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span>
                 <i class="fa-solid fa-box-open"></i> Box
             </button>
+            <button id="nav-chat" onclick="if(window.switchTab) window.switchTab('chat')" class="nav-btn"><i class="fa-solid fa-comments"></i> Chat</button>
             <button id="nav-refer" onclick="if(window.switchTab) window.switchTab('refer')" class="nav-btn"><i class="fa-solid fa-users"></i> Refer</button>
-            <button id="nav-profile" onclick="if(window.switchTab) window.switchTab('profile')" class="nav-btn"><i class="fa-solid fa-user"></i> Profile</button>
         </nav>
     </div>
 </div>
 
-<!-- NEW: Public Profile Modal (Facebook Like Interface) -->
+<!-- 🟢 NOTIFICATIONS MODAL 🟢 -->
+<div id="notifications-modal" class="modal-overlay">
+    <div class="modal-content max-h-[80vh] flex flex-col !p-5">
+        <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+            <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-bell text-yellow-400 mr-2"></i> Notifications</h3>
+            <button onclick="document.getElementById('notifications-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+        <div id="notifications-list" class="overflow-y-auto space-y-3 flex-1 pr-1 custom-scrollbar"></div>
+    </div>
+</div>
+
+<!-- Public Profile Modal -->
 <div id="public-profile-modal" class="modal-overlay">
     <div class="modal-content text-center !p-0 overflow-hidden relative">
         <div class="h-32 bg-gradient-to-r from-blue-600 to-cyan-500 relative">
@@ -596,7 +688,7 @@
             <div class="-mt-12 mb-3 flex justify-center">
                 <div id="pp-avatar" class="w-24 h-24 rounded-full border-4 border-[#121822] bg-[#0084ff] text-white flex items-center justify-center text-4xl font-bold overflow-hidden shadow-xl z-10">U</div>
             </div>
-            <h3 id="pp-name" class="text-2xl font-bold text-white">User Name</h3>
+            <h3 id="pp-name" class="text-2xl font-bold text-white flex justify-center items-center gap-1">User Name <i id="pp-vip-tick" class="fa-solid fa-circle-check text-blue-500 text-sm hidden"></i></h3>
             <p id="pp-vip-status" class="text-sm text-yellow-400 font-bold mb-4">👑 VIP 1</p>
             
             <div class="flex justify-center gap-4 mb-5">
@@ -631,7 +723,7 @@
     </div>
 </div>
 
-<!-- NEW: Point History Modal -->
+<!-- Point History Modal -->
 <div id="point-history-modal" class="modal-overlay">
     <div class="modal-content max-h-[80vh] flex flex-col !p-5">
         <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
@@ -639,28 +731,56 @@
             <button onclick="document.getElementById('point-history-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
         <p class="text-xs text-gray-400 mb-3 text-center">আপনার ইনকাম করা এবং খরচ করা পয়েন্টের বিস্তারিত হিস্ট্রি এখানে দেখানো হচ্ছে।</p>
-        <div id="point-history-list" class="overflow-y-auto space-y-3 flex-1 pr-1">
-            <!-- Items will load here -->
-        </div>
+        <div id="point-history-list" class="overflow-y-auto space-y-3 flex-1 pr-1 custom-scrollbar"></div>
     </div>
 </div>
 
-<!-- NEW: Friend Requests Modal -->
-<div id="friend-requests-modal" class="modal-overlay">
-    <div class="modal-content max-h-[80vh] flex flex-col !p-5">
+<!-- 🟢 SETTINGS MODAL 🟢 -->
+<div id="settings-modal" class="modal-overlay">
+    <div class="modal-content">
         <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
-            <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-user-plus text-pink-400 mr-2"></i> ফ্রেন্ড রিকোয়েস্ট</h3>
-            <button onclick="document.getElementById('friend-requests-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-gear text-gray-400 mr-2"></i> App Settings</h3>
+            <button onclick="document.getElementById('settings-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
-        <div id="friend-requests-list" class="overflow-y-auto space-y-3 flex-1 pr-1">
-            <!-- Requests will load here -->
+        
+        <div class="space-y-4 my-4">
+            <div class="flex justify-between items-center glass p-3 rounded-xl border border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center"><i class="fa-solid fa-moon"></i></div>
+                    <span class="font-bold text-sm text-white">Dark Mode</span>
+                </div>
+                <input type="checkbox" id="toggle-dark-mode" class="toggle-switch" checked onchange="window.toggleAppTheme()">
+            </div>
+            
+            <div class="flex justify-between items-center glass p-3 rounded-xl border border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-green-500/20 text-green-400 flex items-center justify-center"><i class="fa-solid fa-volume-high"></i></div>
+                    <span class="font-bold text-sm text-white">App Sounds</span>
+                </div>
+                <input type="checkbox" id="toggle-sound" class="toggle-switch" checked>
+            </div>
+
+            <div class="flex justify-between items-center glass p-3 rounded-xl border border-gray-700 cursor-pointer active:bg-gray-800" onclick="document.getElementById('settings-modal').style.display='none'; document.getElementById('lang-modal').style.display='flex'">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-indigo-500/20 text-indigo-400 flex items-center justify-center"><i class="fa-solid fa-language"></i></div>
+                    <span class="font-bold text-sm text-white">App Language</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500 text-sm"></i>
+            </div>
+
+            <div class="flex justify-between items-center glass p-3 rounded-xl border border-gray-700 cursor-pointer active:bg-gray-800" onclick="document.getElementById('settings-modal').style.display='none'; document.getElementById('password-modal').style.display='flex'">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-purple-500/20 text-purple-400 flex items-center justify-center"><i class="fa-solid fa-key"></i></div>
+                    <span class="font-bold text-sm text-white">Change Password</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500 text-sm"></i>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- UPDATED MODALS -->
 <div id="lang-modal" class="modal-overlay">
-    <!-- Same as before -->
     <div class="modal-content text-center">
         <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
             <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-language text-indigo-400 mr-2"></i> ভাষা পরিবর্তন</h3>
@@ -674,6 +794,27 @@
     </div>
 </div>
 
+<!-- 🟢 NEW ABOUT US MODAL 🟢 -->
+<div id="about-modal" class="modal-overlay">
+    <div class="modal-content text-center">
+        <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+            <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-circle-info text-blue-400 mr-2"></i> About Us</h3>
+            <button onclick="document.getElementById('about-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+        <div class="text-sm text-gray-400 text-left h-[40vh] overflow-y-auto pr-2 my-4 space-y-4 leading-relaxed custom-scrollbar">
+            <div class="flex justify-center mb-4">
+                <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center font-bold text-4xl shadow-xl border border-white/20"><i class="fa-solid fa-wallet text-white"></i></div>
+            </div>
+            <h4 class="font-bold text-white text-center text-lg">EarnPro - The Ultimate Earning App</h4>
+            <p>EarnPro হচ্ছে বাংলাদেশের অন্যতম নির্ভরযোগ্য এবং বিশ্বস্ত আর্নিং প্ল্যাটফর্ম। আমাদের মূল লক্ষ্য হচ্ছে সাধারণ ব্যবহারকারীদের জন্য ঘরে বসে মোবাইল ফোনের মাধ্যমে একটি স্মার্ট ইনকামের সুযোগ তৈরি করা।</p>
+            <p>আমরা স্বচ্ছতা এবং পেমেন্ট গ্যারান্টির উপর বিশ্বাস করি। আমাদের সিস্টেমে কোনো ধরনের জালিয়াতি বা হিডেন চার্জ নেই। আপনি আপনার কাজের পারিশ্রমিক ২৪ ঘন্টার মধ্যে খুব সহজেই বিকাশ বা নগদের মাধ্যমে তুলে নিতে পারবেন।</p>
+            <p class="font-bold text-blue-400 mt-2 text-center">Version: 1.1.0 (Advanced)</p>
+            <p class="text-center text-xs">Developed with ❤️ for trusted users.</p>
+        </div>
+        <button onclick="document.getElementById('about-modal').style.display='none'" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold text-white transition active:scale-95">Close</button>
+    </div>
+</div>
+
 <!-- FULLY DETAILED RULES MODAL -->
 <div id="rules-modal" class="modal-overlay">
     <div class="modal-content">
@@ -681,7 +822,7 @@
             <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-book-open text-green-400 mr-2"></i> কাজের নিয়মকানুন</h3>
             <button onclick="document.getElementById('rules-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
-        <div class="text-[13px] text-gray-300 pr-2 my-2 space-y-4">
+        <div class="text-[13px] text-gray-300 pr-2 my-2 space-y-4 custom-scrollbar">
             
             <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
                 <h4 class="font-bold text-blue-400 mb-1">১. কীভাবে কাজ করবেন (Ad Task):</h4>
@@ -715,13 +856,12 @@
 </div>
 
 <div id="ai-guide-modal" class="modal-overlay">
-    <!-- Same as before -->
     <div class="modal-content text-center">
         <div class="flex justify-between items-center mb-2 border-b border-gray-700 pb-2">
             <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-robot text-[#00d2ff] mr-2"></i> এআই গাইড</h3>
             <button onclick="document.getElementById('ai-guide-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
-        <div class="text-sm text-gray-400 text-left h-48 overflow-y-auto pr-2 my-4 space-y-3">
+        <div class="text-sm text-gray-400 text-left h-48 overflow-y-auto pr-2 my-4 space-y-3 custom-scrollbar">
             <p>স্ক্রিনের নিচের বাম দিকের <b>বিড়াল রোবটটিতে</b> ক্লিক করে আপনি সরাসরি কথা বলে অ্যাপ কন্ট্রোল করতে পারবেন।</p>
             <p><b>কিছু ভয়েস কমান্ড:</b></p>
             <ul class="list-disc pl-5 space-y-1 text-blue-300">
@@ -750,13 +890,12 @@
             <label class="text-sm text-gray-400 mb-1 block">প্রোফাইল ছবি (গ্যালারি থেকে)</label>
             <input type="file" id="edit-avatar-file" accept="image/*" class="input-style bg-[#121822] cursor-pointer" style="padding: 10px;">
             <p class="text-[10px] text-gray-500 mb-4 -mt-2">যেকোনো একটি ছবি সিলেক্ট করুন</p>
-            <button type="submit" id="btn-save-profile" class="w-full bg-blue-600 py-3 rounded-xl font-bold active:scale-95 shadow-lg shadow-blue-500/30">সেভ করুন</button>
+            <button type="submit" id="btn-save-profile" class="w-full bg-blue-600 py-3 rounded-xl font-bold active:scale-95 shadow-lg shadow-blue-500/30 text-white">সেভ করুন</button>
         </form>
     </div>
 </div>
 
 <div id="withdraw-modal" class="modal-overlay">
-    <!-- Same as before -->
     <div class="modal-content !p-5">
         <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
             <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-money-bill-transfer text-green-400 mr-2"></i> টাকা উত্তোলন (Withdraw)</h3>
@@ -805,13 +944,12 @@
             <label class="text-sm text-gray-300 mb-2 block font-bold">টাকার পরিমাণ সিলেক্ট করুন</label>
             <div id="dynamic-amounts-container" class="grid grid-cols-3 gap-2 mb-6"></div>
 
-            <button type="submit" id="btn-withdraw" class="w-full bg-blue-600 hover:bg-blue-500 transition py-4 rounded-xl font-bold active:scale-95 shadow-lg shadow-blue-500/30">উত্তোলন রিকোয়েস্ট দিন</button>
+            <button type="submit" id="btn-withdraw" class="w-full bg-blue-600 hover:bg-blue-500 transition py-4 rounded-xl font-bold active:scale-95 shadow-lg shadow-blue-500/30 text-white">উত্তোলন রিকোয়েস্ট দিন</button>
         </form>
     </div>
 </div>
 
 <div id="vip-modal" class="modal-overlay">
-    <!-- Same as before -->
     <div class="modal-content !p-5">
         <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
             <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-crown text-yellow-400 mr-2"></i> VIP আপগ্রেড করুন</h3>
@@ -834,7 +972,7 @@
                         <p class="text-[10px] text-gray-400 mt-1">লিমিট ১০০০ ৳</p>
                         <span id="promo-badge" class="text-[9px] bg-red-500 text-white px-1.5 py-0.5 rounded font-bold mt-1 inline-block animate-pulse shadow-lg hidden">Launch Promo!</span>
                     </div>
-                    <button onclick="window.buyVipWithPoints('VIP 1')" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg font-bold shadow-lg transition relative z-10 flex flex-col items-center leading-tight active:scale-95">
+                    <button onclick="window.buyVipWithPoints('VIP 1')" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg font-bold shadow-lg transition relative z-10 flex flex-col items-center leading-tight active:scale-95 text-white">
                         <span class="line-through text-[10px] text-blue-200 hidden" id="vip1-reg-cost">10000 Pts</span>
                         <span class="text-sm"><span id="vip1-point-cost">10000</span> Pts</span>
                     </button>
@@ -860,7 +998,7 @@
                 <p class="text-sm text-gray-300">নিচের নাম্বারে <b id="vip-price-display" class="text-green-400 text-lg">৳৫০</b> সেন্ড মানি করুন।</p>
                 <div class="flex justify-between items-center mt-2 bg-[#05070a] p-2 rounded border border-gray-700">
                     <span class="font-bold text-lg tracking-wider" id="admin-number">01600678966</span>
-                    <button onclick="if(window.copyText) window.copyText('01600678966', 'নাম্বার কপি হয়েছে')" class="bg-gray-800 px-3 py-1 rounded text-xs">কপি</button>
+                    <button onclick="if(window.copyText) window.copyText('01600678966', 'নাম্বার কপি হয়েছে')" class="bg-gray-800 px-3 py-1 rounded text-xs text-white">কপি</button>
                 </div>
             </div>
             <input type="number" id="pay-number" placeholder="যে নাম্বার থেকে টাকা পাঠিয়েছেন" class="input-style">
@@ -882,7 +1020,7 @@
         <form onsubmit="if(window.submitPasswordChange) window.submitPasswordChange(event)">
             <label class="text-sm text-gray-400 mb-1 block">নতুন পাসওয়ার্ড</label>
             <input type="password" id="new-pass" placeholder="কমপক্ষে ৬ অক্ষরের নতুন পাসওয়ার্ড" class="input-style" required minlength="6">
-            <button type="submit" class="w-full bg-purple-600 py-3 rounded-xl font-bold active:scale-95 shadow-lg shadow-purple-500/30">পরিবর্তন করুন</button>
+            <button type="submit" class="w-full bg-purple-600 py-3 rounded-xl font-bold active:scale-95 shadow-lg shadow-purple-500/30 text-white">পরিবর্তন করুন</button>
         </form>
     </div>
 </div>
@@ -894,7 +1032,7 @@
             <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-shield text-gray-400 mr-2"></i> প্রাইভেসি পলিসি</h3>
             <button onclick="document.getElementById('privacy-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
-        <div class="text-sm text-gray-400 text-left h-[50vh] overflow-y-auto pr-2 my-4 space-y-4 leading-relaxed">
+        <div class="text-sm text-gray-400 text-left h-[50vh] overflow-y-auto pr-2 my-4 space-y-4 leading-relaxed custom-scrollbar">
             <p class="font-bold text-blue-400">EarnPro অ্যাপটি ১০০% বিশ্বস্ত এবং স্বচ্ছ নীতির উপর প্রতিষ্ঠিত। এখানে কোনো ধরনের প্রতারণার সুযোগ নেই।</p>
             
             <div>
@@ -904,12 +1042,12 @@
             
             <div>
                 <h4 class="font-bold text-white mb-1">২. ডাটা প্রাইভেসি:</h4>
-                <p>অ্যাকাউন্ট খোলার সময় আপনার ব্যবহৃত ফোন নাম্বার এবং নাম সম্পূর্ণ সুরক্ষিত। আমরা এই তথ্যগুলো শুধু আপনার পেমেন্ট ভেরিফিকেশন এবং আইডেন্টিটির জন্য ব্যবহার করি। তৃতীয় কোনো পক্ষের কাছে আপনার ডাটা বিক্রি করা হয় না।</p>
+                <p>অ্যাকাউন্ট খোলার সময় আপনার ব্যবহৃত ফোন নাম্বার এবং নাম সম্পূর্ণ সুরক্ষিত। আমরা এই তথ্যগুলো শুধু আপনার পেমেন্ট ভেরিফিকেশন এবং আইডেন্টিটির জন্য ব্যবহার করি। তৃতীয় কোনো পক্ষের কাছে আপনার ডাটা বিক্রি করা হয় সমাধানে হয় না।</p>
             </div>
             
             <div>
                 <h4 class="font-bold text-white mb-1">৩. এক মোবাইল, এক একাউন্ট:</h4>
-                <p>অ্যাপটি মাল্টি-অ্যাকাউন্ট (একই ডিভাইস দিয়ে বারবার নতুন অ্যাকাউন্ট খোলা) সাপোর্ট করে না। আমাদের সিস্টেম খুবই অ্যাডভান্সড। যদি কেউ নিজের রেফার কোড নিজে ব্যবহার করার জন্য ফেক অ্যাকাউন্ট বানায়, তবে তার সব অ্যাকাউন্ট ব্যান করে ব্যালেন্স জিরো করে দেওয়া হবে।</p>
+                <p>অ্যাপটি মাল্টি-অ্যাকাউন্ট (একই ডিভাইস দিয়ে বারবার নতুন অ্যাকাউন্ট খোলা) সাপোর্ট করে সমাধানে। আমাদের সিস্টেম খুবই অ্যাডভান্সড। যদি কেউ নিজের রেফার কোড নিজে ব্যবহার করার জন্য ফেক অ্যাকাউন্ট বানায়, তবে তার সব অ্যাকাউন্ট ব্যান করে ব্যালেন্স জিরো করে দেওয়া হবে।</p>
             </div>
 
             <div>
@@ -932,7 +1070,7 @@
             <h3 class="text-xl font-bold text-white">উত্তোলনের হিস্ট্রি</h3>
             <button onclick="document.getElementById('history-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
-        <div id="history-list" class="overflow-y-auto space-y-3 flex-1 pr-1"></div>
+        <div id="history-list" class="overflow-y-auto space-y-3 flex-1 pr-1 custom-scrollbar"></div>
     </div>
 </div>
 
@@ -961,10 +1099,30 @@
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
     window.isSignupMode = false;
-
-    // Admin Phone (Will have master control linked to your admin panel later)
     const ADMIN_PHONE = "01600678966"; 
     let isAdmin = false; 
+
+    // 🟢 APP THEME TOGGLE 🟢
+    window.toggleAppTheme = () => {
+        let isDark = document.getElementById('toggle-dark-mode').checked;
+        if(isDark) {
+            document.body.classList.remove('light-mode');
+        } else {
+            document.body.classList.add('light-mode');
+            window.showNotify("Light mode currently in beta!", "info");
+        }
+    };
+
+    // 🟢 SIDEBAR LOGIC 🟢
+    window.openSidebar = () => {
+        document.getElementById('sidebar-overlay').classList.add('show');
+        document.getElementById('sidebar').classList.add('open');
+    };
+
+    window.closeSidebar = () => {
+        document.getElementById('sidebar-overlay').classList.remove('show');
+        document.getElementById('sidebar').classList.remove('open');
+    };
 
     window.changeLanguage = (langCode) => {
         var selectField = document.querySelector("#google_translate_element select");
@@ -1021,14 +1179,18 @@
             else if(activeChatMode === 'private_room') window.setChatMode('private_room');
         }
 
-        // Leaderboard load trigger
         if(tabId === 'leaderboard' && window.loadRealLeaderboard) {
             window.loadRealLeaderboard();
+        }
+
+        if(tabId === 'refer') {
+            window.fetchReferralStats(); 
         }
     };
 
     window.closeAllReactMenus = (e) => {
-        if(e.target.closest('.react-menu') || e.target.closest('.fa-face-smile') || e.target.closest('#public-profile-modal')) return;
+        if(e.target.closest('.react-menu') || e.target.closest('.fa-face-smile') || e.target.closest('#public-profile-modal') || e.target.closest('.sidebar') || e.target.closest('.fa-bars')) return;
+        
         const openMenus = document.querySelectorAll('.react-menu');
         for(let i=0; i<openMenus.length; i++) {
             if(openMenus[i].style.display === 'flex') openMenus[i].style.display = 'none';
@@ -1071,18 +1233,25 @@
         toast.innerHTML = `${icon} <span>${msg}</span>`;
         container.appendChild(toast);
         
+        if (document.getElementById('toggle-sound').checked) {
+            try {
+                let audio = new Audio('https://actions.google.com/sounds/v1/ui/button_click.ogg');
+                audio.volume = 0.2;
+                audio.play().catch(e=>{});
+            } catch(e){}
+        }
+
         setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 50);
         setTimeout(() => { toast.style.transform = 'translateX(120%)'; setTimeout(() => toast.remove(), 500); }, 3500);
     };
 
-    // 🟢 POINT HISTORY LOGGER 🟢
     async function logPointHistory(uid, desc, pointsStr, typeColor) {
         try {
             let historyRef = collection(db, "users", uid, "point_history");
             await addDoc(historyRef, {
                 desc: desc,
                 points: pointsStr,
-                color: typeColor, // 'text-green-400' (Earned) or 'text-red-400' (Spent)
+                color: typeColor, 
                 timestamp: serverTimestamp()
             });
         } catch(e) { console.log("History Error", e); }
@@ -1117,7 +1286,6 @@
         } catch (e) { listDiv.innerHTML = '<p class="text-center text-red-500 py-4">ডাটা লোড হতে সমস্যা হয়েছে</p>'; }
     }
 
-    // 🟢 FRIEND REQUESTS SYSTEM 🟢
     window.openFriendRequestsModal = async () => {
         document.getElementById('friend-requests-modal').style.display = 'flex';
         const listDiv = document.getElementById('friend-requests-list');
@@ -1182,31 +1350,77 @@
         window.openFriendRequestsModal();
     }
 
-    // 🟢 REAL-TIME LEADERBOARD LOGIC 🟢
+    // 🟢 DYNAMIC NOTIFICATION MODAL 🟢
+    window.openNotificationsModal = () => {
+        document.getElementById('notifications-modal').style.display = 'flex';
+        
+        let notifs = JSON.parse(localStorage.getItem('earnpro_notifs') || '[]');
+        const listDiv = document.getElementById('notifications-list');
+        
+        if(notifs.length === 0) {
+            listDiv.innerHTML = '<p class="text-center text-gray-500 py-4">কোনো নতুন নোটিফিকেশন নেই</p>';
+        } else {
+            listDiv.innerHTML = '';
+            notifs.reverse().forEach(n => {
+                let dateStr = new Date(n.time).toLocaleString();
+                listDiv.innerHTML += `
+                    <div class="bg-[#121822] p-4 rounded-xl border border-gray-700 shadow-sm relative overflow-hidden">
+                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"></div>
+                        <h4 class="font-bold text-white text-sm mb-1">${n.title}</h4>
+                        <p class="text-xs text-gray-300 leading-relaxed">${n.body}</p>
+                        <p class="text-[9px] text-gray-500 mt-2 text-right">${dateStr}</p>
+                    </div>
+                `;
+            });
+        }
+        
+        localStorage.setItem('earnpro_notifs_read_count', notifs.length.toString());
+        document.getElementById('unread-notify-badge').classList.add('hidden');
+    };
+
+    // 🟢 BOT INJECTED LEADERBOARD 🟢
     window.loadRealLeaderboard = async () => {
         const listDiv = document.getElementById('real-leaderboard-list');
         listDiv.innerHTML = '<p class="text-center text-gray-500 text-sm py-4"><i class="fa-solid fa-spinner fa-spin"></i> Loading Leaderboard...</p>';
         
         try {
             const usersRef = collection(db, "users");
-            // Query top 100 users by points
-            const q = query(usersRef, orderBy("points", "desc"), limit(100));
+            const q = query(usersRef, orderBy("points", "desc"), limit(80));
             const snap = await getDocs(q);
             
-            if(snap.empty) { listDiv.innerHTML = '<p class="text-center text-gray-500 text-sm py-4">No users found.</p>'; return; }
-            
-            listDiv.innerHTML = "";
-            let rank = 1;
+            let combinedUsers = [];
             
             snap.forEach(doc => {
                 let u = doc.data();
-                if(u.isBanned) return; 
+                u.uid = doc.id; 
+                if(!u.isBanned) combinedUsers.push(u);
+            });
 
+            // 15 Bots Injection
+            const botNames = ["Sabbir Hossain", "Riya Islam", "Akash Ahmed", "Mim Akter", "Hridoy Khan", "Sadia Afrin", "Rakib Hasan", "Tanjila Chowdhury", "Nayeem Rahman", "Asha Begum", "Emon Ali", "Nusrat Jahan", "Tarek Mahmud", "Eva Rahman", "Sajib Das"];
+            botNames.forEach(name => {
+                combinedUsers.push({
+                    uid: 'bot_' + name.replace(/\s+/g, ''),
+                    isBot: true,
+                    name: name,
+                    points: Math.floor(Math.random() * (500 - 300 + 1)) + 300,
+                    currentVIP: Math.random() > 0.5 ? "VIP 1" : "Free",
+                    avatar: ""
+                });
+            });
+
+            combinedUsers.sort((a, b) => (b.points || 0) - (a.points || 0));
+            let top100 = combinedUsers.slice(0, 100);
+
+            listDiv.innerHTML = "";
+            let rank = 1;
+            
+            top100.forEach(u => {
                 let medal = rank === 1 ? "🥇" : (rank === 2 ? "🥈" : (rank === 3 ? "🥉" : "🏅"));
                 let avatarHtml = u.avatar ? `<img src="${u.avatar}" class="w-8 h-8 rounded-full object-cover">` : `<div class="w-8 h-8 rounded-full bg-[#0084ff] text-white flex items-center justify-center font-bold text-xs">${u.name.charAt(0).toUpperCase()}</div>`;
                 
                 listDiv.innerHTML += `
-                    <div class="flex justify-between items-center bg-[#121822] p-3 rounded-xl border border-gray-800/80 mb-2 cursor-pointer shadow-sm hover:bg-gray-800 transition" onclick="if(window.openPublicProfile) window.openPublicProfile('${doc.id}', '${u.name}', '${u.avatar || ''}')">
+                    <div class="flex justify-between items-center bg-[#121822] p-3 rounded-xl border border-gray-800/80 mb-2 cursor-pointer shadow-sm hover:bg-gray-800 transition" onclick="if(window.openPublicProfile) window.openPublicProfile('${u.uid}', '${u.name}', '${u.avatar || ''}')">
                         <div class="flex items-center gap-3">
                             <span class="w-6 text-center text-lg">${medal}</span>
                             ${avatarHtml}
@@ -1229,7 +1443,7 @@
         }
     };
 
-
+    // 🟢 VISUAL REFERRAL NETWORK TREE 🟢
     window.fetchReferralStats = async () => {
         if(!currentUserData || !currentUserData.myReferCode) return;
         try {
@@ -1239,11 +1453,31 @@
             let freeCount = 0;
             let vipCount = 0;
             
-            snap.forEach(doc => {
-                let d = doc.data();
-                if(!d.currentVIP || d.currentVIP === "Free") freeCount++;
-                else vipCount++;
-            });
+            let treeHtml = `<div class="network-tree">
+                <div class="network-root">
+                    <div class="network-node root">
+                        <img src="${currentUserData.avatar || 'https://i.ibb.co.com/jMbbGqj/placeholder.png'}" onerror="this.src='https://i.ibb.co.com/jMbbGqj/placeholder.png'">
+                        <span>Me (${currentUserData.name})</span>
+                    </div>
+                </div>`;
+            
+            if (total > 0) {
+                treeHtml += `<div class="network-children">`;
+                snap.forEach(doc => {
+                    let d = doc.data();
+                    if(!d.currentVIP || d.currentVIP === "Free") freeCount++; else vipCount++;
+                    
+                    let childAvatar = d.avatar ? `<img src="${d.avatar}">` : `<div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-xs mb-1 font-bold text-white border-2 border-[#3b82f6]">${d.name.charAt(0)}</div>`;
+                    
+                    treeHtml += `<div class="network-node">
+                        ${childAvatar}
+                        <span>${d.name}</span>
+                    </div>`;
+                });
+                treeHtml += `</div>`;
+            }
+            treeHtml += `</div>`;
+            document.getElementById('referral-tree-container').innerHTML = treeHtml;
             
             document.getElementById('total-refers-count').innerHTML = engToBng(total) + ' <span class="text-xs text-gray-500 font-normal">জন</span>';
             document.getElementById('free-refers-count').innerText = engToBng(freeCount);
@@ -1717,6 +1951,78 @@
         setTimeout(() => { toast.style.transform = 'translateX(120%)'; setTimeout(() => toast.remove(), 500); }, 4000);
     }
 
+    // 🟢 CUSTOM LIVE NOTIFICATION LISTENER 🟢
+    function listenForLiveNotifications() {
+        const q = query(collection(db, "app_settings"), where("__name__", "==", "live_notification"));
+        onSnapshot(q, (snapshot) => {
+            snapshot.forEach((docSnap) => {
+                let data = docSnap.data();
+                if(data.timestamp) {
+                    let timeId = data.timestamp.toMillis();
+                    
+                    // Save to local array for history
+                    let notifs = JSON.parse(localStorage.getItem('earnpro_notifs') || '[]');
+                    let exists = notifs.find(n => n.time === timeId);
+                    
+                    if(!exists) {
+                        notifs.push({title: data.title, body: data.body, time: timeId});
+                        if(notifs.length > 20) notifs.shift();
+                        localStorage.setItem('earnpro_notifs', JSON.stringify(notifs));
+                        
+                        let readCount = parseInt(localStorage.getItem('earnpro_notifs_read_count') || '0');
+                        let unread = notifs.length - readCount;
+                        
+                        if(unread > 0) {
+                            let badge = document.getElementById('unread-notify-badge');
+                            badge.innerText = unread;
+                            badge.classList.remove('hidden');
+                        }
+
+                        let timeDiff = Date.now() - timeId;
+                        if(timeDiff < 10000) { 
+                            showAdminLiveNotification(data.title, data.body);
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    function showAdminLiveNotification(title, body) {
+        const container = document.getElementById('live-notify');
+        const toast = document.createElement('div');
+
+        toast.className = `bg-[#1e1b4b]/95 border border-indigo-500/80 border-l-4 border-indigo-500 p-4 rounded-2xl shadow-[0_0_20px_rgba(99,102,241,0.4)] flex items-start gap-3 transform translate-x-[120%] transition-transform duration-500 w-[90vw] max-w-[340px] backdrop-blur-xl mb-3 relative overflow-hidden self-end pointer-events-auto z-[999999]`;
+        
+        toast.innerHTML = `
+            <div class="w-10 h-10 min-w-[40px] rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 text-xl shadow-inner z-10 border border-white/10 mt-1">
+                <i class="fa-solid fa-bullhorn animate-pulse"></i>
+            </div>
+            <div class="flex-1 z-10">
+                <h4 class="font-bold text-white text-[15px] mb-1 leading-tight">${title}</h4>
+                <p class="text-xs text-indigo-200 leading-relaxed">${body}</p>
+            </div>
+            <button onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-indigo-400/50 hover:text-white transition z-20"><i class="fa-solid fa-xmark"></i></button>
+        `;
+        container.appendChild(toast);
+        
+        if (document.getElementById('toggle-sound').checked) {
+            try {
+                let audio = new Audio('https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg');
+                audio.volume = 0.3;
+                audio.play().catch(e=>{});
+            } catch(e){}
+        }
+
+        setTimeout(() => toast.style.transform = 'translateX(0)', 50);
+        setTimeout(() => { 
+            if(toast) {
+                toast.style.transform = 'translateX(120%)'; 
+                setTimeout(() => toast.remove(), 500); 
+            }
+        }, 15000); 
+    }
+
     function showFakeNotification() {
         if(currentUserData && !currentUserData.isBanned) {
             const prefixes = ["017", "019", "018", "016", "013", "014"];
@@ -1733,7 +2039,7 @@
             } else {
                 let amounts = [100, 200, 300, 400, 500, 1000];
                 let randAmount = amounts[Math.floor(Math.random() * amounts.length)];
-                let method = Math.random() > 0.5 ? "বিকাশ" : "নগদ";
+                let method = Math.random() > 0.5 ? "বিকাশ" : "ন নগদ";
                 showTrustNotification(fakePhone, `সদ্য ৳${engToBng(randAmount)} ${method}-এ উত্তোলন করেছেন!`, false);
             }
         }
@@ -1795,6 +2101,7 @@
             listenToUserData(user.uid);
             listenToGlobalChat(); 
             trackRealtimePresence(user); 
+            listenForLiveNotifications(); 
             
             splash.style.opacity = '0';
             setTimeout(() => { splash.style.display = 'none'; }, 400);
@@ -2121,7 +2428,53 @@
         let badge = document.getElementById('home-vip-badge');
         badge.innerText = currentUserData.currentVIP === "Free" ? "Free User" : "👑 " + currentUserData.currentVIP;
         
-        window.fetchReferralStats();
+        // 🟢 UPDATE SIDEBAR DATA 🟢
+        document.getElementById('side-avatar').innerHTML = avatarHtml;
+        document.getElementById('side-name').innerText = currentUserData.name;
+        document.getElementById('side-refer-code').innerText = currentUserData.myReferCode;
+        
+        if (currentUserData.createdAt) {
+            document.getElementById('side-join-date').innerText = "জয়েন করেছেন: " + new Date(currentUserData.createdAt.toMillis()).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+        }
+
+        if(currentUserData.currentVIP !== "Free") {
+            document.getElementById('side-vip-tick').style.display = 'flex';
+            let bgType = document.getElementById('side-account-type');
+            bgType.innerText = "VIP PREMIUM ACCOUNT";
+            bgType.className = "bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-[10px] font-bold px-4 py-1.5 rounded-full mt-2 mb-2 tracking-wider shadow-md";
+        } else {
+            document.getElementById('side-vip-tick').style.display = 'none';
+            let bgType = document.getElementById('side-account-type');
+            bgType.innerText = "BASIC ACCOUNT";
+            bgType.className = "bg-gradient-to-r from-gray-600 to-gray-500 text-white text-[10px] font-bold px-4 py-1.5 rounded-full mt-2 mb-2 tracking-wider shadow-md";
+        }
+
+        // Update Profile Tab Stats
+        document.getElementById('my-friends-stat').innerText = engToBng((currentUserData.friends || []).length);
+        document.getElementById('my-likes-stat').innerText = engToBng(currentUserData.likes || 0);
+        document.getElementById('my-points-stat').innerText = engToBng(currentUserData.points || 0);
+        
+        let pendingReqs = (currentUserData.friend_requests || []).length;
+        document.getElementById('friend-req-count').innerText = pendingReqs;
+        if(pendingReqs > 0) {
+            // Render basic requests list inside profile
+            let reqHtml = '';
+            (currentUserData.friend_requests || []).forEach(uid => {
+                reqHtml += `<div class="flex justify-between items-center bg-[#121822] p-2 rounded-lg border border-gray-700">
+                    <span class="text-xs text-gray-300">New Request!</span>
+                    <button onclick="window.openFriendRequestsModal()" class="bg-blue-600 px-2 py-1 rounded text-[10px] font-bold text-white">View</button>
+                </div>`;
+            });
+            document.getElementById('friend-requests-list').innerHTML = reqHtml;
+        } else {
+            document.getElementById('friend-requests-list').innerHTML = '<p class="text-center text-xs text-gray-500 py-3">No pending requests.</p>';
+        }
+
+
+        // Fetch Referral Stats & Draw Tree only if on Refer Tab
+        if(localStorage.getItem('active_tab') === 'refer') {
+            window.fetchReferralStats();
+        }
 
         let todayDate = new Date().toLocaleDateString('en-GB');
         let needsUpdate = false;
@@ -2188,7 +2541,6 @@
             window.showNotify("ছবি আপলোডে সমস্যা হয়েছে, আবার চেষ্টা করুন!", "error"); 
             console.log(error); 
         } finally {
-            // Always reset button
             btn.innerText = "সেভ করুন"; btn.disabled = false;
         }
     };
@@ -2589,7 +2941,7 @@
         } catch (e) { listDiv.innerHTML = '<p class="text-center text-red-500 py-4">ডাটা লোড হতে সমস্যা হয়েছে</p>'; }
     };
 
-    window.contactSupport = () => { window.open(`https://t.me/Refer_earn08`, '_blank'); };
+    window.contactSupport = () => { window.open(`https://t.me/roni_vai12`, '_blank'); };
 
     // 🟢 SOCIAL SYSTEM (Public Profiles, Likes, Friend Requests) 🟢
     let currentViewingProfile = null;
@@ -2600,7 +2952,7 @@
         document.getElementById('public-profile-modal').style.display = 'flex';
         
         // Reset defaults
-        document.getElementById('pp-name').innerText = name;
+        document.getElementById('pp-name').innerHTML = `${name} <i id="pp-vip-tick" class="fa-solid fa-circle-check text-blue-500 text-sm hidden"></i>`;
         let avatarEl = document.getElementById('pp-avatar');
         if(avatar) avatarEl.innerHTML = `<img src="${avatar}" class="w-full h-full object-cover">`;
         else avatarEl.innerHTML = name.charAt(0).toUpperCase();
@@ -2609,18 +2961,20 @@
         document.getElementById('pp-friends-count').innerText = "...";
         document.getElementById('pp-likes-count').innerText = "...";
         document.getElementById('pp-vip-status').innerText = "Loading...";
+        document.getElementById('pp-vip-tick').classList.add('hidden');
 
-        // Bot Detection & Fake Data Generator
-        if(uid.includes('admin_custom_bot') || uid.startsWith('temp_')) {
-            let fakePoints = Math.floor(Math.random() * 50000) + 10000;
-            let fakeFriends = Math.floor(Math.random() * 200) + 50;
-            let fakeLikes = Math.floor(Math.random() * 150) + 20;
+        // 🟢 BOT DETECTION & FAKE DATA (POINTS REDUCED) 🟢
+        if(uid.includes('admin_custom_bot') || uid.startsWith('temp_') || uid.startsWith('bot_')) {
+            let fakePoints = Math.floor(Math.random() * 500) + 150; // Points reduced to 150 - 650
+            let fakeFriends = Math.floor(Math.random() * 150) + 20;
+            let fakeLikes = Math.floor(Math.random() * 100) + 10;
             let fakeVIPs = ["👑 VIP 1", "👑 VIP 2", "👑 VIP 3"];
             
             document.getElementById('pp-points-count').innerText = engToBng(fakePoints);
             document.getElementById('pp-friends-count').innerText = engToBng(fakeFriends);
             document.getElementById('pp-likes-count').innerText = engToBng(fakeLikes);
             document.getElementById('pp-vip-status').innerText = fakeVIPs[Math.floor(Math.random()*fakeVIPs.length)];
+            document.getElementById('pp-vip-tick').classList.remove('hidden');
             
             document.getElementById('btn-add-friend').innerHTML = `<i class="fa-solid fa-user-check"></i> Requested`;
             document.getElementById('btn-add-friend').style.opacity = '0.5';
@@ -2635,6 +2989,10 @@
                 document.getElementById('pp-friends-count').innerText = engToBng((uData.friends || []).length);
                 document.getElementById('pp-likes-count').innerText = engToBng(uData.likes || 0);
                 document.getElementById('pp-vip-status').innerText = uData.currentVIP === "Free" ? "Free User" : "👑 " + uData.currentVIP;
+                
+                if(uData.currentVIP !== "Free") {
+                    document.getElementById('pp-vip-tick').classList.remove('hidden');
+                }
 
                 let addBtn = document.getElementById('btn-add-friend');
                 if((uData.friends || []).includes(currentUserData.uid)) {
@@ -2690,7 +3048,7 @@
 
     window.openPrivateChatFromProfile = () => {
         document.getElementById('public-profile-modal').style.display = 'none';
-        let name = document.getElementById('pp-name').innerText;
+        let name = document.getElementById('pp-name').innerText.trim();
         let avatarImg = document.getElementById('pp-avatar').querySelector('img');
         let avatar = avatarImg ? avatarImg.src : "";
         
@@ -3017,7 +3375,6 @@
         }
         lines.push(currentLine.trim());
         
-        ctx.fillStyle = '#303134'; const paddingX = 18; const paddingY = 16; const lineHeight = 26;
         const bubbleH = (lines.length * lineHeight) + (paddingY * 2);
         ctx.beginPath(); ctx.roundRect(15, 145, maxWidth + (paddingX*2), bubbleH, 20); ctx.fill();
         
@@ -3143,7 +3500,7 @@
                     }
                 });
 
-                if (activePrivateUid.includes('admin_custom_bot')) {
+                if (activePrivateUid.includes('bot_') || activePrivateUid.includes('admin_custom_bot')) {
                     setTimeout(() => triggerBotAutoReply(activePrivateUid, activePrivateName, text), 2500);
                 }
             }
