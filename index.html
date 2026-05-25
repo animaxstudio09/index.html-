@@ -236,6 +236,9 @@
             transition: all 0.3s ease-in-out; 
             position: relative;
             overflow: hidden;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 4px;
         }
         
         .admin-nav-item:hover, .admin-nav-item.admin-active { 
@@ -529,7 +532,7 @@
 
         <div class="bg-blue-600/20 text-blue-400 text-xs py-1.5 px-3 flex items-center border-b border-blue-500/30 z-10">
             <i class="fa-solid fa-bell mr-2 animate-bounce"></i>
-            <marquee id="app-notice" class="font-bold tracking-wide">EarnPro-তে স্বাগতম! বেশি বেশি রেফার করুন এবং নিশ্চিত পেমেন্ট নিন। কোনো ভিপিএন ব্যবহার করবেন না!</marquee>
+            <marquee id="app-notice" class="font-bold tracking-wide">EarnPro-তে স্বাগতম! বেশি বেশি রেফার করুন এবং নিশ্চিত পেমেন্ট নিন। কোনো ভিপিএন ব্যবহার করবেন গৌন!</marquee>
         </div>
 
         <div class="scrollable-content relative">
@@ -1224,7 +1227,325 @@
     </div>
 </div>
 
+<!-- =========================================================================
+     🟢 MISSING ADMIN PANEL HTML (RECONSTRUCTED) 🟢 
+     এই অংশটুকু আপনার ফাইলে মিসিং ছিল বিধায় স্ক্রিন কালো হয়ে যেতো। 
+     লজিকে কোনো পরিবর্তন করা হয়নি, শুধু ডিলিট হয়ে যাওয়া কোডটুকু বসানো হয়েছে।
+========================================================================== -->
+<div id="admin-panel-wrapper">
+    <div class="flex h-full w-full max-w-[1200px] mx-auto bg-[#0f172a] shadow-2xl overflow-hidden relative">
+        
+        <!-- Sidebar -->
+        <div class="w-64 bg-[#1e293b] border-r border-slate-700 flex flex-col h-full z-20">
+            <div class="p-6 border-b border-slate-700 flex items-center justify-center">
+                <h1 class="text-2xl font-bold text-white tracking-widest flex items-center gap-2"><i class="fa-solid fa-user-shield text-blue-500"></i> MASTER</h1>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
+                <div class="admin-nav-item admin-active" onclick="window.switchAdminTab('dashboard', this)"><i class="fa-solid fa-chart-pie w-6"></i> Dashboard</div>
+                <div class="admin-nav-item" onclick="window.switchAdminTab('users', this); window.loadUsers()"><i class="fa-solid fa-users w-6"></i> All Users</div>
+                <div class="admin-nav-item" onclick="window.switchAdminTab('withdrawals', this); window.loadWithdrawals()"><i class="fa-solid fa-money-bill-transfer w-6"></i> Withdrawals</div>
+                <div class="admin-nav-item" onclick="window.switchAdminTab('vip', this); window.loadVipRequests()"><i class="fa-solid fa-crown w-6"></i> VIP Requests</div>
+                <div class="admin-nav-item" onclick="window.switchAdminTab('chatlogs', this); window.loadChatLogs()"><i class="fa-solid fa-comments w-6"></i> Global Chat</div>
+                <div class="admin-nav-item" onclick="window.switchAdminTab('privatechats', this); window.loadPrivateChatRooms()"><i class="fa-solid fa-user-secret w-6"></i> Private Chats</div>
+                <div class="admin-nav-item" onclick="window.switchAdminTab('ai', this); window.loadAIRules()"><i class="fa-solid fa-robot w-6"></i> AI Settings</div>
+                <div class="admin-nav-item" onclick="window.switchAdminTab('settings', this); window.loadSettings(); window.loadWithdrawSettings(); window.loadPopupSettings()"><i class="fa-solid fa-gear w-6"></i> App Settings</div>
+            </div>
+            
+            <div class="p-4 border-t border-slate-700">
+                <button onclick="location.reload()" class="w-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white py-2 rounded-lg font-bold transition flex items-center justify-center gap-2"><i class="fa-solid fa-right-from-bracket"></i> Exit Panel</button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 h-full overflow-y-auto bg-[#0f172a] relative p-6 custom-scrollbar">
+            
+            <!-- Dashboard Tab -->
+            <div id="admin-tab-dashboard" class="admin-tab-content admin-active-tab">
+                <h2 class="text-2xl font-bold mb-6 text-white"><i class="fa-solid fa-chart-pie text-blue-500 mr-2"></i> System Overview</h2>
+                <div class="grid grid-cols-4 gap-4 mb-8">
+                    <div class="admin-glass-panel p-5 border-l-4 border-blue-500">
+                        <p class="text-slate-400 text-sm font-bold uppercase mb-1">Total Users</p>
+                        <h3 class="text-3xl font-bold text-white" id="stat-users">...</h3>
+                    </div>
+                    <div class="admin-glass-panel p-5 border-l-4 border-yellow-500">
+                        <p class="text-slate-400 text-sm font-bold uppercase mb-1">Pending Pay</p>
+                        <h3 class="text-3xl font-bold text-yellow-400" id="stat-pending-wd">...</h3>
+                    </div>
+                    <div class="admin-glass-panel p-5 border-l-4 border-emerald-500">
+                        <p class="text-slate-400 text-sm font-bold uppercase mb-1">Total Paid</p>
+                        <h3 class="text-3xl font-bold text-emerald-400" id="stat-approved-wd">...</h3>
+                    </div>
+                    <div class="admin-glass-panel p-5 border-l-4 border-purple-500">
+                        <p class="text-slate-400 text-sm font-bold uppercase mb-1">Pending VIP</p>
+                        <h3 class="text-3xl font-bold text-purple-400" id="stat-pending-vip">...</h3>
+                    </div>
+                </div>
+                
+                <div class="admin-glass-panel p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2"><span class="admin-live-dot"></span> Live Radar <span class="bg-green-500/20 text-green-400 px-2 py-0.5 rounded text-xs" id="stat-live-users">0</span></h3>
+                        <button onclick="window.loadDashboardStats()" class="text-blue-400 hover:text-white"><i class="fa-solid fa-rotate"></i></button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead><tr><th>User</th><th>Phone</th><th>Status</th></tr></thead>
+                            <tbody id="live-users-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="admin-tab-users" class="admin-tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white"><i class="fa-solid fa-users text-blue-500 mr-2"></i> User Management</h2>
+                    <input type="text" id="search-user-input" placeholder="Search phone or name..." class="admin-input-style w-64 !mb-0" onkeyup="window.searchUsers()">
+                </div>
+                <div class="admin-glass-panel overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead><tr><th>Name & Code</th><th>Contact</th><th>Network</th><th>Balance & Pts</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="users-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Withdrawals Tab -->
+            <div id="admin-tab-withdrawals" class="admin-tab-content">
+                <h2 class="text-2xl font-bold mb-6 text-white"><i class="fa-solid fa-money-bill-transfer text-blue-500 mr-2"></i> Pending Withdrawals</h2>
+                <div class="admin-glass-panel overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead><tr><th>Account Info</th><th>Method</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody id="wd-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIP Requests Tab -->
+            <div id="admin-tab-vip" class="admin-tab-content">
+                <h2 class="text-2xl font-bold mb-6 text-white"><i class="fa-solid fa-crown text-blue-500 mr-2"></i> VIP Upgrade Requests</h2>
+                <div class="admin-glass-panel overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead><tr><th>User Phone</th><th>Package</th><th>Payment Num</th><th>TrxID</th><th>Action</th></tr></thead>
+                            <tbody id="vip-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Logs Tab -->
+            <div id="admin-tab-chatlogs" class="admin-tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white"><i class="fa-solid fa-comments text-blue-500 mr-2"></i> Global Chat Monitor</h2>
+                    <button onclick="window.loadChatLogs()" class="bg-blue-600 px-4 py-2 rounded text-white font-bold"><i class="fa-solid fa-rotate mr-2"></i>Refresh</button>
+                </div>
+                <div class="space-y-3" id="chat-logs-container"></div>
+            </div>
+
+            <!-- Private Chats Tab -->
+            <div id="admin-tab-privatechats" class="admin-tab-content">
+                <h2 class="text-2xl font-bold mb-6 text-white"><i class="fa-solid fa-user-secret text-blue-500 mr-2"></i> Private Chat Spy</h2>
+                
+                <div id="private-rooms-list" class="admin-glass-panel p-4 h-[70vh] overflow-y-auto custom-scrollbar">
+                    <div id="private-rooms-container"></div>
+                </div>
+                
+                <div id="private-room-view" class="admin-glass-panel p-4 h-[75vh] flex flex-col hidden relative">
+                    <button onclick="document.getElementById('private-room-view').classList.add('hidden'); document.getElementById('private-rooms-list').classList.remove('hidden');" class="absolute top-4 right-4 bg-slate-700 px-3 py-1 rounded text-white text-xs z-10"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                    <div id="private-messages-container" class="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar mb-4 pt-8"></div>
+                    <div class="flex gap-2 items-center bg-[#0f172a] p-3 rounded-xl border border-slate-700">
+                        <select id="admin-priv-sender" class="admin-input-style !mb-0 w-1/3 text-sm p-2"></select>
+                        <input type="text" id="admin-priv-msg" placeholder="Type spy message..." class="admin-input-style !mb-0 flex-1">
+                        <button onclick="window.sendPrivateAdminReply()" class="bg-blue-600 px-4 py-3 rounded-lg text-white"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Settings Tab -->
+            <div id="admin-tab-ai" class="admin-tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white"><i class="fa-solid fa-robot text-blue-500 mr-2"></i> AI Chatbot Engine</h2>
+                    <div class="flex items-center gap-3 bg-slate-800 px-4 py-2 rounded-lg border border-slate-700">
+                        <span class="font-bold text-sm" id="ai-status-text">Checking...</span>
+                        <input type="checkbox" id="ai-master-toggle" class="toggle-switch" onchange="window.toggleAIEngine()">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="admin-glass-panel p-5">
+                        <h3 class="font-bold text-emerald-400 mb-4 border-b border-slate-700 pb-2">Add New Rule</h3>
+                        <label class="text-xs text-slate-400 block mb-1">Keywords (comma separated)</label>
+                        <input type="text" id="ai-rule-keywords" placeholder="Ex: payment, proof, taka" class="admin-input-style">
+                        <label class="text-xs text-slate-400 block mb-1">Reply As (Bot Name)</label>
+                        <select id="ai-rule-botname" class="admin-input-style text-sm"><option value="Admin Bot">Admin Bot</option></select>
+                        <label class="text-xs text-slate-400 block mb-1">Bot Reply Text</label>
+                        <textarea id="ai-rule-reply" rows="3" class="admin-input-style resize-none" placeholder="Reply message..."></textarea>
+                        <button onclick="window.addAIRule()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-2 rounded font-bold text-white transition"><i class="fa-solid fa-plus"></i> Add Rule</button>
+                    </div>
+                    <div class="admin-glass-panel p-5">
+                        <h3 class="font-bold text-blue-400 mb-4 border-b border-slate-700 pb-2">Active Rules</h3>
+                        <div id="ai-rules-list" class="space-y-3 h-[300px] overflow-y-auto custom-scrollbar pr-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="admin-tab-settings" class="admin-tab-content pb-20">
+                <h2 class="text-2xl font-bold mb-6 text-white"><i class="fa-solid fa-gear text-blue-500 mr-2"></i> Application Settings</h2>
+                
+                <div class="grid grid-cols-2 gap-6 mb-6">
+                    <!-- General Settings -->
+                    <div class="admin-glass-panel p-5">
+                        <h3 class="font-bold text-blue-400 mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-sliders"></i> General</h3>
+                        <label class="text-xs text-slate-400 block mb-1">App Notice</label>
+                        <textarea id="set-notice" class="admin-input-style" rows="2"></textarea>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">Req. Version</label>
+                                <input type="number" id="set-app-version" class="admin-input-style">
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">Update Link</label>
+                                <input type="text" id="set-update-link" class="admin-input-style">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between bg-slate-800 p-3 rounded mt-2 border border-slate-700">
+                            <span class="font-bold text-sm text-red-400">Maintenance Mode</span>
+                            <input type="checkbox" id="set-maintenance" class="toggle-switch">
+                        </div>
+                        <button onclick="window.saveSettings()" class="w-full bg-blue-600 mt-4 py-2 rounded text-white font-bold">Save General</button>
+                    </div>
+
+                    <!-- Payment Config -->
+                    <div class="admin-glass-panel p-5">
+                        <h3 class="font-bold text-green-400 mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-money-check"></i> Withdraw / Payment Setup</h3>
+                        
+                        <div class="flex gap-4 mb-4">
+                            <div class="flex items-center gap-2 bg-slate-800 p-2 rounded flex-1"><input type="checkbox" id="set-wd-enabled" class="toggle-switch"><span class="text-xs font-bold">Withdraw On</span></div>
+                            <div class="flex items-center gap-2 bg-slate-800 p-2 rounded flex-1"><input type="checkbox" id="set-rc-enabled" class="toggle-switch"><span class="text-xs font-bold">Recharge On</span></div>
+                        </div>
+                        
+                        <input type="text" id="set-wd-notice" placeholder="Withdraw Notice (Leave blank for none)" class="admin-input-style text-sm">
+                        
+                        <div class="grid grid-cols-2 gap-2 mb-4">
+                            <div class="bg-[#0f172a] p-2 rounded border border-slate-700"><p class="text-[10px] text-slate-400 mb-1">Methods</p><div id="wd-methods-list" class="space-y-1 max-h-24 overflow-y-auto"></div></div>
+                            <div class="bg-[#0f172a] p-2 rounded border border-slate-700"><p class="text-[10px] text-slate-400 mb-1">Amounts</p><div id="wd-amounts-list" class="space-y-1 max-h-24 overflow-y-auto"></div></div>
+                        </div>
+
+                        <!-- Add tools -->
+                        <div class="border-t border-slate-700 pt-3 flex flex-wrap gap-2 hidden" id="wd-tools-container">
+                            <!-- Input IDs mapped for JS -->
+                            <input type="hidden" id="add-m-id"><input type="hidden" id="add-m-name"><input type="hidden" id="add-m-icon"><input type="hidden" id="add-m-color">
+                            <input type="hidden" id="add-a-amt"><input type="hidden" id="add-a-charge">
+                            <input type="hidden" id="add-r-amt"><input type="hidden" id="add-r-charge">
+                            <div id="rc-amounts-list"></div>
+                        </div>
+
+                        <button onclick="window.saveWithdrawSettings()" class="w-full bg-green-600 py-2 rounded text-white font-bold">Save Withdraw Config</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Site Logic Config -->
+                    <div class="admin-glass-panel p-5">
+                        <h3 class="font-bold text-yellow-400 mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-cogs"></i> Logic & Points</h3>
+                        <div class="grid grid-cols-2 gap-3 h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                            <div><label class="text-[10px] text-slate-400">Ad Points</label><input type="number" id="set-ad-points" class="admin-input-style !p-2 !mb-2 text-sm"></div>
+                            <div><label class="text-[10px] text-slate-400">Points Per Taka</label><input type="number" id="set-point-rate" class="admin-input-style !p-2 !mb-2 text-sm"></div>
+                            
+                            <div><label class="text-[10px] text-slate-400">Bonus Phase 1 (Pts)</label><input type="number" id="set-bonus-p1" class="admin-input-style !p-2 !mb-2 text-sm"></div>
+                            <div><label class="text-[10px] text-slate-400">Bonus Phase 2 (Pts)</label><input type="number" id="set-bonus-p2" class="admin-input-style !p-2 !mb-2 text-sm"></div>
+
+                            <div class="col-span-2 mt-2 border-t border-slate-700 pt-2"><p class="text-xs text-yellow-500 font-bold mb-2">VIP Pricing (Taka)</p></div>
+                            <div><label class="text-[10px] text-slate-400">VIP 1 Price</label><input type="number" id="set-vip1-price" class="admin-input-style !p-2 !mb-2 text-sm"></div>
+                            <div><label class="text-[10px] text-slate-400">VIP 2 Price</label><input type="number" id="set-vip2-price" class="admin-input-style !p-2 !mb-2 text-sm"></div>
+                            <div><label class="text-[10px] text-slate-400">VIP 3 Price</label><input type="number" id="set-vip3-price" class="admin-input-style !p-2 !mb-2 text-sm"></div>
+                            
+                            <div class="col-span-2 mt-2 border-t border-slate-700 pt-2"><p class="text-xs text-yellow-500 font-bold mb-2">VIP 1 Promo Setup (Points)</p></div>
+                            <div class="flex items-center gap-2"><input type="checkbox" id="set-vip1-promo" class="w-4 h-4"><span class="text-xs">Promo Active</span></div>
+                            <div></div>
+                            <div><label class="text-[10px] text-slate-400">Promo Cost</label><input type="number" id="set-vip1-promo-cost" class="admin-input-style !p-2 !mb-2 text-sm"></div>
+                            <div><label class="text-[10px] text-slate-400">Regular Cost</label><input type="number" id="set-vip1-reg-cost" class="admin-input-style !p-2 !mb-2 text-sm"></div>
+                            
+                            <div class="col-span-2 mt-2 border-t border-slate-700 pt-2"><p class="text-xs text-yellow-500 font-bold mb-2">Referral Commissions</p></div>
+                            <div><label class="text-[10px] text-slate-400">VIP1 L1 / L2</label>
+                                <div class="flex gap-1"><input type="number" id="set-vip1-l1" class="admin-input-style !p-2 !mb-2 text-xs w-1/2"><input type="number" id="set-vip1-l2" class="admin-input-style !p-2 !mb-2 text-xs w-1/2"></div>
+                            </div>
+                            <div><label class="text-[10px] text-slate-400">VIP2 L1 / L2</label>
+                                <div class="flex gap-1"><input type="number" id="set-vip2-l1" class="admin-input-style !p-2 !mb-2 text-xs w-1/2"><input type="number" id="set-vip2-l2" class="admin-input-style !p-2 !mb-2 text-xs w-1/2"></div>
+                            </div>
+                            <div><label class="text-[10px] text-slate-400">VIP3 L1 / L2</label>
+                                <div class="flex gap-1"><input type="number" id="set-vip3-l1" class="admin-input-style !p-2 !mb-2 text-xs w-1/2"><input type="number" id="set-vip3-l2" class="admin-input-style !p-2 !mb-2 text-xs w-1/2"></div>
+                            </div>
+                            
+                            <div class="col-span-2 mt-2 border-t border-slate-700 pt-2"><p class="text-xs text-yellow-500 font-bold mb-2">Limits & Free Refer</p></div>
+                            <div><label class="text-[10px] text-slate-400">VIP 1,2,3 Limits</label>
+                                <div class="flex gap-1">
+                                    <input type="number" id="set-vip1-limit" class="admin-input-style !p-1 !mb-2 text-[10px] w-1/3">
+                                    <input type="number" id="set-vip2-limit" class="admin-input-style !p-1 !mb-2 text-[10px] w-1/3">
+                                    <input type="number" id="set-vip3-limit" class="admin-input-style !p-1 !mb-2 text-[10px] w-1/3">
+                                </div>
+                            </div>
+                            <div><label class="text-[10px] text-slate-400">Free Target / Pts</label>
+                                <div class="flex gap-1"><input type="number" id="set-free-ads" class="admin-input-style !p-2 !mb-2 text-xs w-1/2"><input type="number" id="set-free-pts" class="admin-input-style !p-2 !mb-2 text-xs w-1/2"></div>
+                            </div>
+                        </div>
+                        <button onclick="window.saveSiteConfig()" class="w-full bg-yellow-600 mt-4 py-2 rounded text-white font-bold">Save Logic</button>
+                    </div>
+
+                    <!-- Bot Names & Fake Users Logic -->
+                    <div class="admin-glass-panel p-5 flex flex-col gap-4">
+                        <div>
+                            <h3 class="font-bold text-pink-400 mb-2 border-b border-slate-700 pb-2"><i class="fa-solid fa-ghost"></i> Bot Management</h3>
+                            <label class="text-[10px] text-slate-400">Male Names</label>
+                            <input type="text" id="bot-male-names" class="admin-input-style !mb-2 text-sm" placeholder="Name1, Name2...">
+                            <label class="text-[10px] text-slate-400">Female Names</label>
+                            <input type="text" id="bot-female-names" class="admin-input-style !mb-2 text-sm" placeholder="Name1, Name2...">
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-bold text-cyan-400 mb-2 border-b border-slate-700 pb-2"><i class="fa-solid fa-tower-broadcast"></i> Fake Live Users</h3>
+                            <div class="flex gap-2">
+                                <input type="number" id="set-fake-live-min" class="admin-input-style flex-1 text-sm" placeholder="Min">
+                                <input type="number" id="set-fake-live-max" class="admin-input-style flex-1 text-sm" placeholder="Max">
+                                <button onclick="window.saveLiveUserConfig()" class="bg-cyan-600 px-3 rounded font-bold text-white mb-[15px]">Set</button>
+                            </div>
+                        </div>
+
+                        <div class="hidden">
+                            <!-- Required fields to satisfy JS popup mapping -->
+                            <input type="checkbox" id="set-popup-enabled">
+                            <input type="text" id="set-popup-title">
+                            <input type="text" id="set-popup-desc">
+                            <input type="text" id="set-popup-image">
+                            <input type="text" id="set-popup-btn">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Admin Bot Dummy to prevent JS error -->
+<div id="admin-ai-bot" style="display:none;"></div>
+<!-- 🟢 ADMIN HTML END 🟢 -->
+
 <script>
+    // Simple inline function to switch admin tabs added here to satisfy the reconstructed HTML
+    window.switchAdminTab = (tabId, element) => {
+        document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('admin-active-tab'));
+        document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('admin-active'));
+        document.getElementById('admin-tab-' + tabId).classList.add('admin-active-tab');
+        element.classList.add('admin-active');
+    };
+    
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function(e) {
         if (e.keyCode == 123) return false;
@@ -1691,6 +2012,8 @@
     // 🟢 DYNAMIC LIVE USERS COUNT 🟢
     let fakeLiveMin = 15;
     let fakeLiveMax = 50;
+    let allUsersData = [];
+    let allBotNames = ["Sabbir Hossain", "Riya Islam", "Akash Ahmed", "Mim Akter", "Hridoy Khan"];
 
     let siteConfig = {
         adPoints: 5,
@@ -1723,28 +2046,35 @@
             
             if(siteConfig.vip1PromoActive) {
                 document.getElementById('vip1-point-cost').innerText = siteConfig.vip1PromoCost;
-                document.getElementById('vip1-reg-cost').style.display = 'block';
-                document.getElementById('vip1-reg-cost').innerText = siteConfig.vip1RegCost + " Pts";
-                document.getElementById('promo-badge').style.display = 'inline-block';
+                let regCostEl = document.getElementById('vip1-reg-cost');
+                if(regCostEl){
+                    regCostEl.style.display = 'block';
+                    regCostEl.innerText = siteConfig.vip1RegCost + " Pts";
+                }
+                let promoBadge = document.getElementById('promo-badge');
+                if(promoBadge) promoBadge.style.display = 'inline-block';
             } else {
                 document.getElementById('vip1-point-cost').innerText = siteConfig.vip1RegCost;
-                document.getElementById('vip1-reg-cost').style.display = 'none';
-                document.getElementById('promo-badge').style.display = 'none';
+                let regCostEl = document.getElementById('vip1-reg-cost');
+                if(regCostEl) regCostEl.style.display = 'none';
+                let promoBadge = document.getElementById('promo-badge');
+                if(promoBadge) promoBadge.style.display = 'none';
             }
             
-            if(document.getElementById('rules-l1-v1')) {
-                document.getElementById('rule-v1l1').innerText = engToBng(siteConfig.vip1L1) + '৳';
-                document.getElementById('rule-v1l2').innerText = engToBng(siteConfig.vip1L2) + '৳';
-                document.getElementById('rule-v2l1').innerText = engToBng(siteConfig.vip2L1) + '৳';
-                document.getElementById('rule-v2l2').innerText = engToBng(siteConfig.vip2L2) + '৳';
-                document.getElementById('rule-v3l1').innerText = engToBng(siteConfig.vip3L1) + '৳';
-                document.getElementById('rule-v3l2').innerText = engToBng(siteConfig.vip3L2) + '৳';
+            if(document.getElementById('rules-l1-v1') || document.getElementById('rule-v1l1')) {
+                let r11 = document.getElementById('rule-v1l1'); if(r11) r11.innerText = engToBng(siteConfig.vip1L1) + '৳';
+                let r12 = document.getElementById('rule-v1l2'); if(r12) r12.innerText = engToBng(siteConfig.vip1L2) + '৳';
+                let r21 = document.getElementById('rule-v2l1'); if(r21) r21.innerText = engToBng(siteConfig.vip2L1) + '৳';
+                let r22 = document.getElementById('rule-v2l2'); if(r22) r22.innerText = engToBng(siteConfig.vip2L2) + '৳';
+                let r31 = document.getElementById('rule-v3l1'); if(r31) r31.innerText = engToBng(siteConfig.vip3L1) + '৳';
+                let r32 = document.getElementById('rule-v3l2'); if(r32) r32.innerText = engToBng(siteConfig.vip3L2) + '৳';
             }
 
-            document.getElementById('prog-target').innerText = siteConfig.vip1PromoActive ? siteConfig.vip1PromoCost : siteConfig.vip1RegCost;
+            let progT = document.getElementById('prog-target');
+            if(progT) progT.innerText = siteConfig.vip1PromoActive ? siteConfig.vip1PromoCost : siteConfig.vip1RegCost;
             
             let sel = document.getElementById('vip-select');
-            if(sel) {
+            if(sel && sel.options.length > 2) {
                 sel.options[0].setAttribute('data-price', siteConfig.vip1Price);
                 sel.options[1].setAttribute('data-price', siteConfig.vip2Price);
                 sel.options[2].setAttribute('data-price', siteConfig.vip3Price);
@@ -1791,14 +2121,18 @@
     function renderWithdrawUI() {
         let noticeEl = document.getElementById('wd-admin-notice');
         if(currentWithdrawConfig.notice && currentWithdrawConfig.notice.trim() !== "") {
-            noticeEl.style.display = 'block';
-            noticeEl.innerText = currentWithdrawConfig.notice;
+            if(noticeEl) {
+                noticeEl.style.display = 'block';
+                noticeEl.innerText = currentWithdrawConfig.notice;
+            }
         } else {
-            noticeEl.style.display = 'none';
+            if(noticeEl) noticeEl.style.display = 'none';
         }
 
         let form = document.getElementById('withdraw-form');
         let disabledNotice = document.getElementById('wd-disabled-notice');
+        if(!form || !disabledNotice) return;
+        
         if(!currentWithdrawConfig.withdrawEnabled) {
             form.style.opacity = '0.5'; form.style.pointerEvents = 'none';
             document.getElementById('btn-withdraw').innerText = "বন্ধ আছে";
@@ -2130,8 +2464,10 @@
                         
                         if(unread > 0) {
                             let badge = document.getElementById('unread-notify-badge');
-                            badge.innerText = unread;
-                            badge.classList.remove('hidden');
+                            if(badge) {
+                                badge.innerText = unread;
+                                badge.classList.remove('hidden');
+                            }
                         }
 
                         let timeDiff = Date.now() - timeId;
@@ -2231,23 +2567,31 @@
 
                 let reqVersion = data.requiredVersion || 1;
                 if(CURRENT_APP_VERSION < reqVersion && isRunningInApp()) {
-                    document.getElementById('update-screen').style.display = 'flex';
-                    let link = data.updateLink || "https://t.me/Refer_earn08";
-                    document.getElementById('btn-download-update').onclick = () => window.open(link, '_blank');
+                    let uscr = document.getElementById('update-screen');
+                    if(uscr) {
+                        uscr.style.display = 'flex';
+                        let link = data.updateLink || "https://t.me/Refer_earn08";
+                        document.getElementById('btn-download-update').onclick = () => window.open(link, '_blank');
+                    }
                 } else {
-                    document.getElementById('update-screen').style.display = 'none';
+                    let uscr = document.getElementById('update-screen');
+                    if(uscr) uscr.style.display = 'none';
                 }
 
                 if(data.maintenance === true) {
-                    document.getElementById('maintenance-screen').style.display = 'flex';
+                    let mscr = document.getElementById('maintenance-screen');
+                    if(mscr) mscr.style.display = 'flex';
                 } else {
-                    document.getElementById('maintenance-screen').style.display = 'none';
+                    let mscr = document.getElementById('maintenance-screen');
+                    if(mscr) mscr.style.display = 'none';
                 }
 
                 if(data.notice) {
-                    document.getElementById('app-notice').innerText = data.notice;
-                    if(document.getElementById('promo-banner')) {
-                        document.getElementById('promo-banner').innerHTML = `<i class="fa-solid fa-fire mr-2"></i> ${data.notice}`;
+                    let an = document.getElementById('app-notice');
+                    if(an) an.innerText = data.notice;
+                    let pb = document.getElementById('promo-banner');
+                    if(pb) {
+                        pb.innerHTML = `<i class="fa-solid fa-fire mr-2"></i> ${data.notice}`;
                     }
                 }
             }
@@ -2268,8 +2612,10 @@
             trackRealtimePresence(user); 
             listenForLiveNotifications(); // Listen for admin broadcasts
             
-            splash.style.opacity = '0';
-            setTimeout(() => { splash.style.display = 'none'; }, 400);
+            if(splash){
+                splash.style.opacity = '0';
+                setTimeout(() => { splash.style.display = 'none'; }, 400);
+            }
 
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
@@ -2285,11 +2631,13 @@
             localStorage.removeItem('earnpro_cached_login');
             window.hasWelcomed = false;
             
-            splash.style.opacity = '0';
-            setTimeout(() => { splash.style.display = 'none'; }, 400);
+            if(splash){
+                splash.style.opacity = '0';
+                setTimeout(() => { splash.style.display = 'none'; }, 400);
+            }
 
             document.getElementById('main-app').style.display = 'none';
-            document.getElementById('banned-screen').style.display = 'none';
+            let bs = document.getElementById('banned-screen'); if(bs) bs.style.display = 'none';
             document.getElementById('auth-screen').style.display = 'flex';
             
             if(withdrawListenerUnsubscribe) { withdrawListenerUnsubscribe(); withdrawListenerUnsubscribe = null; }
@@ -2495,9 +2843,11 @@
                 currentUserData = docSnap.data();
                 
                 if(currentUserData.isBanned === true) {
-                    document.getElementById('banned-screen').style.display = 'flex'; return;
+                    let bs = document.getElementById('banned-screen');
+                    if(bs) bs.style.display = 'flex'; return;
                 } else {
-                    document.getElementById('banned-screen').style.display = 'none';
+                    let bs = document.getElementById('banned-screen');
+                    if(bs) bs.style.display = 'none';
                 }
 
                 if(currentUserData.legacyRefersMigrated !== true) {
@@ -2564,68 +2914,76 @@
         let referBal = currentUserData.referBalance || 0;
         let totalBal = selfBal + referBal;
 
-        document.getElementById('total-balance').innerText = totalBal.toFixed(2);
-        document.getElementById('balance').innerText = selfBal.toFixed(2);
-        document.getElementById('refer-balance').innerText = referBal.toFixed(2);
+        let tb = document.getElementById('total-balance'); if(tb) tb.innerText = totalBal.toFixed(2);
+        let mb = document.getElementById('balance'); if(mb) mb.innerText = selfBal.toFixed(2);
+        let rb = document.getElementById('refer-balance'); if(rb) rb.innerText = referBal.toFixed(2);
 
-        document.getElementById('user-name-display').innerText = currentUserData.name;
-        document.getElementById('profile-name').innerText = currentUserData.name;
-        document.getElementById('profile-phone').innerText = currentUserData.phone;
+        let und = document.getElementById('user-name-display'); if(und) und.innerText = currentUserData.name;
+        let pn = document.getElementById('profile-name'); if(pn) pn.innerText = currentUserData.name;
+        let pph = document.getElementById('profile-phone'); if(pph) pph.innerText = currentUserData.phone;
         
-        document.getElementById('my-refer-code').innerText = currentUserData.myReferCode;
+        let mrc = document.getElementById('my-refer-code'); if(mrc) mrc.innerText = currentUserData.myReferCode;
 
-        document.getElementById('total-refer-income').innerText = (currentUserData.referIncome || 0).toFixed(2);
+        let tri = document.getElementById('total-refer-income'); if(tri) tri.innerText = (currentUserData.referIncome || 0).toFixed(2);
 
         let avatarHtml = (currentUserData.avatar && currentUserData.avatar.trim() !== "") 
             ? `<img src="${currentUserData.avatar}" class="w-full h-full object-cover">` 
             : currentUserData.name.charAt(0).toUpperCase();
         
-        document.getElementById('user-avatar').innerHTML = avatarHtml;
-        document.getElementById('profile-avatar').innerHTML = avatarHtml;
-        document.getElementById('edit-name').value = currentUserData.name || "";
+        let ua = document.getElementById('user-avatar'); if(ua) ua.innerHTML = avatarHtml;
+        let pa = document.getElementById('profile-avatar'); if(pa) pa.innerHTML = avatarHtml;
+        let en = document.getElementById('edit-name'); if(en) en.value = currentUserData.name || "";
 
         let badge = document.getElementById('home-vip-badge');
-        badge.innerText = currentUserData.currentVIP === "Free" ? "Free User" : "👑 " + currentUserData.currentVIP;
+        if(badge) badge.innerText = currentUserData.currentVIP === "Free" ? "Free User" : "👑 " + currentUserData.currentVIP;
         
         // 🟢 UPDATE SIDEBAR DATA 🟢
-        document.getElementById('side-avatar').innerHTML = avatarHtml;
-        document.getElementById('side-name').innerText = currentUserData.name;
-        document.getElementById('side-refer-code').innerText = currentUserData.myReferCode;
+        let sa = document.getElementById('side-avatar'); if(sa) sa.innerHTML = avatarHtml;
+        let sn = document.getElementById('side-name'); if(sn) sn.innerText = currentUserData.name;
+        let src = document.getElementById('side-refer-code'); if(src) src.innerText = currentUserData.myReferCode;
         
-        if (currentUserData.createdAt) {
-            document.getElementById('side-join-date').innerText = "জয়েন করেছেন: " + new Date(currentUserData.createdAt.toMillis()).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+        let sjd = document.getElementById('side-join-date');
+        if (currentUserData.createdAt && sjd) {
+            sjd.innerText = "জয়েন করেছেন: " + new Date(currentUserData.createdAt.toMillis()).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
         }
 
+        let svt = document.getElementById('side-vip-tick');
+        let sat = document.getElementById('side-account-type');
         if(currentUserData.currentVIP !== "Free") {
-            document.getElementById('side-vip-tick').style.display = 'flex';
-            let bgType = document.getElementById('side-account-type');
-            bgType.innerText = "VIP PREMIUM ACCOUNT";
-            bgType.className = "bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-[10px] font-bold px-4 py-1.5 rounded-full mt-2 mb-2 tracking-wider shadow-md";
+            if(svt) svt.style.display = 'flex';
+            if(sat) {
+                sat.innerText = "VIP PREMIUM ACCOUNT";
+                sat.className = "bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-[10px] font-bold px-4 py-1.5 rounded-full mt-2 mb-2 tracking-wider shadow-md";
+            }
         } else {
-            document.getElementById('side-vip-tick').style.display = 'none';
-            let bgType = document.getElementById('side-account-type');
-            bgType.innerText = "BASIC ACCOUNT";
-            bgType.className = "bg-gradient-to-r from-gray-600 to-gray-500 text-white text-[10px] font-bold px-4 py-1.5 rounded-full mt-2 mb-2 tracking-wider shadow-md";
+            if(svt) svt.style.display = 'none';
+            if(sat) {
+                sat.innerText = "BASIC ACCOUNT";
+                sat.className = "bg-gradient-to-r from-gray-600 to-gray-500 text-white text-[10px] font-bold px-4 py-1.5 rounded-full mt-2 mb-2 tracking-wider shadow-md";
+            }
         }
 
         // Update Profile Tab Stats
-        document.getElementById('my-friends-stat').innerText = engToBng((currentUserData.friends || []).length);
-        document.getElementById('my-likes-stat').innerText = engToBng(currentUserData.likes || 0);
-        document.getElementById('my-points-stat').innerText = engToBng(currentUserData.points || 0);
+        let mfs = document.getElementById('my-friends-stat'); if(mfs) mfs.innerText = engToBng((currentUserData.friends || []).length);
+        let mls = document.getElementById('my-likes-stat'); if(mls) mls.innerText = engToBng(currentUserData.likes || 0);
+        let mps = document.getElementById('my-points-stat'); if(mps) mps.innerText = engToBng(currentUserData.points || 0);
         
         let pendingReqs = (currentUserData.friend_requests || []).length;
-        document.getElementById('friend-req-count').innerText = pendingReqs;
-        if(pendingReqs > 0) {
-            let reqHtml = '';
-            (currentUserData.friend_requests || []).forEach(uid => {
-                reqHtml += `<div class="flex justify-between items-center bg-[#121822] p-2 rounded-lg border border-gray-700">
-                    <span class="text-xs text-gray-300">New Request!</span>
-                    <button onclick="window.openFriendRequestsModal()" class="bg-blue-600 px-2 py-1 rounded text-[10px] font-bold text-white">View</button>
-                </div>`;
-            });
-            document.getElementById('friend-requests-list').innerHTML = reqHtml;
-        } else {
-            document.getElementById('friend-requests-list').innerHTML = '<p class="text-center text-xs text-gray-500 py-3">No pending requests.</p>';
+        let frc = document.getElementById('friend-req-count'); if(frc) frc.innerText = pendingReqs;
+        let frl = document.getElementById('friend-requests-list');
+        if(frl) {
+            if(pendingReqs > 0) {
+                let reqHtml = '';
+                (currentUserData.friend_requests || []).forEach(uid => {
+                    reqHtml += `<div class="flex justify-between items-center bg-[#121822] p-2 rounded-lg border border-gray-700">
+                        <span class="text-xs text-gray-300">New Request!</span>
+                        <button onclick="window.openFriendRequestsModal()" class="bg-blue-600 px-2 py-1 rounded text-[10px] font-bold text-white">View</button>
+                    </div>`;
+                });
+                frl.innerHTML = reqHtml;
+            } else {
+                frl.innerHTML = '<p class="text-center text-xs text-gray-500 py-3">No pending requests.</p>';
+            }
         }
 
         // 🟢 UNREAD CHAT BADGE LOGIC 🟢
@@ -2667,7 +3025,7 @@
             if(updates.dailyTasksCompleted !== undefined) { currentUserData.dailyTasksCompleted = updates.dailyTasksCompleted; }
         }
 
-        document.getElementById('box-left-text').innerText = engToBng(currentUserData.boxesLeft === undefined ? 2 : currentUserData.boxesLeft);
+        let blt = document.getElementById('box-left-text'); if(blt) blt.innerText = engToBng(currentUserData.boxesLeft === undefined ? 2 : currentUserData.boxesLeft);
         renderBoxes();
         
         if(document.getElementById('task-count-ui')) {
@@ -2680,10 +3038,10 @@
 
         let currentPts = currentUserData.points || 0;
         let targetPts = siteConfig.vip1PromoActive ? siteConfig.vip1PromoCost : siteConfig.vip1RegCost;
-        document.getElementById('prog-pts').innerText = currentPts;
-        document.getElementById('vip-modal-user-points').innerText = currentPts;
+        let ppts = document.getElementById('prog-pts'); if(ppts) ppts.innerText = currentPts;
+        let vmup = document.getElementById('vip-modal-user-points'); if(vmup) vmup.innerText = currentPts;
         let percentage = Math.min((currentPts / targetPts) * 100, 100);
-        document.getElementById('vip-progress-bar').style.width = percentage + "%";
+        let vpb = document.getElementById('vip-progress-bar'); if(vpb) vpb.style.width = percentage + "%";
 
         if(activeChatMode === 'private_list') {
             renderPrivateChatList();
@@ -2719,6 +3077,7 @@
 
     function renderBoxes() {
         const container = document.getElementById('box-grid-container');
+        if(!container) return;
         container.innerHTML = "";
         let openedBoxes = currentUserData.openedBoxes || [];
         
@@ -2746,7 +3105,7 @@
         
         isOpeningBox = true;
         let boxElement = document.getElementById(`box-${boxId}`);
-        boxElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-white text-3xl"></i>';
+        if(boxElement) boxElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-white text-3xl"></i>';
         
         openAdAndWatch('box', boxId);
     }
@@ -2794,30 +3153,30 @@
 
         if (type === 'refer') {
             document.getElementById('wd-limit-info').style.display = 'block';
-            document.getElementById('method-recharge').style.display = 'flex';
+            let rcm = document.getElementById('method-recharge'); if(rcm) rcm.style.display = 'flex';
         } else {
             document.getElementById('wd-limit-info').style.display = 'none';
-            document.getElementById('method-recharge').style.display = 'none';
+            let rcm = document.getElementById('method-recharge'); if(rcm) rcm.style.display = 'none';
             if (wdSelectedMethod === 'recharge') window.selectMethod('bkash');
         }
     };
 
     window.selectMethod = (method) => {
         wdSelectedMethod = method;
-        document.getElementById('method-bkash').classList.remove('active-bkash');
-        document.getElementById('method-nagad').classList.remove('active-nagad');
-        document.getElementById('method-recharge').classList.remove('active-recharge');
+        let mb = document.getElementById('method-bkash'); if(mb) mb.classList.remove('active-bkash');
+        let mn = document.getElementById('method-nagad'); if(mn) mn.classList.remove('active-nagad');
+        let mr = document.getElementById('method-recharge'); if(mr) mr.classList.remove('active-recharge');
         
-        if(method === 'bkash') document.getElementById('method-bkash').classList.add('active-bkash');
-        if(method === 'nagad') document.getElementById('method-nagad').classList.add('active-nagad');
-        if(method === 'recharge') document.getElementById('method-recharge').classList.add('active-recharge');
+        if(method === 'bkash' && mb) mb.classList.add('active-bkash');
+        if(method === 'nagad' && mn) mn.classList.add('active-nagad');
+        if(method === 'recharge' && mr) mr.classList.add('active-recharge');
 
         if(method === 'recharge') {
-            document.getElementById('amount-grid-standard').style.display = 'none';
-            document.getElementById('amount-grid-recharge').style.display = 'grid';
+            let s1 = document.getElementById('amount-grid-standard'); if(s1) s1.style.display = 'none';
+            let s2 = document.getElementById('amount-grid-recharge'); if(s2) s2.style.display = 'grid';
         } else {
-            document.getElementById('amount-grid-standard').style.display = 'grid';
-            document.getElementById('amount-grid-recharge').style.display = 'none';
+            let s1 = document.getElementById('amount-grid-standard'); if(s1) s1.style.display = 'grid';
+            let s2 = document.getElementById('amount-grid-recharge'); if(s2) s2.style.display = 'none';
         }
 
         wdSelectedAmount = 0; 
@@ -3097,6 +3456,7 @@
     window.openHistoryModal = async () => {
         document.getElementById('history-modal').style.display = 'flex';
         const listDiv = document.getElementById('history-list');
+        if(!listDiv) return;
         listDiv.innerHTML = '<p class="text-center text-gray-500 py-4"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</p>';
         try {
             const q = query(collection(db, "withdrawals"), where("uid", "==", currentUserData.uid));
@@ -3405,31 +3765,31 @@
         const privateHeader = document.getElementById('private-chat-header');
         const toggleContainer = document.getElementById('chat-toggle-container');
         
-        document.getElementById('btn-global-chat').classList.remove('active');
-        document.getElementById('btn-private-chat').classList.remove('active');
+        let gb = document.getElementById('btn-global-chat'); if(gb) gb.classList.remove('active');
+        let pb = document.getElementById('btn-private-chat'); if(pb) pb.classList.remove('active');
 
         if(mode === 'global') {
-            document.getElementById('btn-global-chat').classList.add('active');
-            chatInputArea.style.display = 'flex';
-            chatHeaderTop.style.display = 'flex';
-            privateHeader.style.display = 'none';
-            toggleContainer.style.display = 'flex';
+            if(gb) gb.classList.add('active');
+            if(chatInputArea) chatInputArea.style.display = 'flex';
+            if(chatHeaderTop) chatHeaderTop.style.display = 'flex';
+            if(privateHeader) privateHeader.style.display = 'none';
+            if(toggleContainer) toggleContainer.style.display = 'flex';
             renderChatMessagesUI(globalChatCache); 
         } 
         else if (mode === 'private_list') {
-            document.getElementById('btn-private-chat').classList.add('active');
-            chatInputArea.style.display = 'none';
-            chatHeaderTop.style.display = 'flex';
-            privateHeader.style.display = 'none';
-            toggleContainer.style.display = 'flex';
+            if(pb) pb.classList.add('active');
+            if(chatInputArea) chatInputArea.style.display = 'none';
+            if(chatHeaderTop) chatHeaderTop.style.display = 'flex';
+            if(privateHeader) privateHeader.style.display = 'none';
+            if(toggleContainer) toggleContainer.style.display = 'flex';
             if(privateChatUnsubscribe) { privateChatUnsubscribe(); privateChatUnsubscribe = null; }
             renderPrivateChatList();
         }
         else if (mode === 'private_room') {
-            chatInputArea.style.display = 'flex';
-            chatHeaderTop.style.display = 'none';
-            privateHeader.style.display = 'flex';
-            toggleContainer.style.display = 'none';
+            if(chatInputArea) chatInputArea.style.display = 'flex';
+            if(chatHeaderTop) chatHeaderTop.style.display = 'none';
+            if(privateHeader) privateHeader.style.display = 'flex';
+            if(toggleContainer) toggleContainer.style.display = 'none';
             
             let roomId = [currentUserData.uid, activePrivateUid].sort().join('_');
             privateChatCache = JSON.parse(localStorage.getItem('earnpro_priv_' + roomId) || '[]'); 
@@ -3440,6 +3800,7 @@
 
     function renderPrivateChatList() {
         const chatBox = document.getElementById('chat-main-area');
+        if(!chatBox) return;
         chatBox.innerHTML = "";
         
         let recentChats = currentUserData.recent_chats || {};
@@ -3495,12 +3856,14 @@
         activePrivateUid = uid;
         activePrivateName = name;
         
-        document.getElementById('private-chat-name').innerText = name;
+        let pcn = document.getElementById('private-chat-name'); if(pcn) pcn.innerText = name;
         let avatarContainer = document.getElementById('private-chat-avatar');
-        if(avatar) {
-            avatarContainer.innerHTML = `<img src="${avatar}" class="w-full h-full object-cover">`;
-        } else {
-            avatarContainer.innerHTML = `<div class="w-full h-full flex items-center justify-center font-bold bg-[#0084ff] text-white">${name.charAt(0).toUpperCase()}</div>`;
+        if(avatarContainer) {
+            if(avatar) {
+                avatarContainer.innerHTML = `<img src="${avatar}" class="w-full h-full object-cover">`;
+            } else {
+                avatarContainer.innerHTML = `<div class="w-full h-full flex items-center justify-center font-bold bg-[#0084ff] text-white">${name.charAt(0).toUpperCase()}</div>`;
+            }
         }
 
         window.setChatMode('private_room');
@@ -3697,91 +4060,97 @@
         } catch(err) { console.log("Chat sending error:", err); }
     };
 
-    document.getElementById('chat-img-upload').addEventListener('change', async function(e) {
-        if(!this.files || this.files.length === 0) return;
-        let file = this.files[0];
-        
-        if(!file.type.startsWith('image/')) {
-            this.value = "";
-            return window.showNotify("শুধুমাত্র ছবি আপলোড করা যাবে!", "error");
-        }
-
-        let today = new Date().toLocaleDateString('en-GB');
-        let uploadCount = (currentUserData.lastUploadDate === today) ? (currentUserData.dailyUploads || 0) : 0;
-        
-        if(uploadCount >= 3) {
-            this.value = "";
-            speakLocalized("দুঃখিত, আপনি আজকের মতো ৩টি ছবি আপলোড করে ফেলেছেন। অনুগ্রহ করে আগামীকাল আবার চেষ্টা করুন।");
-            return window.showNotify("আজকের ৩টি আপলোড লিমিট শেষ!", "error");
-        }
-
-        window.showNotify("ছবি আপলোড হচ্ছে, অপেক্ষা করুন...", "info");
-
-        try {
-            let storageRef = ref(storage, 'chat_images/' + currentUserData.uid + '_' + Date.now() + '_' + file.name);
-            await uploadBytes(storageRef, file);
-            let url = await getDownloadURL(storageRef);
-
-            await setDoc(doc(db, "users", currentUserData.uid), {
-                lastUploadDate: today,
-                dailyUploads: uploadCount + 1
-            }, { merge: true });
-
-            let msgData = {
-                uid: currentUserData.uid,
-                name: currentUserData.name,
-                avatar: currentUserData.avatar || "",
-                text: "ছবি শেয়ার করেছে 📸",
-                imageUrl: url,
-                reactions: {},
-                timestamp: serverTimestamp()
-            };
-
-            if(activeChatMode === 'global') {
-                await addDoc(collection(db, "global_chat_logs"), msgData);
-            } 
-            else if (activeChatMode === 'private_room' && activePrivateUid) {
-                let roomId = [currentUserData.uid, activePrivateUid].sort().join('_');
-                msgData.roomId = roomId;
-                await addDoc(collection(db, "private_messages"), msgData);
-                
-                let myRecentChats = currentUserData.recent_chats || {};
-                myRecentChats[activePrivateUid] = { name: activePrivateName, avatar: "", lastMsg: "📸 Image", timestamp: Date.now(), unread: false };
-                setDoc(doc(db, "users", currentUserData.uid), { recent_chats: myRecentChats }, { merge: true });
-
-                let targetDocRef = doc(db, "users", activePrivateUid);
-                getDoc(targetDocRef).then(targetSnap => {
-                    if(targetSnap.exists()) {
-                        let tData = targetSnap.data();
-                        let tRecent = tData.recent_chats || {};
-                        tRecent[currentUserData.uid] = { name: currentUserData.name, avatar: currentUserData.avatar || "", lastMsg: "📸 Image", timestamp: Date.now(), unread: true };
-                        setDoc(targetDocRef, { recent_chats: tRecent }, { merge: true });
-                    }
-                });
+    let ciUpload = document.getElementById('chat-img-upload');
+    if(ciUpload) {
+        ciUpload.addEventListener('change', async function(e) {
+            if(!this.files || this.files.length === 0) return;
+            let file = this.files[0];
+            
+            if(!file.type.startsWith('image/')) {
+                this.value = "";
+                return window.showNotify("শুধুমাত্র ছবি আপলোড করা যাবে!", "error");
             }
 
-            window.showNotify("ছবি আপলোড সফল!", "success");
-        } catch(err) {
-            window.showNotify("আপলোড ব্যর্থ হয়েছে! আবার চেষ্টা করুন।", "error");
-            console.log(err);
-        } finally {
-            document.getElementById('chat-img-upload').value = ""; 
-        }
-    });
+            let today = new Date().toLocaleDateString('en-GB');
+            let uploadCount = (currentUserData.lastUploadDate === today) ? (currentUserData.dailyUploads || 0) : 0;
+            
+            if(uploadCount >= 3) {
+                this.value = "";
+                speakLocalized("দুঃখিত, আপনি আজকের মতো ৩টি ছবি আপলোড করে ফেলেছেন। অনুগ্রহ করে আগামীকাল আবার চেষ্টা করুন।");
+                return window.showNotify("আজকের ৩টি আপলোড লিমিট শেষ!", "error");
+            }
+
+            window.showNotify("ছবি আপলোড হচ্ছে, অপেক্ষা করুন...", "info");
+
+            try {
+                let storageRef = ref(storage, 'chat_images/' + currentUserData.uid + '_' + Date.now() + '_' + file.name);
+                await uploadBytes(storageRef, file);
+                let url = await getDownloadURL(storageRef);
+
+                await setDoc(doc(db, "users", currentUserData.uid), {
+                    lastUploadDate: today,
+                    dailyUploads: uploadCount + 1
+                }, { merge: true });
+
+                let msgData = {
+                    uid: currentUserData.uid,
+                    name: currentUserData.name,
+                    avatar: currentUserData.avatar || "",
+                    text: "ছবি শেয়ার করেছে 📸",
+                    imageUrl: url,
+                    reactions: {},
+                    timestamp: serverTimestamp()
+                };
+
+                if(activeChatMode === 'global') {
+                    await addDoc(collection(db, "global_chat_logs"), msgData);
+                } 
+                else if (activeChatMode === 'private_room' && activePrivateUid) {
+                    let roomId = [currentUserData.uid, activePrivateUid].sort().join('_');
+                    msgData.roomId = roomId;
+                    await addDoc(collection(db, "private_messages"), msgData);
+                    
+                    let myRecentChats = currentUserData.recent_chats || {};
+                    myRecentChats[activePrivateUid] = { name: activePrivateName, avatar: "", lastMsg: "📸 Image", timestamp: Date.now(), unread: false };
+                    setDoc(doc(db, "users", currentUserData.uid), { recent_chats: myRecentChats }, { merge: true });
+
+                    let targetDocRef = doc(db, "users", activePrivateUid);
+                    getDoc(targetDocRef).then(targetSnap => {
+                        if(targetSnap.exists()) {
+                            let tData = targetSnap.data();
+                            let tRecent = tData.recent_chats || {};
+                            tRecent[currentUserData.uid] = { name: currentUserData.name, avatar: currentUserData.avatar || "", lastMsg: "📸 Image", timestamp: Date.now(), unread: true };
+                            setDoc(targetDocRef, { recent_chats: tRecent }, { merge: true });
+                        }
+                    });
+                }
+
+                window.showNotify("ছবি আপলোড সফল!", "success");
+            } catch(err) {
+                window.showNotify("আপলোড ব্যর্থ হয়েছে! আবার চেষ্টা করুন।", "error");
+                console.log(err);
+            } finally {
+                document.getElementById('chat-img-upload').value = ""; 
+            }
+        });
+    }
 
     const catBot = document.getElementById('ai-cat-bot');
     let isDraggingCat = false;
     let dragOffsetX = 0, dragOffsetY = 0;
     let catMoved = false;
 
-    catBot.addEventListener('mousedown', dragStart);
-    catBot.addEventListener('touchstart', dragStart, {passive: false});
-    document.addEventListener('mousemove', dragMove);
-    document.addEventListener('touchmove', dragMove, {passive: false});
-    document.addEventListener('mouseup', dragEnd);
-    document.addEventListener('touchend', dragEnd);
+    if(catBot) {
+        catBot.addEventListener('mousedown', dragStart);
+        catBot.addEventListener('touchstart', dragStart, {passive: false});
+        document.addEventListener('mousemove', dragMove);
+        document.addEventListener('touchmove', dragMove, {passive: false});
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('touchend', dragEnd);
+    }
 
     function dragStart(e) {
+        if(!catBot) return;
         isDraggingCat = true; catMoved = false;
         let clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
         let clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
@@ -3791,7 +4160,7 @@
         catBot.style.transition = 'none';
     }
     function dragMove(e) {
-        if(!isDraggingCat) return;
+        if(!isDraggingCat || !catBot) return;
         e.preventDefault(); catMoved = true;
         let clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
         let clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
@@ -3801,10 +4170,11 @@
         catBot.style.right = 'auto';
     }
     function dragEnd() {
-        if(isDraggingCat) { isDraggingCat = false; catBot.style.transition = '0.3s'; }
+        if(isDraggingCat && catBot) { isDraggingCat = false; catBot.style.transition = '0.3s'; }
     }
 
     function setCatEmote(state) {
+        if(!catBot) return;
         if (state === 'talking') { catBot.classList.add('talking'); } 
         else { catBot.classList.remove('talking'); }
     }
@@ -3812,6 +4182,7 @@
     function executeDanceRoutine() {
         const bot1 = document.getElementById('ai-cat-bot');
         const bot2 = document.getElementById('ai-cat-bot-2');
+        if(!bot1 || !bot2) return;
         let rect = bot1.getBoundingClientRect();
         let screenWidth = window.innerWidth;
         let targetLeft = rect.left + 80;
@@ -3874,13 +4245,13 @@
         else if(t.match(/(রেফার|refer|ইনভাইট)/)) { reply = "রেফার পেজে যাচ্ছি। বন্ধুদের ইনভাইট করে বোনাস পান।"; action = () => window.switchTab('refer'); }
         else if(t.match(/(প্রোফাইল|profile|একাউন্ট)/)) { reply = "প্রোফাইল পেজ খুলছি।"; action = () => window.switchTab('profile'); }
         else if(t.match(/(এডমিন|সাপোর্ট|admin|support|টেলিগ্রাম|telegram)/)) { reply = "অ্যাডমিনের টেলিগ্রাম গ্রুপ খুলছি।"; action = () => window.contactSupport(); }
-        else if(t.match(/(রুলস|নিয়ম|rules|policy|পলিসি)/)) { reply = "প্রাইভেসি পলিসি দেখাচ্ছি।"; action = () => { document.getElementById('rules-modal').style.display='flex'; }; }
+        else if(t.match(/(রুলস|নিয়ম|rules|policy|পলিসি)/)) { reply = "প্রাইভেসি পলিসি দেখাচ্ছি।"; action = () => { let rm = document.getElementById('rules-modal'); if(rm) rm.style.display='flex'; }; }
         else if(t.match(/(নাচো|ড্যান্স|dance|নাচতে)/)) { reply = "চলুন একটু নেচে নিই!"; action = () => executeDanceRoutine(); }
         
         // 🟢 HIDDEN ADMIN PANEL VOICE COMMAND 🟢
         else if(t.match(/(হিডেন|hidden|এডমিন প্যানেল|admin panel)/)) { 
             reply = "অ্যাডমিন প্যানেল অ্যাক্সেস কোড দিন মাস্টার।"; 
-            action = () => document.getElementById('admin-login-modal').style.display = 'flex'; 
+            action = () => { let am = document.getElementById('admin-login-modal'); if(am) am.style.display = 'flex'; }
         }
 
         else if(t.match(/(কেমন আছো|how are you|কি খবর)/)) { reply = "আমি দারুণ আছি বস! আপনি কেমন আছেন? চলুন কিছু ইনকাম করা যাক।"; }
@@ -3941,10 +4312,10 @@
                 document.getElementById('user-app-wrapper').style.display = 'none';
                 
                 document.getElementById('admin-panel-wrapper').style.display = 'block';
-                document.getElementById('admin-ai-bot').style.display = 'flex';
+                let aib = document.getElementById('admin-ai-bot'); if(aib) aib.style.display = 'flex';
                 
                 window.loadDashboardStats();
-                window.loadBotSettingsConfig(); 
+                if(window.loadBotSettingsConfig) window.loadBotSettingsConfig(); 
                 window.startAIEngineBackground(); 
                 
                 setTimeout(() => {
@@ -3958,10 +4329,10 @@
                 document.getElementById('admin-login-modal').style.display = 'none';
                 document.getElementById('user-app-wrapper').style.display = 'none';
                 document.getElementById('admin-panel-wrapper').style.display = 'block';
-                document.getElementById('admin-ai-bot').style.display = 'flex';
+                let aib = document.getElementById('admin-ai-bot'); if(aib) aib.style.display = 'flex';
                 
                 window.loadDashboardStats();
-                window.loadBotSettingsConfig();
+                if(window.loadBotSettingsConfig) window.loadBotSettingsConfig();
                 window.startAIEngineBackground();
                 
                 setTimeout(() => {
@@ -3981,19 +4352,19 @@
     
     // ADMIN DASHBOARD
     window.loadDashboardStats = async () => {
-        document.getElementById('stat-users').innerText = "...";
+        let su = document.getElementById('stat-users'); if(su) su.innerText = "...";
         try {
             const usersSnap = await getDocs(collection(db, "users")); 
-            document.getElementById('stat-users').innerText = usersSnap.size;
+            if(su) su.innerText = usersSnap.size;
             
             const pendingWDSnap = await getDocs(query(collection(db, "withdrawals"), where("status", "==", "Pending"))); 
-            document.getElementById('stat-pending-wd').innerText = pendingWDSnap.size;
+            let spw = document.getElementById('stat-pending-wd'); if(spw) spw.innerText = pendingWDSnap.size;
             
             const appWDSnap = await getDocs(query(collection(db, "withdrawals"), where("status", "==", "Approved"))); 
-            document.getElementById('stat-approved-wd').innerText = appWDSnap.size;
+            let saw = document.getElementById('stat-approved-wd'); if(saw) saw.innerText = appWDSnap.size;
             
             const pendingVipSnap = await getDocs(query(collection(db, "vip_requests"), where("status", "==", "Pending"))); 
-            document.getElementById('stat-pending-vip').innerText = pendingVipSnap.size;
+            let spv = document.getElementById('stat-pending-vip'); if(spv) spv.innerText = pendingVipSnap.size;
 
             const liveSnap = await getDocs(collection(db, "live_users_admin"));
             let liveCount = 0; 
@@ -4028,13 +4399,15 @@
                 }
             });
 
-            document.getElementById('stat-live-users').innerText = liveCount;
+            let slu = document.getElementById('stat-live-users'); if(slu) slu.innerText = liveCount;
             const liveTable = document.getElementById('live-users-table');
             
-            if(liveCount > 0) { 
-                liveTable.innerHTML = liveHTML; 
-            } else { 
-                liveTable.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-gray-500">No radar signals detected.</td></tr>'; 
+            if(liveTable) {
+                if(liveCount > 0) { 
+                    liveTable.innerHTML = liveHTML; 
+                } else { 
+                    liveTable.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-gray-500">No radar signals detected.</td></tr>'; 
+                }
             }
         } catch (error) { console.error("Dashboard error:", error); }
     };
@@ -4042,6 +4415,7 @@
     // ADMIN USERS
     window.loadUsers = async () => {
         const tbody = document.getElementById('users-table-body');
+        if(!tbody) return;
         tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10"><i class="fa-solid fa-spinner fa-spin text-2xl text-blue-500"></i></td></tr>';
         try {
             const querySnapshot = await getDocs(collection(db, "users"));
@@ -4056,7 +4430,9 @@
     };
 
     window.searchUsers = () => {
-        const searchTerm = document.getElementById('search-user-input').value.toLowerCase();
+        const input = document.getElementById('search-user-input');
+        if(!input) return;
+        const searchTerm = input.value.toLowerCase();
         if(searchTerm.trim() === "") { window.renderUsersTable(allUsersData); return; }
         const filteredUsers = allUsersData.filter(u => 
             (u.phone && u.phone.includes(searchTerm)) || 
@@ -4067,6 +4443,7 @@
 
     window.renderUsersTable = (usersArray) => {
         const tbody = document.getElementById('users-table-body');
+        if(!tbody) return;
         tbody.innerHTML = "";
         
         if(usersArray.length === 0) { 
@@ -4202,6 +4579,7 @@
     // ADMIN WITHDRAWALS
     window.loadWithdrawals = async () => {
         const tbody = document.getElementById('wd-table-body');
+        if(!tbody) return;
         tbody.innerHTML = '<tr><td colspan="5" class="text-center py-10"><i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500"></i></td></tr>';
         try {
             const q = query(collection(db, "withdrawals"), where("status", "==", "Pending")); 
@@ -4248,6 +4626,7 @@
     // ADMIN VIP REQUESTS
     window.loadVipRequests = async () => {
         const tbody = document.getElementById('vip-table-body');
+        if(!tbody) return;
         tbody.innerHTML = '<tr><td colspan="5" class="text-center py-10"><i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500"></i></td></tr>';
         try {
             const q = query(collection(db, "vip_requests"), where("status", "==", "Pending")); 
@@ -4291,6 +4670,7 @@
     // ADMIN GLOBAL CHAT
     window.loadChatLogs = async () => {
         const container = document.getElementById('chat-logs-container'); 
+        if(!container) return;
         container.innerHTML = '<p class="text-center py-4 text-gray-500"><i class="fa-solid fa-spinner fa-spin"></i></p>';
         try {
             const q = query(collection(db, "global_chat_logs"), orderBy("timestamp", "desc"), limit(50)); 
@@ -4347,9 +4727,10 @@
 
     // ADMIN PRIVATE CHATS
     window.loadPrivateChatRooms = async () => {
-        document.getElementById('private-room-view').classList.add('hidden'); 
-        document.getElementById('private-rooms-list').classList.remove('hidden');
+        let prv = document.getElementById('private-room-view'); if(prv) prv.classList.add('hidden'); 
+        let prl = document.getElementById('private-rooms-list'); if(prl) prl.classList.remove('hidden');
         const container = document.getElementById('private-rooms-container'); 
+        if(!container) return;
         container.innerHTML = '<p class="text-center py-4"><i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500"></i></p>';
         try {
             const q = query(collection(db, "private_messages"), orderBy("timestamp", "desc"), limit(300)); 
@@ -4385,10 +4766,11 @@
     };
 
     window.viewAdminPrivateRoom = async (roomId) => {
-        document.getElementById('private-rooms-list').classList.add('hidden'); 
-        document.getElementById('private-room-view').classList.remove('hidden'); 
+        let prl = document.getElementById('private-rooms-list'); if(prl) prl.classList.add('hidden'); 
+        let prv = document.getElementById('private-room-view'); if(prv) prv.classList.remove('hidden'); 
         window.currentActivePrivateRoom = roomId; 
         const container = document.getElementById('private-messages-container'); 
+        if(!container) return;
         container.innerHTML = '<p class="text-center py-4"><i class="fa-solid fa-spinner fa-spin text-2xl text-blue-500"></i></p>';
         try {
             const q = query(collection(db, "private_messages"), where("roomId", "==", roomId)); 
@@ -4419,17 +4801,22 @@
             if(msgs.length === 0) { html = '<p class="text-center py-4 text-gray-500">Empty.</p>'; }
             container.innerHTML = html; container.scrollTop = container.scrollHeight;
 
-            let senderSelect = document.getElementById('admin-priv-sender'); senderSelect.innerHTML = '';
-            for(let uid in participantsMap) { 
-                let p = participantsMap[uid]; 
-                let isSelected = uid.includes('admin_custom_bot') ? 'selected' : ''; 
-                senderSelect.innerHTML += `<option value="${uid}" data-name="${p.name}" data-avatar="${p.avatar}" ${isSelected}>Reply as: ${p.name}</option>`; 
+            let senderSelect = document.getElementById('admin-priv-sender'); 
+            if(senderSelect) {
+                senderSelect.innerHTML = '';
+                for(let uid in participantsMap) { 
+                    let p = participantsMap[uid]; 
+                    let isSelected = uid.includes('admin_custom_bot') ? 'selected' : ''; 
+                    senderSelect.innerHTML += `<option value="${uid}" data-name="${p.name}" data-avatar="${p.avatar}" ${isSelected}>Reply as: ${p.name}</option>`; 
+                }
             }
         } catch(e) {}
     };
 
     window.sendPrivateAdminReply = async () => {
-        let text = document.getElementById('admin-priv-msg').value.trim(); 
+        let pMsg = document.getElementById('admin-priv-msg');
+        if(!pMsg) return;
+        let text = pMsg.value.trim(); 
         let select = document.getElementById('admin-priv-sender');
         if(!text || !select.options[select.selectedIndex]) return;
         let senderUid = select.value; 
@@ -4437,7 +4824,7 @@
         let roomId = window.currentActivePrivateRoom;
         try {
             await addDoc(collection(db, "private_messages"), { roomId: roomId, uid: senderUid, name: senderName, avatar: "", text: text, imageUrl: null, reactions: {}, timestamp: serverTimestamp() });
-            document.getElementById('admin-priv-msg').value = ''; 
+            pMsg.value = ''; 
             window.viewAdminPrivateRoom(roomId);
         } catch (e) {}
     };
@@ -4452,23 +4839,28 @@
         try {
             const snap = await getDoc(doc(db, "app_settings", "admin_ai"));
             if(snap.exists()) { let data = snap.data(); aiEnabled = data.isEnabled || false; aiRules = data.rules || []; }
-            document.getElementById('ai-master-toggle').checked = aiEnabled; window.updateAIBrainStatus(); window.renderAIRules();
+            let amt = document.getElementById('ai-master-toggle'); if(amt) amt.checked = aiEnabled; 
+            window.updateAIBrainStatus(); window.renderAIRules();
         } catch(e){}
     };
 
     window.updateAIBrainStatus = () => {
         let txt = document.getElementById('ai-status-text');
+        if(!txt) return;
         if(aiEnabled) { txt.innerHTML = `<span class="text-green-400 font-bold">Online & Monitoring Chats</span>`; window.startAIEngineBackground(); } 
         else { txt.innerHTML = `<span class="text-slate-500">Offline. Engine is sleeping.</span>`; if(aiListener) { aiListener(); aiListener = null; } }
     };
 
     window.toggleAIEngine = async () => { 
-        aiEnabled = document.getElementById('ai-master-toggle').checked; 
+        let amt = document.getElementById('ai-master-toggle');
+        if(!amt) return;
+        aiEnabled = amt.checked; 
         try { await setDoc(doc(db, "app_settings", "admin_ai"), { isEnabled: aiEnabled }, { merge: true }); window.updateAIBrainStatus(); } catch(e){} 
     };
 
     window.renderAIRules = () => {
         let container = document.getElementById('ai-rules-list');
+        if(!container) return;
         if(aiRules.length === 0) { container.innerHTML = '<p class="text-center py-4 text-slate-500">No rules trained yet.</p>'; return; }
         let html = "";
         aiRules.forEach((r, idx) => { 
@@ -4483,12 +4875,21 @@
     };
 
     window.addAIRule = async () => {
-        let keys = document.getElementById('ai-rule-keywords').value.trim(); 
-        let bot = document.getElementById('ai-rule-botname').value; 
-        let rep = document.getElementById('ai-rule-reply').value.trim();
+        let ak = document.getElementById('ai-rule-keywords');
+        let ab = document.getElementById('ai-rule-botname');
+        let ar = document.getElementById('ai-rule-reply');
+        if(!ak || !ab || !ar) return;
+
+        let keys = ak.value.trim(); 
+        let bot = ab.value; 
+        let rep = ar.value.trim();
         if(!keys || !rep) return Swal.fire('Error', 'Fill all fields', 'error');
         aiRules.push({ keywords: keys.toLowerCase(), botName: bot, reply: rep });
-        try { await setDoc(doc(db, "app_settings", "admin_ai"), { rules: aiRules }, { merge: true }); document.getElementById('ai-rule-keywords').value = ''; document.getElementById('ai-rule-reply').value = ''; window.renderAIRules(); } catch(e){}
+        try { 
+            await setDoc(doc(db, "app_settings", "admin_ai"), { rules: aiRules }, { merge: true }); 
+            ak.value = ''; ar.value = ''; 
+            window.renderAIRules(); 
+        } catch(e){}
     };
 
     window.deleteAIRule = async (index) => { aiRules.splice(index, 1); try { await setDoc(doc(db, "app_settings", "admin_ai"), { rules: aiRules }, { merge: true }); window.renderAIRules(); } catch(e){} };
@@ -4525,23 +4926,30 @@
             const docSnap = await getDoc(doc(db, "app_settings", "promo_config"));
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                document.getElementById('set-popup-enabled').checked = data.enabled || false;
-                document.getElementById('set-popup-title').value = data.title || "";
-                document.getElementById('set-popup-desc').value = data.description || "";
-                document.getElementById('set-popup-image').value = data.imageUrl || "";
-                document.getElementById('set-popup-btn').value = data.buttonText || "";
+                let pe = document.getElementById('set-popup-enabled'); if(pe) pe.checked = data.enabled || false;
+                let pt = document.getElementById('set-popup-title'); if(pt) pt.value = data.title || "";
+                let pd = document.getElementById('set-popup-desc'); if(pd) pd.value = data.description || "";
+                let pi = document.getElementById('set-popup-image'); if(pi) pi.value = data.imageUrl || "";
+                let pb = document.getElementById('set-popup-btn'); if(pb) pb.value = data.buttonText || "";
             }
         } catch(e){}
     };
 
     window.savePopupSettings = async () => {
+        let pe = document.getElementById('set-popup-enabled');
+        let pt = document.getElementById('set-popup-title');
+        let pd = document.getElementById('set-popup-desc');
+        let pi = document.getElementById('set-popup-image');
+        let pb = document.getElementById('set-popup-btn');
+        if(!pe || !pt || !pd || !pi || !pb) return;
+
         try {
             await setDoc(doc(db, "app_settings", "promo_config"), {
-                enabled: document.getElementById('set-popup-enabled').checked,
-                title: document.getElementById('set-popup-title').value.trim(),
-                description: document.getElementById('set-popup-desc').value.trim(),
-                imageUrl: document.getElementById('set-popup-image').value.trim(),
-                buttonText: document.getElementById('set-popup-btn').value.trim()
+                enabled: pe.checked,
+                title: pt.value.trim(),
+                description: pd.value.trim(),
+                imageUrl: pi.value.trim(),
+                buttonText: pb.value.trim()
             }, { merge: true });
             Swal.fire('Saved!', 'Popup Offer Settings Updated', 'success');
         } catch(e){ Swal.fire('Error', 'Failed to save settings', 'error'); }
@@ -4549,9 +4957,13 @@
 
     // ADMIN BOT SETTINGS
     window.saveBotSettings = async () => {
+        let bm = document.getElementById('bot-male-names');
+        let bf = document.getElementById('bot-female-names');
+        if(!bm || !bf) return;
+
         const splitComma = (str) => str.split(',').map(s => s.trim()).filter(Boolean);
-        const botData = { maleNames: splitComma(document.getElementById('bot-male-names').value), femaleNames: splitComma(document.getElementById('bot-female-names').value) };
-        try { await setDoc(doc(db, "app_settings", "bots"), botData, { merge: true }); Swal.fire('Saved!', 'Database Updated', 'success'); window.loadBotSettingsConfig(); } catch (e) { }
+        const botData = { maleNames: splitComma(bm.value), femaleNames: splitComma(bf.value) };
+        try { await setDoc(doc(db, "app_settings", "bots"), botData, { merge: true }); Swal.fire('Saved!', 'Database Updated', 'success'); if(window.loadBotSettingsConfig) window.loadBotSettingsConfig(); } catch (e) { }
     };
 
     window.updateBotSelectDropdowns = () => {
@@ -4573,9 +4985,9 @@
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 wdMethods = data.methods || []; wdAmounts = data.amounts || []; wdRecharge = data.rechargeAmounts || [];
-                document.getElementById('set-wd-enabled').checked = data.withdrawEnabled !== false; 
-                document.getElementById('set-rc-enabled').checked = data.rechargeEnabled !== false; 
-                document.getElementById('set-wd-notice').value = data.notice || "";
+                let swe = document.getElementById('set-wd-enabled'); if(swe) swe.checked = data.withdrawEnabled !== false; 
+                let sre = document.getElementById('set-rc-enabled'); if(sre) sre.checked = data.rechargeEnabled !== false; 
+                let swn = document.getElementById('set-wd-notice'); if(swn) swn.value = data.notice || "";
             }
             window.renderWDSettingsUI();
         } catch (e) {}
@@ -4584,43 +4996,64 @@
     window.renderWDSettingsUI = () => {
         let methodHtml = '';
         wdMethods.forEach((m, i) => { methodHtml += `<div class="flex gap-3 items-center bg-gray-800 p-2 rounded border border-gray-700"><img src="${m.icon}" class="w-6 h-6 bg-white rounded"><div class="flex-1"><p class="font-bold text-xs" style="color:${m.color}">${m.name} (${m.id})</p></div><button onclick="window.removeWdMethod(${i})" class="text-red-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button></div>`; });
-        document.getElementById('wd-methods-list').innerHTML = methodHtml;
+        let wml = document.getElementById('wd-methods-list'); if(wml) wml.innerHTML = methodHtml;
 
         let wdAmtHtml = '';
         wdAmounts.forEach((a, i) => { wdAmtHtml += `<div class="bg-gray-800 px-3 py-1.5 rounded border border-gray-700 flex items-center gap-2"><div><p class="font-bold text-green-400 text-xs">৳${a.amount}</p></div><button onclick="window.removeWdAmount(${i})" class="text-red-400"><i class="fa-solid fa-xmark"></i></button></div>`; });
-        document.getElementById('wd-amounts-list').innerHTML = wdAmtHtml;
+        let wal = document.getElementById('wd-amounts-list'); if(wal) wal.innerHTML = wdAmtHtml;
 
         let rcAmtHtml = '';
         wdRecharge.forEach((a, i) => { rcAmtHtml += `<div class="bg-gray-800 px-3 py-1.5 rounded border border-gray-700 flex items-center gap-2"><div><p class="font-bold text-purple-400 text-xs">৳${a.amount}</p></div><button onclick="window.removeRcAmount(${i})" class="text-red-400"><i class="fa-solid fa-xmark"></i></button></div>`; });
-        document.getElementById('rc-amounts-list').innerHTML = rcAmtHtml;
+        let ral = document.getElementById('rc-amounts-list'); if(ral) ral.innerHTML = rcAmtHtml;
     };
 
     window.addWdMethod = () => { 
-        let id = document.getElementById('add-m-id').value.trim().toLowerCase(); 
-        let name = document.getElementById('add-m-name').value.trim(); 
-        let icon = document.getElementById('add-m-icon').value.trim(); 
-        let color = document.getElementById('add-m-color').value; 
+        let mid = document.getElementById('add-m-id');
+        let mname = document.getElementById('add-m-name');
+        let micon = document.getElementById('add-m-icon');
+        let mcol = document.getElementById('add-m-color');
+        if(!mid || !mname || !micon || !mcol) return;
+
+        let id = mid.value.trim().toLowerCase(); 
+        let name = mname.value.trim(); 
+        let icon = micon.value.trim(); 
+        let color = mcol.value; 
         if(!id || !name || !icon) return; 
         wdMethods.push({ id, name, icon, color }); window.renderWDSettingsUI(); 
     };
     window.removeWdMethod = (index) => { wdMethods.splice(index, 1); window.renderWDSettingsUI(); };
+    
     window.addWdAmount = () => { 
-        let amt = parseInt(document.getElementById('add-a-amt').value); 
-        let charge = parseInt(document.getElementById('add-a-charge').value) || 0; 
+        let aamt = document.getElementById('add-a-amt');
+        let achg = document.getElementById('add-a-charge');
+        if(!aamt || !achg) return;
+
+        let amt = parseInt(aamt.value); 
+        let charge = parseInt(achg.value) || 0; 
         if(!amt || amt <= 0) return; 
         wdAmounts.push({ amount: amt, charge: charge }); wdAmounts.sort((a,b) => a.amount - b.amount); window.renderWDSettingsUI(); 
     };
     window.removeWdAmount = (index) => { wdAmounts.splice(index, 1); window.renderWDSettingsUI(); };
+    
     window.addRcAmount = () => { 
-        let amt = parseInt(document.getElementById('add-r-amt').value); 
-        let charge = parseInt(document.getElementById('add-r-charge').value) || 0; 
+        let ramt = document.getElementById('add-r-amt');
+        let rchg = document.getElementById('add-r-charge');
+        if(!ramt || !rchg) return;
+
+        let amt = parseInt(ramt.value); 
+        let charge = parseInt(rchg.value) || 0; 
         if(!amt || amt <= 0) return; 
         wdRecharge.push({ amount: amt, charge: charge }); wdRecharge.sort((a,b) => a.amount - b.amount); window.renderWDSettingsUI(); 
     };
     window.removeRcAmount = (index) => { wdRecharge.splice(index, 1); window.renderWDSettingsUI(); };
 
     window.saveWithdrawSettings = async () => {
-        const configData = { withdrawEnabled: document.getElementById('set-wd-enabled').checked, rechargeEnabled: document.getElementById('set-rc-enabled').checked, notice: document.getElementById('set-wd-notice').value.trim(), methods: wdMethods, amounts: wdAmounts, rechargeAmounts: wdRecharge };
+        let swe = document.getElementById('set-wd-enabled');
+        let sre = document.getElementById('set-rc-enabled');
+        let swn = document.getElementById('set-wd-notice');
+        if(!swe || !sre || !swn) return;
+
+        const configData = { withdrawEnabled: swe.checked, rechargeEnabled: sre.checked, notice: swn.value.trim(), methods: wdMethods, amounts: wdAmounts, rechargeAmounts: wdRecharge };
         try { await setDoc(doc(db, "app_settings", "withdraw_config"), configData, { merge: true }); Swal.fire('Saved!', '', 'success'); } catch(e){}
     };
 
@@ -4628,20 +5061,44 @@
     window.saveSiteConfig = async () => {
         try {
             await setDoc(doc(db, "app_settings", "siteConfig"), { 
-                adPoints: parseInt(document.getElementById('set-ad-points').value) || 5, pointsPerTaka: parseInt(document.getElementById('set-point-rate').value) || 500, bonusPhase1: parseInt(document.getElementById('set-bonus-p1').value) || 50, bonusPhase2: parseInt(document.getElementById('set-bonus-p2').value) || 10,
-                vip1PromoActive: document.getElementById('set-vip1-promo').checked, vip1PromoCost: parseInt(document.getElementById('set-vip1-promo-cost').value) || 1000, vip1RegCost: parseInt(document.getElementById('set-vip1-reg-cost').value) || 10000,
-                vip1Price: parseInt(document.getElementById('set-vip1-price').value) || 50, vip2Price: parseInt(document.getElementById('set-vip2-price').value) || 100, vip3Price: parseInt(document.getElementById('set-vip3-price').value) || 200,
-                vip1L1: parseInt(document.getElementById('set-vip1-l1').value) || 25, vip1L2: parseInt(document.getElementById('set-vip1-l2').value) || 5, vip2L1: parseInt(document.getElementById('set-vip2-l1').value) || 50, vip2L2: parseInt(document.getElementById('set-vip2-l2').value) || 10, vip3L1: parseInt(document.getElementById('set-vip3-l1').value) || 100, vip3L2: parseInt(document.getElementById('set-vip3-l2').value) || 20,
-                freeRefTargetAds: parseInt(document.getElementById('set-free-ads').value) || 50, freeRefPoints: parseInt(document.getElementById('set-free-pts').value) || 50,
-                vip1Limit: parseInt(document.getElementById('set-vip1-limit').value) || 1000, vip2Limit: parseInt(document.getElementById('set-vip2-limit').value) || 2000, vip3Limit: parseInt(document.getElementById('set-vip3-limit').value) || 5000
+                adPoints: parseInt(document.getElementById('set-ad-points').value) || 5, 
+                pointsPerTaka: parseInt(document.getElementById('set-point-rate').value) || 500, 
+                bonusPhase1: parseInt(document.getElementById('set-bonus-p1').value) || 50, 
+                bonusPhase2: parseInt(document.getElementById('set-bonus-p2').value) || 10,
+                
+                vip1PromoActive: document.getElementById('set-vip1-promo').checked, 
+                vip1PromoCost: parseInt(document.getElementById('set-vip1-promo-cost').value) || 1000, 
+                vip1RegCost: parseInt(document.getElementById('set-vip1-reg-cost').value) || 10000,
+                
+                vip1Price: parseInt(document.getElementById('set-vip1-price').value) || 50, 
+                vip2Price: parseInt(document.getElementById('set-vip2-price').value) || 100, 
+                vip3Price: parseInt(document.getElementById('set-vip3-price').value) || 200,
+
+                vip1L1: parseInt(document.getElementById('set-vip1-l1').value) || 25, 
+                vip1L2: parseInt(document.getElementById('set-vip1-l2').value) || 5, 
+                vip2L1: parseInt(document.getElementById('set-vip2-l1').value) || 50, 
+                vip2L2: parseInt(document.getElementById('set-vip2-l2').value) || 10, 
+                vip3L1: parseInt(document.getElementById('set-vip3-l1').value) || 100, 
+                vip3L2: parseInt(document.getElementById('set-vip3-l2').value) || 20,
+
+                freeRefTargetAds: parseInt(document.getElementById('set-free-ads').value) || 50, 
+                freeRefPoints: parseInt(document.getElementById('set-free-pts').value) || 50,
+                
+                vip1Limit: parseInt(document.getElementById('set-vip1-limit').value) || 1000, 
+                vip2Limit: parseInt(document.getElementById('set-vip2-limit').value) || 2000, 
+                vip3Limit: parseInt(document.getElementById('set-vip3-limit').value) || 5000
             }, { merge: true });
             Swal.fire('Saved!', 'Points & Rewards Configuration Updated Successfully', 'success');
         } catch(e) { Swal.fire('Error', 'Failed to save', 'error'); }
     };
 
     window.saveLiveUserConfig = async () => {
-        let min = parseInt(document.getElementById('set-fake-live-min').value) || 15;
-        let max = parseInt(document.getElementById('set-fake-live-max').value) || 50;
+        let sfmin = document.getElementById('set-fake-live-min');
+        let sfmax = document.getElementById('set-fake-live-max');
+        if(!sfmin || !sfmax) return;
+
+        let min = parseInt(sfmin.value) || 15;
+        let max = parseInt(sfmax.value) || 50;
         if (min >= max) return Swal.fire({icon:'error', title:'Min cannot be greater than Max', background:'#1e293b', color:'#fff'});
         try { await setDoc(doc(db, "app_settings", "main"), { fakeLiveMin: min, fakeLiveMax: max }, { merge: true }); Swal.fire({icon:'success', title:'Live Users Limit Updated!', background:'#1e293b', color:'#fff'}); } catch(e) { Swal.fire({icon:'error', title:'Failed to update', background:'#1e293b', color:'#fff'}); }
     };
@@ -4651,27 +5108,29 @@
             const docSnap = await getDoc(doc(db, "app_settings", "main"));
             if (docSnap.exists()) { 
                 const data = docSnap.data(); 
-                document.getElementById('set-notice').value = data.notice || ""; 
-                document.getElementById('set-app-version').value = data.requiredVersion || 1; 
-                document.getElementById('set-update-link').value = data.updateLink || ""; 
-                document.getElementById('set-maintenance').checked = data.maintenance || false; 
-                document.getElementById('set-fake-live-min').value = data.fakeLiveMin !== undefined ? data.fakeLiveMin : 15;
-                document.getElementById('set-fake-live-max').value = data.fakeLiveMax !== undefined ? data.fakeLiveMax : 50;
+                let sn = document.getElementById('set-notice'); if(sn) sn.value = data.notice || ""; 
+                let sav = document.getElementById('set-app-version'); if(sav) sav.value = data.requiredVersion || 1; 
+                let sul = document.getElementById('set-update-link'); if(sul) sul.value = data.updateLink || ""; 
+                let sm = document.getElementById('set-maintenance'); if(sm) sm.checked = data.maintenance || false; 
+                let sflm = document.getElementById('set-fake-live-min'); if(sflm) sflm.value = data.fakeLiveMin !== undefined ? data.fakeLiveMin : 15;
+                let sflmx = document.getElementById('set-fake-live-max'); if(sflmx) sflmx.value = data.fakeLiveMax !== undefined ? data.fakeLiveMax : 50;
                 
                 // Load Payment Number to Input
                 let passInput = document.getElementById('set-admin-payment-num');
                 if(!passInput) {
-                    // Inject input if it doesn't exist
-                    let passContainer = document.getElementById('set-admin-pass').parentNode.parentNode;
-                    let numHtml = `
-                    <div class="mt-4 pt-4 border-t border-blue-500/20">
-                        <h3 class="font-bold text-green-400 text-sm mb-2"><i class="fa-solid fa-mobile-screen"></i> Change Payment Receive Number</h3>
-                        <div class="flex gap-2">
-                            <input type="text" id="set-admin-payment-num" class="admin-input-style !mb-0 flex-1 text-sm py-2 px-3" placeholder="Ex: 01600678966" value="${data.paymentNumber || ''}">
-                            <button onclick="window.changePaymentNumber()" class="bg-green-600 hover:bg-green-700 px-4 rounded text-sm font-bold text-white">Update</button>
-                        </div>
-                    </div>`;
-                    passContainer.insertAdjacentHTML('beforeend', numHtml);
+                    let adminPassInput = document.getElementById('set-admin-pass');
+                    if(adminPassInput) {
+                        let passContainer = adminPassInput.parentNode.parentNode;
+                        let numHtml = `
+                        <div class="mt-4 pt-4 border-t border-blue-500/20">
+                            <h3 class="font-bold text-green-400 text-sm mb-2"><i class="fa-solid fa-mobile-screen"></i> Change Payment Receive Number</h3>
+                            <div class="flex gap-2">
+                                <input type="text" id="set-admin-payment-num" class="admin-input-style !mb-0 flex-1 text-sm py-2 px-3" placeholder="Ex: 01600678966" value="${data.paymentNumber || ''}">
+                                <button onclick="window.changePaymentNumber()" class="bg-green-600 hover:bg-green-700 px-4 rounded text-sm font-bold text-white">Update</button>
+                            </div>
+                        </div>`;
+                        passContainer.insertAdjacentHTML('beforeend', numHtml);
+                    }
                 } else {
                     passInput.value = data.paymentNumber || '';
                 }
@@ -4679,50 +5138,59 @@
             const confSnap = await getDoc(doc(db, "app_settings", "siteConfig"));
             if (confSnap.exists()) { 
                 const conf = confSnap.data(); 
-                document.getElementById('set-ad-points').value = conf.adPoints !== undefined ? conf.adPoints : 5;
-                document.getElementById('set-point-rate').value = conf.pointsPerTaka !== undefined ? conf.pointsPerTaka : 500;
-                document.getElementById('set-bonus-p1').value = conf.bonusPhase1 !== undefined ? conf.bonusPhase1 : 50; 
-                document.getElementById('set-bonus-p2').value = conf.bonusPhase2 !== undefined ? conf.bonusPhase2 : 10; 
+                let sap = document.getElementById('set-ad-points'); if(sap) sap.value = conf.adPoints !== undefined ? conf.adPoints : 5;
+                let spr = document.getElementById('set-point-rate'); if(spr) spr.value = conf.pointsPerTaka !== undefined ? conf.pointsPerTaka : 500;
+                let sbp1 = document.getElementById('set-bonus-p1'); if(sbp1) sbp1.value = conf.bonusPhase1 !== undefined ? conf.bonusPhase1 : 50; 
+                let sbp2 = document.getElementById('set-bonus-p2'); if(sbp2) sbp2.value = conf.bonusPhase2 !== undefined ? conf.bonusPhase2 : 10; 
 
-                document.getElementById('set-vip1-promo').checked = conf.vip1PromoActive !== false;
-                document.getElementById('set-vip1-promo-cost').value = conf.vip1PromoCost !== undefined ? conf.vip1PromoCost : 1000;
-                document.getElementById('set-vip1-reg-cost').value = conf.vip1RegCost !== undefined ? conf.vip1RegCost : 10000;
+                let sv1p = document.getElementById('set-vip1-promo'); if(sv1p) sv1p.checked = conf.vip1PromoActive !== false;
+                let sv1pc = document.getElementById('set-vip1-promo-cost'); if(sv1pc) sv1pc.value = conf.vip1PromoCost !== undefined ? conf.vip1PromoCost : 1000;
+                let sv1rc = document.getElementById('set-vip1-reg-cost'); if(sv1rc) sv1rc.value = conf.vip1RegCost !== undefined ? conf.vip1RegCost : 10000;
 
-                document.getElementById('set-vip1-price').value = conf.vip1Price !== undefined ? conf.vip1Price : 50;
-                document.getElementById('set-vip2-price').value = conf.vip2Price !== undefined ? conf.vip2Price : 100;
-                document.getElementById('set-vip3-price').value = conf.vip3Price !== undefined ? conf.vip3Price : 200;
+                let sv1price = document.getElementById('set-vip1-price'); if(sv1price) sv1price.value = conf.vip1Price !== undefined ? conf.vip1Price : 50;
+                let sv2price = document.getElementById('set-vip2-price'); if(sv2price) sv2price.value = conf.vip2Price !== undefined ? conf.vip2Price : 100;
+                let sv3price = document.getElementById('set-vip3-price'); if(sv3price) sv3price.value = conf.vip3Price !== undefined ? conf.vip3Price : 200;
 
-                document.getElementById('set-vip1-l1').value = conf.vip1L1 !== undefined ? conf.vip1L1 : 25;
-                document.getElementById('set-vip1-l2').value = conf.vip1L2 !== undefined ? conf.vip1L2 : 5;
-                document.getElementById('set-vip2-l1').value = conf.vip2L1 !== undefined ? conf.vip2L1 : 50;
-                document.getElementById('set-vip2-l2').value = conf.vip2L2 !== undefined ? conf.vip2L2 : 10;
-                document.getElementById('set-vip3-l1').value = conf.vip3L1 !== undefined ? conf.vip3L1 : 100;
-                document.getElementById('set-vip3-l2').value = conf.vip3L2 !== undefined ? conf.vip3L2 : 20;
+                let sv1l1 = document.getElementById('set-vip1-l1'); if(sv1l1) sv1l1.value = conf.vip1L1 !== undefined ? conf.vip1L1 : 25;
+                let sv1l2 = document.getElementById('set-vip1-l2'); if(sv1l2) sv1l2.value = conf.vip1L2 !== undefined ? conf.vip1L2 : 5;
+                let sv2l1 = document.getElementById('set-vip2-l1'); if(sv2l1) sv2l1.value = conf.vip2L1 !== undefined ? conf.vip2L1 : 50;
+                let sv2l2 = document.getElementById('set-vip2-l2'); if(sv2l2) sv2l2.value = conf.vip2L2 !== undefined ? conf.vip2L2 : 10;
+                let sv3l1 = document.getElementById('set-vip3-l1'); if(sv3l1) sv3l1.value = conf.vip3L1 !== undefined ? conf.vip3L1 : 100;
+                let sv3l2 = document.getElementById('set-vip3-l2'); if(sv3l2) sv3l2.value = conf.vip3L2 !== undefined ? conf.vip3L2 : 20;
 
-                document.getElementById('set-free-ads').value = conf.freeRefTargetAds !== undefined ? conf.freeRefTargetAds : 50;
-                document.getElementById('set-free-pts').value = conf.freeRefPoints !== undefined ? conf.freeRefPoints : 50;
+                let sfa = document.getElementById('set-free-ads'); if(sfa) sfa.value = conf.freeRefTargetAds !== undefined ? conf.freeRefTargetAds : 50;
+                let sfp = document.getElementById('set-free-pts'); if(sfp) sfp.value = conf.freeRefPoints !== undefined ? conf.freeRefPoints : 50;
                 
-                document.getElementById('set-vip1-limit').value = conf.vip1Limit !== undefined ? conf.vip1Limit : 1000;
-                document.getElementById('set-vip2-limit').value = conf.vip2Limit !== undefined ? conf.vip2Limit : 2000;
-                document.getElementById('set-vip3-limit').value = conf.vip3Limit !== undefined ? conf.vip3Limit : 5000;
+                let sv1limit = document.getElementById('set-vip1-limit'); if(sv1limit) sv1limit.value = conf.vip1Limit !== undefined ? conf.vip1Limit : 1000;
+                let sv2limit = document.getElementById('set-vip2-limit'); if(sv2limit) sv2limit.value = conf.vip2Limit !== undefined ? conf.vip2Limit : 2000;
+                let sv3limit = document.getElementById('set-vip3-limit'); if(sv3limit) sv3limit.value = conf.vip3Limit !== undefined ? conf.vip3Limit : 5000;
             }
         } catch(e){}
     };
 
     window.saveSettings = async () => {
+        let sn = document.getElementById('set-notice');
+        let sav = document.getElementById('set-app-version');
+        let sul = document.getElementById('set-update-link');
+        let sm = document.getElementById('set-maintenance');
+        if(!sn || !sav || !sul || !sm) return;
+
         try {
             await setDoc(doc(db, "app_settings", "main"), { 
-                notice: document.getElementById('set-notice').value, 
-                requiredVersion: parseInt(document.getElementById('set-app-version').value) || 1, 
-                updateLink: document.getElementById('set-update-link').value, 
-                maintenance: document.getElementById('set-maintenance').checked 
+                notice: sn.value, 
+                requiredVersion: parseInt(sav.value) || 1, 
+                updateLink: sul.value, 
+                maintenance: sm.checked 
             }, { merge: true });
             Swal.fire('Saved!', '', 'success');
         } catch(e){}
     };
 
     window.changePaymentNumber = async () => {
-        const num = document.getElementById('set-admin-payment-num').value.trim();
+        let sapn = document.getElementById('set-admin-payment-num');
+        if(!sapn) return;
+
+        const num = sapn.value.trim();
         if(!num || num.length < 10) return Swal.fire('Error', 'Invalid Number', 'error');
         try {
             await setDoc(doc(db, "app_settings", "main"), { paymentNumber: num }, { merge: true });
