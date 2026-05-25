@@ -1054,7 +1054,7 @@
         </div>
         
         <div id="wd-free-warning" class="bg-red-500/10 border border-red-500/30 p-3 rounded-xl mb-4 hidden">
-            <p class="text-xs text-red-400 font-bold mb-3 leading-relaxed">⚠️ ফ্রি একাউন্টে টাকা উত্তোলন করা যায় না। টাকা তুলতে হলে আপনাকে আগে VIP প্যাকেজ কিনে একাউন্ট অ্যাক্টিভ করতে হবে।</p>
+            <p class="text-xs text-red-400 font-bold mb-3 leading-relaxed">⚠️ ফ্রি একাউন্টে টাকা উত্তোলন করা যায় পণ্ডিত। টাকা তুলতে হলে আপনাকে আগে VIP প্যাকেজ কিনে একাউন্ট অ্যাক্টিভ করতে হবে।</p>
             <button onclick="document.getElementById('withdraw-modal').style.display='none'; if(window.openVipPackages) window.openVipPackages();" class="w-full bg-red-600 py-2 rounded-lg text-sm font-bold text-white shadow-lg active:scale-95">VIP আপগ্রেড করুন</button>
         </div>
 
@@ -4619,6 +4619,29 @@
     };
 
     if(window.speechSynthesis) { window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); }; }
+
+    // 🟢 ADMIN LOGIN VERIFICATION 🟢
+    window.verifyAdminPassword = () => {
+        const correctPassword = "admin123"; 
+        const passInput = document.getElementById('secret-admin-pass');
+        const enteredPassword = passInput.value.trim();
+
+        if (enteredPassword === correctPassword) {
+            isAdmin = true;
+            document.getElementById('admin-login-modal').style.display = 'none'; 
+            document.getElementById('admin-panel-wrapper').style.display = 'block'; 
+            passInput.value = ""; 
+            if(window.showNotify) window.showNotify("Welcome Admin! Panel Unlocked.", "success");
+            if(window.loadDashboardStats) window.loadDashboardStats();
+        } else {
+            if(window.showNotify) window.showNotify("পাসওয়ার্ড ভুল! আবার চেষ্টা করুন।", "error");
+            passInput.value = ""; 
+        }
+    };
+
+    window.handleAdminAIBotClick = () => {
+        if(window.showNotify) window.showNotify("অ্যাডমিন বট এ মুহূর্তে অফলাইনে আছে!", "info");
+    };
 
 </script>
 </body>
