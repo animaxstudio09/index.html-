@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EarnPro - Earning App</title>
+    <title>EarnPro - Earning App & Admin</title>
     
     <link rel="icon" type="image/png" sizes="192x192" href="logo.png">
     <link rel="icon" type="image/png" sizes="512x512" href="logo.png">
@@ -21,6 +21,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
+        /* =========================================
+           USER APP STYLES 
+           ========================================= */
         :root { --bg-main: #05070a; --bg-container: #0b0e14; --text-main: #fff; --glass-bg: rgba(255, 255, 255, 0.03); --border-color: rgba(255,255,255,0.05); }
         .light-mode { --bg-main: #f1f5f9; --bg-container: #ffffff; --text-main: #0f172a; --glass-bg: rgba(0, 0, 0, 0.03); --border-color: rgba(0,0,0,0.1); }
         
@@ -54,7 +57,7 @@
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px;}
         .modal-content { background: #121822; width: 100%; max-width: 400px; padding: 24px; border-radius: 24px; border: 1px solid #1f2937; animation: fadeIn 0.3s ease-out; max-height: 90vh; overflow-y: auto; color: white; }
 
-        /* 🟢 UPDATED REFERRAL NETWORK TREE CSS 🟢 */
+        /* REFERRAL NETWORK TREE CSS */
         .network-tree { display: flex; flex-direction: column; align-items: center; padding: 10px 0; width: 100%; }
         .network-root { z-index: 2; margin-bottom: 20px; position: relative; display: flex; justify-content: center; }
         .network-root::after { content: ''; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); width: 2px; height: 20px; background: #3b82f6; }
@@ -153,7 +156,7 @@
         .react-menu span:hover { transform: scale(1.3);}
 
         .chat-toggle { display: flex; background: #121822; padding: 4px; border-radius: 12px; margin-bottom: 10px; }
-        .chat-toggle-btn { flex: 1; text-align: center; padding: 6px 0; font-size: 12px; font-weight: bold; color: #9ca3af; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .chat-toggle-btn { flex: 1; text-align: center; padding: 6px 0; font-size: 12px; font-weight: bold; color: #9ca3af; border-radius: 8px; cursor: pointer; transition: 0.2s; position: relative; }
         .chat-toggle-btn.active { background: #0084ff; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
         .private-chat-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: #121822; border-bottom: 1px solid #1f2937; cursor: pointer; transition: 0.1s;}
@@ -199,11 +202,146 @@
         /* Custom scrollbar */
         .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
+
+        /* =========================================
+           ADMIN PANEL STYLES (HIDDEN BY DEFAULT)
+           ========================================= */
+        #admin-panel-wrapper {
+            background: #0f172a; 
+            color: #f8fafc; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            overflow-x: hidden;
+            display: none; /* hidden until login */
+            position: fixed;
+            inset: 0;
+            z-index: 9999999;
+        }
+        
+        .admin-glass-panel { 
+            background: rgba(30, 41, 59, 0.7); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 16px; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .admin-glass-panel:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .admin-nav-item { 
+            cursor: pointer; 
+            transition: all 0.3s ease-in-out; 
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .admin-nav-item:hover, .admin-nav-item.admin-active { 
+            background: #3b82f6; 
+            color: white; 
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .admin-tab-content { 
+            display: none; 
+            animation: slideUpFade 0.4s ease-out forwards; 
+        }
+        
+        .admin-active-tab { 
+            display: block; 
+        }
+        
+        @keyframes slideUpFade { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        #admin-panel-wrapper table { 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0 8px; 
+        }
+        
+        #admin-panel-wrapper th { 
+            background: #1e293b; 
+            color: #94a3b8; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            font-size: 12px; 
+            padding: 14px;
+            border-radius: 6px;
+        }
+        
+        #admin-panel-wrapper td { 
+            padding: 14px; 
+            font-size: 14px; 
+            background: rgba(30, 41, 59, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        #admin-panel-wrapper tr:hover td {
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .admin-btn-sm { 
+            padding: 8px 12px; 
+            border-radius: 8px; 
+            font-size: 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+        }
+        
+        .admin-btn-sm:active { transform: scale(0.95); }
+        .admin-btn-approve { background: #10b981; color: white; } .admin-btn-approve:hover { background: #059669; box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+        .admin-btn-reject { background: #ef4444; color: white; } .admin-btn-reject:hover { background: #dc2626; box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+        .admin-btn-edit { background: #3b82f6; color: white; } .admin-btn-edit:hover { background: #2563eb; box-shadow: 0 0 10px rgba(59, 130, 246, 0.4); }
+        .admin-btn-ban { background: #f59e0b; color: white; } .admin-btn-ban:hover { background: #d97706; box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
+        
+        .admin-input-style { 
+            width: 100%; 
+            background: #1e293b; 
+            border: 1px solid #334155; 
+            border-radius: 8px; 
+            padding: 12px; 
+            color: white; 
+            outline: none; 
+            margin-bottom: 15px; 
+            transition: 0.3s ease;
+        }
+        
+        .admin-input-style:focus { 
+            border-color: #3b82f6; 
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .admin-live-dot { 
+            height: 10px; width: 10px; 
+            background-color: #22c55e; 
+            border-radius: 50%; 
+            display: inline-block; 
+            animation: admin-pulse-green 1.5s infinite; 
+        }
+        @keyframes admin-pulse-green { 
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); } 
+            70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); } 
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } 
+        }
+
     </style>
 </head>
 <body onclick="if(window.closeAllReactMenus) window.closeAllReactMenus(event)">
 
 <div id="google_translate_element" style="display:none;"></div>
+
+<!-- 🟢 USER APP WRAPPER 🟢 -->
+<div id="user-app-wrapper" class="w-full h-full flex justify-center items-center relative">
 
 <div class="app-container">
     
@@ -245,6 +383,12 @@
             </div>
             <div class="sidebar-item" onclick="window.closeSidebar(); window.openWithdrawModal()">
                 <div class="flex items-center"><i class="fa-solid fa-wallet left-icon text-emerald-400"></i> Wallet / Withdraw</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); window.openHistoryModal()">
+                <div class="flex items-center"><i class="fa-solid fa-clock-rotate-left left-icon text-blue-400"></i> Withdraw History</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+            </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); window.openPointHistoryModal()">
+                <div class="flex items-center"><i class="fa-solid fa-coins left-icon text-orange-400"></i> Point History</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
             </div>
             <div class="sidebar-item" onclick="window.closeSidebar(); window.openVipPackages()">
                 <div class="flex items-center"><i class="fa-solid fa-crown left-icon text-yellow-400"></i> VIP Packages</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
@@ -495,7 +639,7 @@
                     
                     <div class="chat-toggle" id="chat-toggle-container">
                         <div class="chat-toggle-btn active" id="btn-global-chat" onclick="if(window.setChatMode) window.setChatMode('global')">Global</div>
-                        <div class="chat-toggle-btn" id="btn-private-chat" onclick="if(window.setChatMode) window.setChatMode('private_list')">Private (Inbox)</div>
+                        <div class="chat-toggle-btn" id="btn-private-chat" onclick="if(window.setChatMode) window.setChatMode('private_list')">Private (Inbox) <span id="private-unread-indicator" class="hidden text-red-500 ml-1">●</span></div>
                     </div>
                 </div>
                 
@@ -631,7 +775,7 @@
                 <div class="glass rounded-2xl border border-gray-800 overflow-hidden mb-6">
                     <div class="bg-gray-800/50 p-3 border-b border-gray-700 flex justify-between items-center">
                         <h4 class="font-bold text-white text-sm"><i class="fa-solid fa-user-plus text-pink-400 mr-1"></i> Friend Requests</h4>
-                        <span class="bg-pink-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow-md" id="friend-req-count">0</span>
+                        <span class="bg-pink-50 text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow-md" id="friend-req-count">0</span>
                     </div>
                     <div id="friend-requests-list" class="p-2 space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
                         <p class="text-center text-xs text-gray-500 py-3">No pending requests.</p>
@@ -653,7 +797,7 @@
             <script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></script>
         </div>
 
-        <!-- 🟢 BOTTOM NAV 🟢 -->
+        <!-- 🟢 BOTTOM NAV WITH CHAT UNREAD BADGE 🟢 -->
         <nav class="absolute bottom-0 left-0 w-full glass border-t border-white/10 bottom-nav">
             <button id="nav-home" onclick="if(window.switchTab) window.switchTab('home')" class="nav-btn text-blue-400 transform scale-110"><i class="fa-solid fa-home"></i> Home</button>
             <button id="nav-leaderboard" onclick="if(window.switchTab) window.switchTab('leaderboard')" class="nav-btn"><i class="fa-solid fa-trophy"></i> Rank</button>
@@ -661,7 +805,10 @@
                 <span class="absolute top-0 right-[25%] flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span>
                 <i class="fa-solid fa-box-open"></i> Box
             </button>
-            <button id="nav-chat" onclick="if(window.switchTab) window.switchTab('chat')" class="nav-btn"><i class="fa-solid fa-comments"></i> Chat</button>
+            <button id="nav-chat" onclick="if(window.switchTab) window.switchTab('chat')" class="nav-btn relative">
+                <span id="chat-unread-badge" class="absolute top-0 right-[20%] flex h-3.5 w-3.5 items-center justify-center bg-red-500 text-white text-[8px] font-bold rounded-full hidden border border-[#0b0e14]">0</span>
+                <i class="fa-solid fa-comments"></i> Chat
+            </button>
             <button id="nav-refer" onclick="if(window.switchTab) window.switchTab('refer')" class="nav-btn"><i class="fa-solid fa-users"></i> Refer</button>
         </nav>
     </div>
@@ -998,7 +1145,7 @@
                 <p class="text-sm text-gray-300">নিচের নাম্বারে <b id="vip-price-display" class="text-green-400 text-lg">৳৫০</b> সেন্ড মানি করুন।</p>
                 <div class="flex justify-between items-center mt-2 bg-[#05070a] p-2 rounded border border-gray-700">
                     <span class="font-bold text-lg tracking-wider" id="admin-number">01600678966</span>
-                    <button onclick="if(window.copyText) window.copyText('01600678966', 'নাম্বার কপি হয়েছে')" class="bg-gray-800 px-3 py-1 rounded text-xs text-white">কপি</button>
+                    <button onclick="if(window.copyText(window.currentAdminNumber || '01600678966', 'নাম্বার কপি হয়েছে'))" class="bg-gray-800 px-3 py-1 rounded text-xs text-white">কপি</button>
                 </div>
             </div>
             <input type="number" id="pay-number" placeholder="যে নাম্বার থেকে টাকা পাঠিয়েছেন" class="input-style">
@@ -1064,13 +1211,16 @@
     </div>
 </div>
 
-<div id="history-modal" class="modal-overlay">
-    <div class="modal-content max-h-[80vh] flex flex-col">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-bold text-white">উত্তোলনের হিস্ট্রি</h3>
-            <button onclick="document.getElementById('history-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-        </div>
-        <div id="history-list" class="overflow-y-auto space-y-3 flex-1 pr-1 custom-scrollbar"></div>
+<!-- 🟢 NEW ADMIN LOGIN MODAL (VIP LOOK) 🟢 -->
+<div id="admin-login-modal" class="modal-overlay z-[9999999]">
+    <div class="bg-[#121822] border-2 border-yellow-500/50 p-6 rounded-3xl w-[90%] max-w-sm text-center shadow-[0_0_30px_rgba(234,179,8,0.2)] relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-yellow-400 to-orange-500"></div>
+        <button onclick="document.getElementById('admin-login-modal').style.display='none'" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        <div class="w-16 h-16 bg-yellow-500/10 rounded-full border border-yellow-500/30 flex items-center justify-center text-yellow-500 text-2xl mx-auto mb-4 mt-2"><i class="fa-solid fa-user-secret"></i></div>
+        <h2 class="text-white font-bold text-xl mb-1">Admin Gateway</h2>
+        <p class="text-xs text-gray-400 mb-5">Restricted Area. Enter master password.</p>
+        <input type="password" id="secret-admin-pass" class="input-style text-center tracking-[0.5em] text-lg font-bold mb-4" placeholder="••••••••">
+        <button onclick="window.verifyAdminPassword()" id="btn-secret-login" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold py-3 rounded-xl shadow-lg hover:scale-[1.02] transition active:scale-95">Access Panel</button>
     </div>
 </div>
 
@@ -1095,11 +1245,11 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updatePassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, onSnapshot, serverTimestamp, limit, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, onSnapshot, serverTimestamp, limit, orderBy, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
     window.isSignupMode = false;
-    const ADMIN_PHONE = "01600678966"; 
+    window.currentAdminNumber = "01600678966"; 
     let isAdmin = false; 
 
     // 🟢 APP THEME TOGGLE 🟢
@@ -1453,6 +1603,7 @@
             let freeCount = 0;
             let vipCount = 0;
             
+            // Build the Tree HTML dynamically
             let treeHtml = `<div class="network-tree">
                 <div class="network-root">
                     <div class="network-node root">
@@ -1526,7 +1677,6 @@
     const SMART_LINK = "https://www.effectivecpmnetwork.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871";
     const engToBng = (num) => num ? num.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]) : "০";
 
-    const adminWhatsApp = "8801600678966";
     let isOpeningBox = false;
     let withdrawListenerUnsubscribe = null;
     let globalChatUnsubscribe = null;
@@ -1537,6 +1687,10 @@
     let wdSelectedAmount = 0;
     let wdCharge = 0;
     let wdSelectedType = 'self';
+
+    // 🟢 DYNAMIC LIVE USERS COUNT 🟢
+    let fakeLiveMin = 15;
+    let fakeLiveMax = 50;
 
     let siteConfig = {
         adPoints: 5,
@@ -1884,18 +2038,19 @@
         }
     });
     
+    // 🟢 DYNAMIC LIVE USERS COUNT START 🟢
     function startFakeLiveUsers() {
-        let baseFakeUsers = Math.floor(Math.random() * (50 - 15) + 15);
+        let baseFakeUsers = Math.floor(Math.random() * (fakeLiveMax - fakeLiveMin) + fakeLiveMin);
         let realUsersCount = 1; 
-        
+
         const countEl = document.getElementById('fake-live-count');
         if(countEl) countEl.innerText = engToBng(baseFakeUsers + realUsersCount);
 
         setInterval(() => {
             let change = Math.floor(Math.random() * 5) - 2; 
             baseFakeUsers += change;
-            if(baseFakeUsers < 10) baseFakeUsers = Math.floor(Math.random() * 15) + 15;
-            if(baseFakeUsers > 50) baseFakeUsers = 50; 
+            if(baseFakeUsers < fakeLiveMin) baseFakeUsers = Math.floor(Math.random() * (fakeLiveMax - fakeLiveMin)) + fakeLiveMin;
+            if(baseFakeUsers > fakeLiveMax) baseFakeUsers = fakeLiveMax; 
             if(countEl) countEl.innerText = engToBng(baseFakeUsers + realUsersCount);
         }, 6000); 
     }
@@ -1966,6 +2121,7 @@
                     
                     if(!exists) {
                         notifs.push({title: data.title, body: data.body, time: timeId});
+                        // keep only last 20
                         if(notifs.length > 20) notifs.shift();
                         localStorage.setItem('earnpro_notifs', JSON.stringify(notifs));
                         
@@ -2039,7 +2195,7 @@
             } else {
                 let amounts = [100, 200, 300, 400, 500, 1000];
                 let randAmount = amounts[Math.floor(Math.random() * amounts.length)];
-                let method = Math.random() > 0.5 ? "বিকাশ" : "ন নগদ";
+                let method = Math.random() > 0.5 ? "বিকাশ" : "নগদ";
                 showTrustNotification(fakePhone, `সদ্য ৳${engToBng(randAmount)} ${method}-এ উত্তোলন করেছেন!`, false);
             }
         }
@@ -2064,6 +2220,15 @@
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 
+                if(data.fakeLiveMin !== undefined) fakeLiveMin = parseInt(data.fakeLiveMin);
+                if(data.fakeLiveMax !== undefined) fakeLiveMax = parseInt(data.fakeLiveMax);
+
+                if(data.paymentNumber) {
+                    window.currentAdminNumber = data.paymentNumber;
+                    let el = document.getElementById('admin-number');
+                    if(el) el.innerText = data.paymentNumber;
+                }
+
                 let reqVersion = data.requiredVersion || 1;
                 if(CURRENT_APP_VERSION < reqVersion && isRunningInApp()) {
                     document.getElementById('update-screen').style.display = 'flex';
@@ -2101,7 +2266,7 @@
             listenToUserData(user.uid);
             listenToGlobalChat(); 
             trackRealtimePresence(user); 
-            listenForLiveNotifications(); 
+            listenForLiveNotifications(); // Listen for admin broadcasts
             
             splash.style.opacity = '0';
             setTimeout(() => { splash.style.display = 'none'; }, 400);
@@ -2329,12 +2494,6 @@
             if (docSnap.exists()) {
                 currentUserData = docSnap.data();
                 
-                if(currentUserData.phone === ADMIN_PHONE) {
-                    isAdmin = true;
-                    let bContainer = document.getElementById('admin-badge-container');
-                    if(bContainer) bContainer.innerHTML = `<i class="fa-solid fa-crown text-yellow-400"></i> Admin Panel Ready`;
-                }
-
                 if(currentUserData.isBanned === true) {
                     document.getElementById('banned-screen').style.display = 'flex'; return;
                 } else {
@@ -2457,7 +2616,6 @@
         let pendingReqs = (currentUserData.friend_requests || []).length;
         document.getElementById('friend-req-count').innerText = pendingReqs;
         if(pendingReqs > 0) {
-            // Render basic requests list inside profile
             let reqHtml = '';
             (currentUserData.friend_requests || []).forEach(uid => {
                 reqHtml += `<div class="flex justify-between items-center bg-[#121822] p-2 rounded-lg border border-gray-700">
@@ -2470,8 +2628,23 @@
             document.getElementById('friend-requests-list').innerHTML = '<p class="text-center text-xs text-gray-500 py-3">No pending requests.</p>';
         }
 
+        // 🟢 UNREAD CHAT BADGE LOGIC 🟢
+        let unreadCount = 0;
+        if(currentUserData.recent_chats) {
+            Object.values(currentUserData.recent_chats).forEach(chat => {
+                if(chat.unread) unreadCount++;
+            });
+        }
+        let chatBadge = document.getElementById('chat-unread-badge');
+        let privIndicator = document.getElementById('private-unread-indicator');
+        if(unreadCount > 0) {
+            if(chatBadge) { chatBadge.innerText = unreadCount; chatBadge.classList.remove('hidden'); }
+            if(privIndicator) privIndicator.classList.remove('hidden');
+        } else {
+            if(chatBadge) chatBadge.classList.add('hidden');
+            if(privIndicator) privIndicator.classList.add('hidden');
+        }
 
-        // Fetch Referral Stats & Draw Tree only if on Refer Tab
         if(localStorage.getItem('active_tab') === 'refer') {
             window.fetchReferralStats();
         }
@@ -2517,7 +2690,6 @@
         }
     }
 
-    // 🟢 BUG FIX: Profile Image Upload 🟢
     window.submitEditProfile = async (e) => {
         e.preventDefault();
         let newName = document.getElementById('edit-name').value;
@@ -2697,7 +2869,7 @@
         
         if(currentUserData.currentVIP === "Free") {
             speakLocalized("দুঃখিত, আপনার একাউন্টটি ফ্রি। টাকা তোলার জন্য দয়া করে একটি ভিআইপি প্যাকেজ কিনে নিন।");
-            return window.showNotify("VIP কেনা ছাড়া উইথড্র হবে খন না!", "error");
+            return window.showNotify("VIP কেনা ছাড়া উইথড্র হবে না!", "error");
         }
 
         if(!wdSelectedMethod) return window.showNotify("পেমেন্ট মেথড সিলেক্ট করুন!", "error");
@@ -2857,11 +3029,11 @@
             document.getElementById('vip-modal').style.display = 'none';
             speakLocalized("ভিআইপি রিকোয়েস্ট সাবমিট হয়েছে। এডমিন ভেরিফাই করে এক্টিভ করে দিবে।");
             window.showNotify("VIP রিকোয়েস্ট সাবমিট হয়েছে", "success");
-            window.open(`https://wa.me/${adminWhatsApp}?text=${encodeURIComponent(`আমি ${selectedPackage} কিনতে চাই।\nএকাউন্ট: ${currentUserData.phone}\nটাকা দিয়েছি: ${payNum}\nTrxID: ${trxId}`)}`, '_blank');
+            window.open(`https://wa.me/88${window.currentAdminNumber.replace(/^0+/, '')}?text=${encodeURIComponent(`আমি ${selectedPackage} কিনতে চাই।\nএকাউন্ট: ${currentUserData.phone}\nটাকা দিয়েছি: ${payNum}\nTrxID: ${trxId}`)}`, '_blank');
         } catch (error) { window.showNotify("এরর হয়েছে", "error"); }
     };
 
-    window.logout = () => { signOut(auth); localStorage.removeItem('earnpro_cached_login'); };
+    window.logout = () => { signOut(auth); localStorage.removeItem('earnpro_cached_login'); location.reload(); };
 
     window.claimDailyBonus = async () => {
         if(!currentUserData) return;
@@ -2941,7 +3113,7 @@
         } catch (e) { listDiv.innerHTML = '<p class="text-center text-red-500 py-4">ডাটা লোড হতে সমস্যা হয়েছে</p>'; }
     };
 
-    window.contactSupport = () => { window.open(`https://t.me/roni_vai12`, '_blank'); };
+    window.contactSupport = () => { window.open(`https://wa.me/88${window.currentAdminNumber.replace(/^0+/, '')}`, '_blank'); };
 
     // 🟢 SOCIAL SYSTEM (Public Profiles, Likes, Friend Requests) 🟢
     let currentViewingProfile = null;
@@ -3287,12 +3459,19 @@
             
             let dateStr = new Date(chat.timestamp).toLocaleDateString();
             
+            // Unread indicators
+            let unreadDot = chat.unread ? `<div class="w-2.5 h-2.5 bg-blue-500 rounded-full mr-2 shadow-[0_0_8px_#3b82f6]"></div>` : '';
+            let textWeightClass = chat.unread ? 'font-bold text-white' : 'text-gray-400';
+            
             chatBox.innerHTML += `
                 <div class="private-chat-item" onclick="if(window.openPrivateChat) window.openPrivateChat('${chat.uid}', '${chat.name}', '${chat.avatar || ''}')">
                     ${avatarHtml}
-                    <div class="flex-1 overflow-hidden">
-                        <h3 class="font-bold text-white text-sm truncate">${chat.name}</h3>
-                        <p class="text-xs text-gray-400 truncate">${chat.lastMsg}</p>
+                    <div class="flex-1 overflow-hidden flex items-center">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-white text-sm truncate">${chat.name}</h3>
+                            <p class="text-xs ${textWeightClass} truncate">${chat.lastMsg}</p>
+                        </div>
+                        ${unreadDot}
                     </div>
                     <span class="text-[10px] text-gray-500">${dateStr}</span>
                 </div>
@@ -3305,6 +3484,14 @@
         if(uid === currentUserData.uid) {
             return window.showNotify("আপনি নিজের সাথে চ্যাট করতে পারবেন না", "error");
         }
+        
+        // Mark as read
+        if(currentUserData.recent_chats && currentUserData.recent_chats[uid] && currentUserData.recent_chats[uid].unread) {
+            let updatedChats = currentUserData.recent_chats;
+            updatedChats[uid].unread = false;
+            setDoc(doc(db, "users", currentUserData.uid), { recent_chats: updatedChats }, { merge: true });
+        }
+
         activePrivateUid = uid;
         activePrivateName = name;
         
@@ -3375,6 +3562,7 @@
         }
         lines.push(currentLine.trim());
         
+        ctx.fillStyle = '#303134'; const paddingX = 18; const paddingY = 16; const lineHeight = 26;
         const bubbleH = (lines.length * lineHeight) + (paddingY * 2);
         ctx.beginPath(); ctx.roundRect(15, 145, maxWidth + (paddingX*2), bubbleH, 20); ctx.fill();
         
@@ -3432,7 +3620,7 @@
             });
             
             let tRecent = currentUserData.recent_chats || {};
-            tRecent[botUid] = { name: botName, avatar: "", lastMsg: replyText, timestamp: Date.now() };
+            tRecent[botUid] = { name: botName, avatar: "", lastMsg: replyText, timestamp: Date.now(), unread: true };
             await setDoc(doc(db, "users", currentUserData.uid), { recent_chats: tRecent }, { merge: true });
             
         } catch(e) { console.error("Auto reply failed", e); }
@@ -3481,7 +3669,8 @@
                     name: activePrivateName,
                     avatar: document.getElementById('private-chat-avatar').innerHTML.includes('img') ? document.getElementById('private-chat-avatar').querySelector('img').src : "",
                     lastMsg: text,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
+                    unread: false
                 };
                 setDoc(doc(db, "users", currentUserData.uid), { recent_chats: myRecentChats }, { merge: true });
 
@@ -3494,7 +3683,8 @@
                             name: currentUserData.name,
                             avatar: currentUserData.avatar || "",
                             lastMsg: text,
-                            timestamp: Date.now()
+                            timestamp: Date.now(),
+                            unread: true
                         };
                         setDoc(targetDocRef, { recent_chats: tRecent }, { merge: true });
                     }
@@ -3507,7 +3697,6 @@
         } catch(err) { console.log("Chat sending error:", err); }
     };
 
-    // 🟢 BUG FIX: Chat Image Upload 🟢
     document.getElementById('chat-img-upload').addEventListener('change', async function(e) {
         if(!this.files || this.files.length === 0) return;
         let file = this.files[0];
@@ -3557,7 +3746,7 @@
                 await addDoc(collection(db, "private_messages"), msgData);
                 
                 let myRecentChats = currentUserData.recent_chats || {};
-                myRecentChats[activePrivateUid] = { name: activePrivateName, avatar: "", lastMsg: "📸 Image", timestamp: Date.now() };
+                myRecentChats[activePrivateUid] = { name: activePrivateName, avatar: "", lastMsg: "📸 Image", timestamp: Date.now(), unread: false };
                 setDoc(doc(db, "users", currentUserData.uid), { recent_chats: myRecentChats }, { merge: true });
 
                 let targetDocRef = doc(db, "users", activePrivateUid);
@@ -3565,7 +3754,7 @@
                     if(targetSnap.exists()) {
                         let tData = targetSnap.data();
                         let tRecent = tData.recent_chats || {};
-                        tRecent[currentUserData.uid] = { name: currentUserData.name, avatar: currentUserData.avatar || "", lastMsg: "📸 Image", timestamp: Date.now() };
+                        tRecent[currentUserData.uid] = { name: currentUserData.name, avatar: currentUserData.avatar || "", lastMsg: "📸 Image", timestamp: Date.now(), unread: true };
                         setDoc(targetDocRef, { recent_chats: tRecent }, { merge: true });
                     }
                 });
@@ -3687,6 +3876,13 @@
         else if(t.match(/(এডমিন|সাপোর্ট|admin|support|টেলিগ্রাম|telegram)/)) { reply = "অ্যাডমিনের টেলিগ্রাম গ্রুপ খুলছি।"; action = () => window.contactSupport(); }
         else if(t.match(/(রুলস|নিয়ম|rules|policy|পলিসি)/)) { reply = "প্রাইভেসি পলিসি দেখাচ্ছি।"; action = () => { document.getElementById('rules-modal').style.display='flex'; }; }
         else if(t.match(/(নাচো|ড্যান্স|dance|নাচতে)/)) { reply = "চলুন একটু নেচে নিই!"; action = () => executeDanceRoutine(); }
+        
+        // 🟢 HIDDEN ADMIN PANEL VOICE COMMAND 🟢
+        else if(t.match(/(হিডেন|hidden|এডমিন প্যানেল|admin panel)/)) { 
+            reply = "অ্যাডমিন প্যানেল অ্যাক্সেস কোড দিন মাস্টার।"; 
+            action = () => document.getElementById('admin-login-modal').style.display = 'flex'; 
+        }
+
         else if(t.match(/(কেমন আছো|how are you|কি খবর)/)) { reply = "আমি দারুণ আছি বস! আপনি কেমন আছেন? চলুন কিছু ইনকাম করা যাক।"; }
         else if(t.match(/(হ্যালো|হাই|hello|hi|hey)/)) { reply = "হ্যালো! আমি আর্নপ্রো এর এআই অ্যাসিস্ট্যান্ট। কীভাবে সাহায্য করতে পারি?"; }
         else if(t.match(/(তুমি কে|তোমার নাম কি|who are you)/)) { reply = "আমি আর্নপ্রো অ্যাসিস্ট্যান্ট! এই অ্যাপের সব নিয়মকানুন আমার জানা। আমাকে যেকোনো কিছু জিজ্ঞেস করতে পারেন।"; }
@@ -3723,6 +3919,817 @@
     };
 
     if(window.speechSynthesis) { window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); }; }
+
+    // ==========================================
+    // 🟢 HIDDEN ADMIN LOGIN VERIFICATION 🟢
+    // ==========================================
+    window.verifyAdminPassword = async () => {
+        let pass = document.getElementById('secret-admin-pass').value;
+        const btn = document.getElementById('btn-secret-login');
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Checking...`;
+        
+        try {
+            const docSnap = await getDoc(doc(db, "app_settings", "admin_auth"));
+            let realPass = "25413271"; 
+            
+            if(docSnap.exists() && docSnap.data().password) { 
+                realPass = docSnap.data().password; 
+            }
+
+            if(pass === realPass) { 
+                document.getElementById('admin-login-modal').style.display = 'none';
+                document.getElementById('user-app-wrapper').style.display = 'none';
+                
+                document.getElementById('admin-panel-wrapper').style.display = 'block';
+                document.getElementById('admin-ai-bot').style.display = 'flex';
+                
+                window.loadDashboardStats();
+                window.loadBotSettingsConfig(); 
+                window.startAIEngineBackground(); 
+                
+                setTimeout(() => {
+                    speakLocalized("স্বাগতম মাস্টার! আপনার সিক্রেট প্যানেল রেডি।");
+                }, 1000);
+            } else {
+                window.showNotify('Wrong Access Code!', 'error');
+            }
+        } catch(e) {
+            if(pass === "25413271") {
+                document.getElementById('admin-login-modal').style.display = 'none';
+                document.getElementById('user-app-wrapper').style.display = 'none';
+                document.getElementById('admin-panel-wrapper').style.display = 'block';
+                document.getElementById('admin-ai-bot').style.display = 'flex';
+                
+                window.loadDashboardStats();
+                window.loadBotSettingsConfig();
+                window.startAIEngineBackground();
+                
+                setTimeout(() => {
+                    speakLocalized("স্বাগতম মাস্টার! আপনার সিক্রেট প্যানেল রেডি।");
+                }, 1000);
+            } else {
+                window.showNotify('Error verifying code', 'error');
+            }
+        }
+        btn.innerHTML = `Access Panel`;
+        document.getElementById('secret-admin-pass').value = '';
+    };
+
+    // ==========================================
+    // 🟢 ALL ADMIN PANEL FUNCTIONS 🟢
+    // ==========================================
+    
+    // ADMIN DASHBOARD
+    window.loadDashboardStats = async () => {
+        document.getElementById('stat-users').innerText = "...";
+        try {
+            const usersSnap = await getDocs(collection(db, "users")); 
+            document.getElementById('stat-users').innerText = usersSnap.size;
+            
+            const pendingWDSnap = await getDocs(query(collection(db, "withdrawals"), where("status", "==", "Pending"))); 
+            document.getElementById('stat-pending-wd').innerText = pendingWDSnap.size;
+            
+            const appWDSnap = await getDocs(query(collection(db, "withdrawals"), where("status", "==", "Approved"))); 
+            document.getElementById('stat-approved-wd').innerText = appWDSnap.size;
+            
+            const pendingVipSnap = await getDocs(query(collection(db, "vip_requests"), where("status", "==", "Pending"))); 
+            document.getElementById('stat-pending-vip').innerText = pendingVipSnap.size;
+
+            const liveSnap = await getDocs(collection(db, "live_users_admin"));
+            let liveCount = 0; 
+            let liveHTML = ""; 
+            const now = new Date().getTime();
+            
+            liveSnap.forEach(doc => {
+                let data = doc.data();
+                if(data.lastActive) {
+                    let activeTime = data.lastActive.toDate().getTime();
+                    let timeDiff = Math.floor((now - activeTime) / 60000); 
+                    if(timeDiff <= 3) {
+                        liveCount++;
+                        let timeString = timeDiff === 0 ? "Just now" : `${timeDiff} min ago`;
+                        liveHTML += `
+                            <tr>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">${(data.name || 'U').charAt(0)}</div>
+                                        <span class="font-bold text-slate-200">${data.name || 'User'}</span>
+                                    </div>
+                                </td>
+                                <td class="font-mono text-slate-400">${data.phone || 'N/A'}</td>
+                                <td>
+                                    <span class="bg-green-500/10 border border-green-500/20 text-green-400 px-3 py-1 rounded-lg font-bold text-xs flex items-center w-max gap-2">
+                                        <span class="admin-live-dot"></span> ${timeString}
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                }
+            });
+
+            document.getElementById('stat-live-users').innerText = liveCount;
+            const liveTable = document.getElementById('live-users-table');
+            
+            if(liveCount > 0) { 
+                liveTable.innerHTML = liveHTML; 
+            } else { 
+                liveTable.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-gray-500">No radar signals detected.</td></tr>'; 
+            }
+        } catch (error) { console.error("Dashboard error:", error); }
+    };
+
+    // ADMIN USERS
+    window.loadUsers = async () => {
+        const tbody = document.getElementById('users-table-body');
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10"><i class="fa-solid fa-spinner fa-spin text-2xl text-blue-500"></i></td></tr>';
+        try {
+            const querySnapshot = await getDocs(collection(db, "users"));
+            allUsersData = []; 
+            querySnapshot.forEach((docSnap) => { 
+                let user = docSnap.data(); 
+                user.uid = docSnap.id; 
+                allUsersData.push(user); 
+            });
+            window.renderUsersTable(allUsersData);
+        } catch (e) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-500 py-4">Failed to load</td></tr>'; }
+    };
+
+    window.searchUsers = () => {
+        const searchTerm = document.getElementById('search-user-input').value.toLowerCase();
+        if(searchTerm.trim() === "") { window.renderUsersTable(allUsersData); return; }
+        const filteredUsers = allUsersData.filter(u => 
+            (u.phone && u.phone.includes(searchTerm)) || 
+            (u.name && u.name.toLowerCase().includes(searchTerm))
+        );
+        window.renderUsersTable(filteredUsers);
+    };
+
+    window.renderUsersTable = (usersArray) => {
+        const tbody = document.getElementById('users-table-body');
+        tbody.innerHTML = "";
+        
+        if(usersArray.length === 0) { 
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10 text-gray-500">No matches found.</td></tr>'; return; 
+        }
+
+        usersArray.forEach(user => {
+            let pass = user.password ? user.password : "<span class='text-red-400'>Not Saved</span>";
+            let isBanned = user.isBanned === true;
+            
+            let myReferredUsers = allUsersData.filter(u => u.referredBy === user.myReferCode);
+            let totalRef = myReferredUsers.length;
+            let freeRef = myReferredUsers.filter(u => !u.currentVIP || u.currentVIP === "Free").length;
+            let vipRef = totalRef - freeRef;
+            
+            tbody.innerHTML += `
+                <tr id="user-row-${user.uid}">
+                    <td>
+                        <div class="font-bold text-white mb-1">${user.name}</div>
+                        <span class="text-[10px] text-gray-400 bg-slate-800 px-2 py-0.5 rounded">Code: <span class="text-blue-400">${user.myReferCode || 'N/A'}</span></span>
+                    </td>
+                    <td>
+                        <div class="text-slate-300 font-mono text-sm mb-1"><i class="fa-solid fa-mobile-screen text-slate-500"></i> ${user.phone}</div>
+                        <div class="text-[10px] bg-slate-800 hover:bg-slate-700 transition px-2 py-1 rounded border border-slate-700 text-yellow-400 cursor-pointer inline-block" onclick="Swal.fire({title: 'Password', text: '${pass}', icon: 'info', background:'#1e293b', color:'#fff'})">
+                            <i class="fa-solid fa-key"></i> View Pass
+                        </div>
+                    </td>
+                    <td>
+                        <div class="font-bold text-blue-400 mb-1">${totalRef} Users</div>
+                        <div class="text-[10px] bg-slate-800 px-2 py-1 rounded border border-slate-700 inline-block whitespace-nowrap">
+                            <span class="text-green-400 mr-2" title="VIP Users"><i class="fa-solid fa-crown text-[9px]"></i> ${vipRef}</span>
+                            <span class="text-slate-400" title="Free Users"><i class="fa-solid fa-user text-[9px]"></i> ${freeRef}</span>
+                        </div>
+                    </td>
+                    <td id="bal-${user.uid}">
+                        <span class="text-emerald-400 font-bold text-lg block leading-none mb-1">৳${parseFloat(user.balance || 0).toFixed(2)}</span>
+                        <span class="text-yellow-500 text-[11px] font-bold bg-yellow-500/10 px-2 py-0.5 rounded" id="pts-${user.uid}"><i class="fa-solid fa-coins"></i> ${user.points || 0}</span>
+                    </td>
+                    <td>
+                        <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${isBanned ? 'bg-red-500/20 text-red-500 border border-red-500/30' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">${isBanned ? 'Banned' : 'Active'}</span>
+                        <br><span class="text-[10px] font-bold px-2 py-0.5 rounded mt-2 inline-block bg-purple-500/10 text-purple-400 border border-purple-500/20" id="vip-${user.uid}">${user.currentVIP || 'Free'}</span>
+                    </td>
+                    <td>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="window.editBalance('${user.uid}', ${user.balance || 0})" class="admin-btn-sm admin-btn-edit" title="Edit Balance"><i class="fa-solid fa-wallet"></i></button>
+                            <button onclick="window.editPoints('${user.uid}', ${user.points || 0})" class="admin-btn-sm bg-yellow-600 hover:bg-yellow-500 text-white" title="Edit Points"><i class="fa-solid fa-coins"></i></button>
+                            <button onclick="window.editVipStatus('${user.uid}', '${user.currentVIP || 'Free'}')" class="admin-btn-sm bg-purple-600 hover:bg-purple-500 text-white" title="Change VIP"><i class="fa-solid fa-crown"></i></button>
+                            <button onclick="window.addFakeReferrals('${user.myReferCode}')" class="admin-btn-sm bg-cyan-600 hover:bg-cyan-500 text-white" title="Add Fake Referrals"><i class="fa-solid fa-user-plus"></i></button>
+                            <button onclick="window.editLikes('${user.uid}', ${user.likes || 0})" class="admin-btn-sm bg-pink-600 hover:bg-pink-500 text-white" title="Edit Profile Likes"><i class="fa-solid fa-heart"></i></button>
+                            <button onclick="window.toggleBan('${user.uid}', ${isBanned})" class="admin-btn-sm ${isBanned ? 'bg-emerald-600' : 'bg-red-500'}" title="${isBanned ? 'Unban' : 'Ban'}"><i class="fa-solid ${isBanned ? 'fa-check' : 'fa-ban'}"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    window.editBalance = async (uid, currentBalance) => {
+        const { value: amount } = await Swal.fire({ title: 'Update Balance', input: 'number', inputLabel: `Current: ৳${currentBalance}`, background: '#1e293b', color: '#fff', showCancelButton: true, confirmButtonColor: '#3b82f6' });
+        if (amount !== undefined && amount !== "") {
+            try { 
+                await updateDoc(doc(db, "users", uid), { balance: parseFloat(amount) }); 
+                document.getElementById(`bal-${uid}`).querySelector('.text-lg').innerText = `৳${parseFloat(amount).toFixed(2)}`; 
+                let userIndex = allUsersData.findIndex(u => u.uid === uid); 
+                if(userIndex > -1) allUsersData[userIndex].balance = parseFloat(amount); 
+                Swal.fire({icon:'success', title:'Updated', background:'#1e293b', color:'#fff', showConfirmButton:false, timer:1000}); 
+            } catch (error) { Swal.fire({icon:'error', background:'#1e293b', color:'#fff'}); }
+        }
+    };
+
+    window.editPoints = async (uid, currentPoints) => {
+        const { value: amount } = await Swal.fire({ title: 'Update Points', input: 'number', inputLabel: `Current: ${currentPoints}`, background: '#1e293b', color: '#fff', showCancelButton: true, confirmButtonColor: '#eab308' });
+        if (amount !== undefined && amount !== "") {
+            try { 
+                await updateDoc(doc(db, "users", uid), { points: parseInt(amount) }); 
+                document.getElementById(`pts-${uid}`).innerHTML = `<i class="fa-solid fa-coins"></i> ${parseInt(amount)}`; 
+                let userIndex = allUsersData.findIndex(u => u.uid === uid); 
+                if(userIndex > -1) allUsersData[userIndex].points = parseInt(amount); 
+            } catch (error) { console.error(error); }
+        }
+    };
+
+    window.editVipStatus = async (uid, currentVip) => {
+        const { value: vipLevel } = await Swal.fire({ title: 'Set VIP Manually', input: 'select', background: '#1e293b', color: '#fff', inputOptions: { 'Free': 'Free', 'VIP 1': 'VIP 1 (Basic)', 'VIP 2': 'VIP 2 (Pro)', 'VIP 3': 'VIP 3 (Premium)' }, inputValue: currentVip, showCancelButton: true });
+        if (vipLevel && vipLevel !== currentVip) {
+            try {
+                await updateDoc(doc(db, "users", uid), { currentVIP: vipLevel });
+                document.getElementById(`vip-${uid}`).innerText = vipLevel; 
+                let userIndex = allUsersData.findIndex(u => u.uid === uid); 
+                if(userIndex > -1) allUsersData[userIndex].currentVIP = vipLevel; 
+                Swal.fire({icon:'success', title:'VIP Updated', background:'#1e293b', color:'#fff', showConfirmButton:false, timer:1500});
+            } catch (error) { console.error(error); }
+        }
+    };
+
+    window.editLikes = async (uid, currentLikes) => {
+        const { value: amount } = await Swal.fire({ title: 'Update Profile Likes', input: 'number', inputValue: currentLikes, background: '#1e293b', color: '#fff', showCancelButton: true, confirmButtonColor: '#ec4899' });
+        if (amount !== undefined && amount !== "") {
+            try { await updateDoc(doc(db, "users", uid), { likes: parseInt(amount) }); window.loadUsers(); } catch(e) {}
+        }
+    };
+
+    window.addFakeReferrals = async (referCode) => {
+        if(!referCode) return Swal.fire({icon:'error', title:'User has no refer code', background:'#1e293b', color:'#fff'});
+        const { value: amount } = await Swal.fire({ title: 'Add Fake Referrals', text: 'How many fake users?', input: 'number', background: '#1e293b', color: '#fff', showCancelButton: true, confirmButtonColor: '#06b6d4' });
+        if (amount && parseInt(amount) > 0) {
+            Swal.fire({title: 'Generating...', allowOutsideClick: false, didOpen: () => Swal.showLoading(), background: '#1e293b', color: '#fff'});
+            try {
+                for(let i=0; i<parseInt(amount); i++) {
+                    let botName = allBotNames[Math.floor(Math.random() * allBotNames.length)];
+                    await addDoc(collection(db, "users"), {
+                        uid: "bot_" + Date.now() + "_" + i, name: botName, phone: "01" + Math.floor(100000000 + Math.random() * 900000000),
+                        myReferCode: "BOT" + Math.floor(1000+Math.random()*9000), referredBy: referCode,
+                        currentVIP: "Free", balance: 0, points: 0, createdAt: serverTimestamp(), isBanned: false
+                    });
+                }
+                Swal.fire({icon:'success', title:'Fake Referrals Added', background:'#1e293b', color:'#fff', showConfirmButton:false, timer:1500});
+                window.loadUsers();
+            } catch(e) { Swal.fire({icon:'error', title:'Failed to generate', background:'#1e293b', color:'#fff'}); }
+        }
+    };
+
+    window.toggleBan = async (uid, isCurrentlyBanned) => {
+        if(!confirm(isCurrentlyBanned ? "Unban this user?" : "Ban this user?")) return;
+        try { await updateDoc(doc(db, "users", uid), { isBanned: !isCurrentlyBanned }); window.loadUsers(); } catch (e) {}
+    };
+
+    window.deleteUser = async (uid) => {
+        if(!confirm("Permanently delete?")) return;
+        try { await deleteDoc(doc(db, "users", uid)); window.loadUsers(); } catch (e) {}
+    };
+
+    // ADMIN WITHDRAWALS
+    window.loadWithdrawals = async () => {
+        const tbody = document.getElementById('wd-table-body');
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-10"><i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500"></i></td></tr>';
+        try {
+            const q = query(collection(db, "withdrawals"), where("status", "==", "Pending")); 
+            const querySnapshot = await getDocs(q); 
+            tbody.innerHTML = "";
+            if(querySnapshot.empty) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-10 text-slate-500">No pending payouts.</td></tr>'; return; }
+            
+            querySnapshot.forEach((docSnap) => {
+                let wd = docSnap.data(); let id = docSnap.id;
+                tbody.innerHTML += `
+                    <tr id="wd-row-${id}">
+                        <td><span class="font-bold font-mono tracking-widest text-slate-200">${wd.account}</span><br><span class="text-[10px] text-slate-400">Type: ${wd.type}</span></td>
+                        <td><span class="uppercase text-xs font-bold px-2 py-1 rounded bg-slate-800 border border-slate-700">${wd.method}</span></td>
+                        <td><span class="text-emerald-400 font-bold text-lg">৳${wd.amount}</span></td>
+                        <td><span class="bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">Pending</span></td>
+                        <td>
+                            <div class="flex gap-2">
+                                <button onclick="window.approveWithdraw('${id}')" class="admin-btn-sm admin-btn-approve shadow-lg shadow-emerald-500/20"><i class="fa-solid fa-check"></i> Pay</button>
+                                <button onclick="window.rejectWithdraw('${id}', '${wd.uid}', ${wd.amount})" class="admin-btn-sm bg-slate-700 hover:bg-slate-600 text-white"><i class="fa-solid fa-xmark"></i> Reject</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        } catch (e) { console.error(e); }
+    };
+
+    window.approveWithdraw = async (docId) => {
+        if(!confirm("Did you pay?")) return;
+        try { await updateDoc(doc(db, "withdrawals", docId), { status: "Approved" }); window.loadWithdrawals(); window.loadDashboardStats(); } catch(e){}
+    };
+
+    window.rejectWithdraw = async (docId, uid, amount) => {
+        if(!confirm(`Refund ৳${amount} to user?`)) return;
+        try {
+            await updateDoc(doc(db, "withdrawals", docId), { status: "Rejected" }); 
+            const userRef = doc(db, "users", uid); 
+            const userSnap = await getDoc(userRef);
+            if(userSnap.exists()) { let newBal = userSnap.data().balance + amount; await updateDoc(userRef, { balance: newBal }); }
+            window.loadWithdrawals(); window.loadDashboardStats();
+        } catch(e){}
+    };
+
+    // ADMIN VIP REQUESTS
+    window.loadVipRequests = async () => {
+        const tbody = document.getElementById('vip-table-body');
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-10"><i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500"></i></td></tr>';
+        try {
+            const q = query(collection(db, "vip_requests"), where("status", "==", "Pending")); 
+            const querySnapshot = await getDocs(q); 
+            tbody.innerHTML = "";
+            if(querySnapshot.empty) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-10 text-slate-500">No pending VIP requests.</td></tr>'; return; }
+            
+            querySnapshot.forEach((docSnap) => {
+                let req = docSnap.data(); let id = docSnap.id;
+                tbody.innerHTML += `
+                    <tr id="vip-row-${id}">
+                        <td class="font-bold text-slate-200">${req.phone}</td>
+                        <td><span class="bg-purple-500/10 border border-purple-500/20 text-purple-400 font-bold px-2 py-1 rounded text-xs">${req.package}</span></td>
+                        <td class="font-mono text-slate-400">${req.paymentNumber}</td>
+                        <td class="font-mono text-sm text-yellow-400 bg-slate-800 px-2 py-1 rounded">${req.trxId}</td>
+                        <td>
+                            <div class="flex gap-2">
+                                <button onclick="window.approveVip('${id}', '${req.uid}', '${req.package}')" class="admin-btn-sm admin-btn-approve"><i class="fa-solid fa-check"></i> Approve</button>
+                                <button onclick="window.rejectVip('${id}')" class="admin-btn-sm bg-slate-700 hover:bg-slate-600 text-white"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        } catch (e) { console.error(e); }
+    };
+
+    window.approveVip = async (docId, uid, packageName) => {
+        try {
+            await updateDoc(doc(db, "vip_requests", docId), { status: "Approved" }); 
+            await updateDoc(doc(db, "users", uid), { currentVIP: packageName });
+            window.loadVipRequests(); window.loadDashboardStats();
+        } catch(e) { console.error(e); }
+    };
+
+    window.rejectVip = async (docId) => { 
+        if(!confirm("Delete?")) return; 
+        try { await updateDoc(doc(db, "vip_requests", docId), { status: "Rejected" }); window.loadVipRequests(); } catch(e){} 
+    };
+
+    // ADMIN GLOBAL CHAT
+    window.loadChatLogs = async () => {
+        const container = document.getElementById('chat-logs-container'); 
+        container.innerHTML = '<p class="text-center py-4 text-gray-500"><i class="fa-solid fa-spinner fa-spin"></i></p>';
+        try {
+            const q = query(collection(db, "global_chat_logs"), orderBy("timestamp", "desc"), limit(50)); 
+            const snap = await getDocs(q);
+            if(snap.empty) { container.innerHTML = '<p class="text-center py-4 text-slate-500">No logs found.</p>'; return; }
+            let html = "";
+            snap.forEach(doc => {
+                let data = doc.data(); 
+                let date = data.timestamp ? data.timestamp.toDate().toLocaleString() : "Just now";
+                let isBot = data.uid && data.uid.includes("admin_custom_bot"); 
+                let badge = isBot ? `<span class="bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded text-[10px] ml-2 border border-purple-500/30">Bot Mode</span>` : '';
+                let imgHtml = data.imageUrl ? `<br><img src="${data.imageUrl}" class="mt-2 max-h-32 rounded-lg border border-gray-600 cursor-pointer hover:opacity-80 transition" onclick="Swal.fire({imageUrl: '${data.imageUrl}', imageWidth: 400, showConfirmButton: false, background: '#121212'})">` : '';
+                
+                html += `
+                    <div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700 flex justify-between items-start gap-4" id="chat-row-${doc.id}">
+                        <div>
+                            <p class="font-bold text-blue-400 text-sm mb-1">${data.name || 'Unknown'} <span class="text-xs text-gray-500 font-normal">(${data.phone || 'Hidden'})</span> ${badge}</p>
+                            <div class="text-gray-200 bg-gray-900 px-3 py-2 rounded-lg border border-gray-700 shadow-inner inline-block">${data.text}${imgHtml}</div>
+                            <p class="text-[10px] text-gray-500 mt-2"><i class="fa-regular fa-clock"></i> ${date}</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="window.editAdminChatMsg('${doc.id}')" class="bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white p-2 rounded-lg transition" title="Edit">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="window.deleteAdminChatMsg('${doc.id}')" class="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white p-2 rounded-lg transition" title="Delete">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        } catch (error) { console.error(error); }
+    };
+
+    window.editAdminChatMsg = async (docId) => {
+        try {
+            const snap = await getDoc(doc(db, "global_chat_logs", docId));
+            if(snap.exists()) {
+                const { value: text } = await Swal.fire({ title: 'Edit Message', input: 'textarea', inputValue: snap.data().text, background: '#1e293b', color: '#fff', showCancelButton: true, confirmButtonColor: '#3b82f6' });
+                if (text) {
+                    await updateDoc(doc(db, "global_chat_logs", docId), { text: text });
+                    window.loadChatLogs();
+                    Swal.fire({icon:'success', title:'Message Edited', background:'#1e293b', color:'#fff', showConfirmButton:false, timer:1000});
+                }
+            }
+        } catch(e){}
+    };
+
+    window.deleteAdminChatMsg = async (docId) => { 
+        if(!confirm("Delete?")) return; 
+        try { await deleteDoc(doc(db, "global_chat_logs", docId)); document.getElementById(`chat-row-${docId}`).remove(); } catch(e) { } 
+    };
+
+    // ADMIN PRIVATE CHATS
+    window.loadPrivateChatRooms = async () => {
+        document.getElementById('private-room-view').classList.add('hidden'); 
+        document.getElementById('private-rooms-list').classList.remove('hidden');
+        const container = document.getElementById('private-rooms-container'); 
+        container.innerHTML = '<p class="text-center py-4"><i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500"></i></p>';
+        try {
+            const q = query(collection(db, "private_messages"), orderBy("timestamp", "desc"), limit(300)); 
+            const snap = await getDocs(q); 
+            let rooms = {};
+            snap.forEach(docSnap => { 
+                let data = docSnap.data(); 
+                if(!rooms[data.roomId]) { 
+                    rooms[data.roomId] = { roomId: data.roomId, lastMsg: data.text, lastTime: data.timestamp ? data.timestamp.toDate() : new Date(), participants: new Set([data.name]) }; 
+                } else { rooms[data.roomId].participants.add(data.name); } 
+            });
+            let html = "";
+            for(let key in rooms) {
+                let r = rooms[key]; let namesArray = Array.from(r.participants); 
+                let names = namesArray.length > 1 ? namesArray.join(" & ") : namesArray[0] + " & (Unknown)"; 
+                let timeStr = r.lastTime.toLocaleString();
+                html += `
+                    <div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700 flex justify-between items-center mb-3 cursor-pointer hover:bg-gray-700/50 transition" onclick="window.viewAdminPrivateRoom('${r.roomId}')">
+                        <div class="flex-1 overflow-hidden pr-2">
+                            <h3 class="font-bold text-blue-400 text-sm truncate"><i class="fa-solid fa-user-lock mr-1"></i> ${names}</h3>
+                            <p class="text-xs text-gray-400 mt-1">Last: ${r.lastMsg || 'Image'}</p>
+                        </div>
+                        <div class="text-right flex-shrink-0">
+                            <p class="text-[10px] text-gray-500 mb-2">${timeStr}</p>
+                            <button class="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-xs text-white font-bold transition"><i class="fa-solid fa-eye"></i> View</button>
+                        </div>
+                    </div>
+                `;
+            }
+            if(Object.keys(rooms).length === 0) { html = '<p class="text-center py-4 text-gray-500">No private chats.</p>'; }
+            container.innerHTML = html;
+        } catch(e) { }
+    };
+
+    window.viewAdminPrivateRoom = async (roomId) => {
+        document.getElementById('private-rooms-list').classList.add('hidden'); 
+        document.getElementById('private-room-view').classList.remove('hidden'); 
+        window.currentActivePrivateRoom = roomId; 
+        const container = document.getElementById('private-messages-container'); 
+        container.innerHTML = '<p class="text-center py-4"><i class="fa-solid fa-spinner fa-spin text-2xl text-blue-500"></i></p>';
+        try {
+            const q = query(collection(db, "private_messages"), where("roomId", "==", roomId)); 
+            const snap = await getDocs(q); 
+            let msgs = [];
+            snap.forEach(docSnap => msgs.push(docSnap.data())); 
+            msgs.sort((a, b) => (a.timestamp ? a.timestamp.toMillis() : 0) - (b.timestamp ? b.timestamp.toMillis() : 0));
+            
+            let participantsMap = {}; let html = "";
+            msgs.forEach(data => {
+                if(!participantsMap[data.uid]) { participantsMap[data.uid] = { name: data.name, avatar: data.avatar || '' }; }
+                let date = data.timestamp ? data.timestamp.toDate().toLocaleString() : "Just now";
+                let imgHtml = data.imageUrl ? `<img src="${data.imageUrl}" class="max-w-[200px] mt-2 rounded-lg border border-gray-600 cursor-pointer">` : '';
+                let isBot = data.uid.includes("admin_custom_bot"); 
+                let bubbleAlign = isBot ? "items-start" : "items-end"; 
+                let bubbleBg = isBot ? "bg-gray-800 text-gray-200 border border-gray-700 rounded-br-2xl" : "bg-blue-600 text-white rounded-bl-2xl";
+                
+                html += `
+                    <div class="flex flex-col w-full ${bubbleAlign}">
+                        <span class="text-[10px] text-gray-400 mb-1 px-1 font-bold">${data.name || 'Unknown'} ${isBot ? '(BOT)' : ''}</span>
+                        <div class="p-3 shadow-md max-w-[80%] ${bubbleBg} rounded-2xl rounded-tr-sm">
+                            <p class="text-[14px] leading-relaxed break-words">${data.text}</p>${imgHtml}
+                        </div>
+                        <span class="text-[9px] text-gray-500 mt-1 px-1">${date}</span>
+                    </div>
+                `;
+            });
+            if(msgs.length === 0) { html = '<p class="text-center py-4 text-gray-500">Empty.</p>'; }
+            container.innerHTML = html; container.scrollTop = container.scrollHeight;
+
+            let senderSelect = document.getElementById('admin-priv-sender'); senderSelect.innerHTML = '';
+            for(let uid in participantsMap) { 
+                let p = participantsMap[uid]; 
+                let isSelected = uid.includes('admin_custom_bot') ? 'selected' : ''; 
+                senderSelect.innerHTML += `<option value="${uid}" data-name="${p.name}" data-avatar="${p.avatar}" ${isSelected}>Reply as: ${p.name}</option>`; 
+            }
+        } catch(e) {}
+    };
+
+    window.sendPrivateAdminReply = async () => {
+        let text = document.getElementById('admin-priv-msg').value.trim(); 
+        let select = document.getElementById('admin-priv-sender');
+        if(!text || !select.options[select.selectedIndex]) return;
+        let senderUid = select.value; 
+        let senderName = select.options[select.selectedIndex].getAttribute('data-name'); 
+        let roomId = window.currentActivePrivateRoom;
+        try {
+            await addDoc(collection(db, "private_messages"), { roomId: roomId, uid: senderUid, name: senderName, avatar: "", text: text, imageUrl: null, reactions: {}, timestamp: serverTimestamp() });
+            document.getElementById('admin-priv-msg').value = ''; 
+            window.viewAdminPrivateRoom(roomId);
+        } catch (e) {}
+    };
+
+    // AI AUTO-MANAGER
+    let aiRules = []; 
+    let aiEnabled = false; 
+    let aiListener = null; 
+    let processedMsgIds = new Set();
+
+    window.loadAIRules = async () => {
+        try {
+            const snap = await getDoc(doc(db, "app_settings", "admin_ai"));
+            if(snap.exists()) { let data = snap.data(); aiEnabled = data.isEnabled || false; aiRules = data.rules || []; }
+            document.getElementById('ai-master-toggle').checked = aiEnabled; window.updateAIBrainStatus(); window.renderAIRules();
+        } catch(e){}
+    };
+
+    window.updateAIBrainStatus = () => {
+        let txt = document.getElementById('ai-status-text');
+        if(aiEnabled) { txt.innerHTML = `<span class="text-green-400 font-bold">Online & Monitoring Chats</span>`; window.startAIEngineBackground(); } 
+        else { txt.innerHTML = `<span class="text-slate-500">Offline. Engine is sleeping.</span>`; if(aiListener) { aiListener(); aiListener = null; } }
+    };
+
+    window.toggleAIEngine = async () => { 
+        aiEnabled = document.getElementById('ai-master-toggle').checked; 
+        try { await setDoc(doc(db, "app_settings", "admin_ai"), { isEnabled: aiEnabled }, { merge: true }); window.updateAIBrainStatus(); } catch(e){} 
+    };
+
+    window.renderAIRules = () => {
+        let container = document.getElementById('ai-rules-list');
+        if(aiRules.length === 0) { container.innerHTML = '<p class="text-center py-4 text-slate-500">No rules trained yet.</p>'; return; }
+        let html = "";
+        aiRules.forEach((r, idx) => { 
+            html += `
+                <div class="bg-gray-800/50 p-3 rounded-lg border border-gray-700 relative">
+                    <button onclick="window.deleteAIRule(${idx})" class="absolute top-2 right-2 text-red-400"><i class="fa-solid fa-trash"></i></button>
+                    <p class="text-[10px] text-gray-400 mb-1">Keywords:</p><p class="text-xs text-yellow-400 mb-2">${r.keywords}</p>
+                    <p class="text-[10px] text-gray-400 mb-1">Reply (${r.botName}):</p><p class="text-xs text-blue-300 bg-blue-900/20 p-2 rounded">${r.reply}</p>
+                </div>`; 
+        });
+        container.innerHTML = html;
+    };
+
+    window.addAIRule = async () => {
+        let keys = document.getElementById('ai-rule-keywords').value.trim(); 
+        let bot = document.getElementById('ai-rule-botname').value; 
+        let rep = document.getElementById('ai-rule-reply').value.trim();
+        if(!keys || !rep) return Swal.fire('Error', 'Fill all fields', 'error');
+        aiRules.push({ keywords: keys.toLowerCase(), botName: bot, reply: rep });
+        try { await setDoc(doc(db, "app_settings", "admin_ai"), { rules: aiRules }, { merge: true }); document.getElementById('ai-rule-keywords').value = ''; document.getElementById('ai-rule-reply').value = ''; window.renderAIRules(); } catch(e){}
+    };
+
+    window.deleteAIRule = async (index) => { aiRules.splice(index, 1); try { await setDoc(doc(db, "app_settings", "admin_ai"), { rules: aiRules }, { merge: true }); window.renderAIRules(); } catch(e){} };
+
+    window.startAIEngineBackground = async () => {
+        if(aiListener) return; 
+        try { const snap = await getDoc(doc(db, "app_settings", "admin_ai")); if(snap.exists()) { aiEnabled = snap.data().isEnabled || false; aiRules = snap.data().rules || []; } } catch(e){}
+        if(!aiEnabled) return;
+        const q = query(collection(db, "global_chat_logs"), orderBy("timestamp", "desc"), limit(1));
+        aiListener = onSnapshot(q, (snapshot) => {
+            snapshot.forEach(async (docSnap) => {
+                let msg = docSnap.data(); let id = docSnap.id;
+                if(processedMsgIds.has(id)) return; processedMsgIds.add(id);
+                if(msg.uid && msg.uid.includes('admin_custom_bot')) return;
+                if(!msg.text) return; 
+                let txt = msg.text.toLowerCase();
+                for(let rule of aiRules) {
+                    let triggerWords = rule.keywords.split(',').map(w => w.trim());
+                    let matched = triggerWords.some(w => txt.includes(w));
+                    if(matched) { 
+                        setTimeout(async () => { 
+                            try { await addDoc(collection(db, "global_chat_logs"), { uid: "admin_custom_bot_" + Date.now(), name: rule.botName, text: rule.reply, phone: "Hidden", timestamp: serverTimestamp() }); } catch(e){} 
+                        }, 3000); 
+                        break; 
+                    }
+                }
+            });
+        });
+    };
+
+    // ADMIN OFFERS & POPUP
+    window.loadPopupSettings = async () => {
+        try {
+            const docSnap = await getDoc(doc(db, "app_settings", "promo_config"));
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                document.getElementById('set-popup-enabled').checked = data.enabled || false;
+                document.getElementById('set-popup-title').value = data.title || "";
+                document.getElementById('set-popup-desc').value = data.description || "";
+                document.getElementById('set-popup-image').value = data.imageUrl || "";
+                document.getElementById('set-popup-btn').value = data.buttonText || "";
+            }
+        } catch(e){}
+    };
+
+    window.savePopupSettings = async () => {
+        try {
+            await setDoc(doc(db, "app_settings", "promo_config"), {
+                enabled: document.getElementById('set-popup-enabled').checked,
+                title: document.getElementById('set-popup-title').value.trim(),
+                description: document.getElementById('set-popup-desc').value.trim(),
+                imageUrl: document.getElementById('set-popup-image').value.trim(),
+                buttonText: document.getElementById('set-popup-btn').value.trim()
+            }, { merge: true });
+            Swal.fire('Saved!', 'Popup Offer Settings Updated', 'success');
+        } catch(e){ Swal.fire('Error', 'Failed to save settings', 'error'); }
+    };
+
+    // ADMIN BOT SETTINGS
+    window.saveBotSettings = async () => {
+        const splitComma = (str) => str.split(',').map(s => s.trim()).filter(Boolean);
+        const botData = { maleNames: splitComma(document.getElementById('bot-male-names').value), femaleNames: splitComma(document.getElementById('bot-female-names').value) };
+        try { await setDoc(doc(db, "app_settings", "bots"), botData, { merge: true }); Swal.fire('Saved!', 'Database Updated', 'success'); window.loadBotSettingsConfig(); } catch (e) { }
+    };
+
+    window.updateBotSelectDropdowns = () => {
+        let optionsHtml = '';
+        allBotNames.forEach(n => { optionsHtml += `<option value="${n}">${n}</option>`; });
+        const adminBotNameEl = document.getElementById('admin-bot-name');
+        const customProofBotEl = document.getElementById('custom-proof-bot');
+        const aiRuleBotNameEl = document.getElementById('ai-rule-botname');
+        if(adminBotNameEl) adminBotNameEl.innerHTML = optionsHtml;
+        if(customProofBotEl) customProofBotEl.innerHTML = optionsHtml;
+        if(aiRuleBotNameEl) aiRuleBotNameEl.innerHTML = optionsHtml;
+    };
+
+    // ADMIN WITHDRAW CONFIG
+    let wdMethods = []; let wdAmounts = []; let wdRecharge = [];
+    window.loadWithdrawSettings = async () => {
+        try {
+            const docSnap = await getDoc(doc(db, "app_settings", "withdraw_config"));
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                wdMethods = data.methods || []; wdAmounts = data.amounts || []; wdRecharge = data.rechargeAmounts || [];
+                document.getElementById('set-wd-enabled').checked = data.withdrawEnabled !== false; 
+                document.getElementById('set-rc-enabled').checked = data.rechargeEnabled !== false; 
+                document.getElementById('set-wd-notice').value = data.notice || "";
+            }
+            window.renderWDSettingsUI();
+        } catch (e) {}
+    };
+
+    window.renderWDSettingsUI = () => {
+        let methodHtml = '';
+        wdMethods.forEach((m, i) => { methodHtml += `<div class="flex gap-3 items-center bg-gray-800 p-2 rounded border border-gray-700"><img src="${m.icon}" class="w-6 h-6 bg-white rounded"><div class="flex-1"><p class="font-bold text-xs" style="color:${m.color}">${m.name} (${m.id})</p></div><button onclick="window.removeWdMethod(${i})" class="text-red-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button></div>`; });
+        document.getElementById('wd-methods-list').innerHTML = methodHtml;
+
+        let wdAmtHtml = '';
+        wdAmounts.forEach((a, i) => { wdAmtHtml += `<div class="bg-gray-800 px-3 py-1.5 rounded border border-gray-700 flex items-center gap-2"><div><p class="font-bold text-green-400 text-xs">৳${a.amount}</p></div><button onclick="window.removeWdAmount(${i})" class="text-red-400"><i class="fa-solid fa-xmark"></i></button></div>`; });
+        document.getElementById('wd-amounts-list').innerHTML = wdAmtHtml;
+
+        let rcAmtHtml = '';
+        wdRecharge.forEach((a, i) => { rcAmtHtml += `<div class="bg-gray-800 px-3 py-1.5 rounded border border-gray-700 flex items-center gap-2"><div><p class="font-bold text-purple-400 text-xs">৳${a.amount}</p></div><button onclick="window.removeRcAmount(${i})" class="text-red-400"><i class="fa-solid fa-xmark"></i></button></div>`; });
+        document.getElementById('rc-amounts-list').innerHTML = rcAmtHtml;
+    };
+
+    window.addWdMethod = () => { 
+        let id = document.getElementById('add-m-id').value.trim().toLowerCase(); 
+        let name = document.getElementById('add-m-name').value.trim(); 
+        let icon = document.getElementById('add-m-icon').value.trim(); 
+        let color = document.getElementById('add-m-color').value; 
+        if(!id || !name || !icon) return; 
+        wdMethods.push({ id, name, icon, color }); window.renderWDSettingsUI(); 
+    };
+    window.removeWdMethod = (index) => { wdMethods.splice(index, 1); window.renderWDSettingsUI(); };
+    window.addWdAmount = () => { 
+        let amt = parseInt(document.getElementById('add-a-amt').value); 
+        let charge = parseInt(document.getElementById('add-a-charge').value) || 0; 
+        if(!amt || amt <= 0) return; 
+        wdAmounts.push({ amount: amt, charge: charge }); wdAmounts.sort((a,b) => a.amount - b.amount); window.renderWDSettingsUI(); 
+    };
+    window.removeWdAmount = (index) => { wdAmounts.splice(index, 1); window.renderWDSettingsUI(); };
+    window.addRcAmount = () => { 
+        let amt = parseInt(document.getElementById('add-r-amt').value); 
+        let charge = parseInt(document.getElementById('add-r-charge').value) || 0; 
+        if(!amt || amt <= 0) return; 
+        wdRecharge.push({ amount: amt, charge: charge }); wdRecharge.sort((a,b) => a.amount - b.amount); window.renderWDSettingsUI(); 
+    };
+    window.removeRcAmount = (index) => { wdRecharge.splice(index, 1); window.renderWDSettingsUI(); };
+
+    window.saveWithdrawSettings = async () => {
+        const configData = { withdrawEnabled: document.getElementById('set-wd-enabled').checked, rechargeEnabled: document.getElementById('set-rc-enabled').checked, notice: document.getElementById('set-wd-notice').value.trim(), methods: wdMethods, amounts: wdAmounts, rechargeAmounts: wdRecharge };
+        try { await setDoc(doc(db, "app_settings", "withdraw_config"), configData, { merge: true }); Swal.fire('Saved!', '', 'success'); } catch(e){}
+    };
+
+    // ADMIN APP CONFIG
+    window.saveSiteConfig = async () => {
+        try {
+            await setDoc(doc(db, "app_settings", "siteConfig"), { 
+                adPoints: parseInt(document.getElementById('set-ad-points').value) || 5, pointsPerTaka: parseInt(document.getElementById('set-point-rate').value) || 500, bonusPhase1: parseInt(document.getElementById('set-bonus-p1').value) || 50, bonusPhase2: parseInt(document.getElementById('set-bonus-p2').value) || 10,
+                vip1PromoActive: document.getElementById('set-vip1-promo').checked, vip1PromoCost: parseInt(document.getElementById('set-vip1-promo-cost').value) || 1000, vip1RegCost: parseInt(document.getElementById('set-vip1-reg-cost').value) || 10000,
+                vip1Price: parseInt(document.getElementById('set-vip1-price').value) || 50, vip2Price: parseInt(document.getElementById('set-vip2-price').value) || 100, vip3Price: parseInt(document.getElementById('set-vip3-price').value) || 200,
+                vip1L1: parseInt(document.getElementById('set-vip1-l1').value) || 25, vip1L2: parseInt(document.getElementById('set-vip1-l2').value) || 5, vip2L1: parseInt(document.getElementById('set-vip2-l1').value) || 50, vip2L2: parseInt(document.getElementById('set-vip2-l2').value) || 10, vip3L1: parseInt(document.getElementById('set-vip3-l1').value) || 100, vip3L2: parseInt(document.getElementById('set-vip3-l2').value) || 20,
+                freeRefTargetAds: parseInt(document.getElementById('set-free-ads').value) || 50, freeRefPoints: parseInt(document.getElementById('set-free-pts').value) || 50,
+                vip1Limit: parseInt(document.getElementById('set-vip1-limit').value) || 1000, vip2Limit: parseInt(document.getElementById('set-vip2-limit').value) || 2000, vip3Limit: parseInt(document.getElementById('set-vip3-limit').value) || 5000
+            }, { merge: true });
+            Swal.fire('Saved!', 'Points & Rewards Configuration Updated Successfully', 'success');
+        } catch(e) { Swal.fire('Error', 'Failed to save', 'error'); }
+    };
+
+    window.saveLiveUserConfig = async () => {
+        let min = parseInt(document.getElementById('set-fake-live-min').value) || 15;
+        let max = parseInt(document.getElementById('set-fake-live-max').value) || 50;
+        if (min >= max) return Swal.fire({icon:'error', title:'Min cannot be greater than Max', background:'#1e293b', color:'#fff'});
+        try { await setDoc(doc(db, "app_settings", "main"), { fakeLiveMin: min, fakeLiveMax: max }, { merge: true }); Swal.fire({icon:'success', title:'Live Users Limit Updated!', background:'#1e293b', color:'#fff'}); } catch(e) { Swal.fire({icon:'error', title:'Failed to update', background:'#1e293b', color:'#fff'}); }
+    };
+
+    window.loadSettings = async () => {
+        try {
+            const docSnap = await getDoc(doc(db, "app_settings", "main"));
+            if (docSnap.exists()) { 
+                const data = docSnap.data(); 
+                document.getElementById('set-notice').value = data.notice || ""; 
+                document.getElementById('set-app-version').value = data.requiredVersion || 1; 
+                document.getElementById('set-update-link').value = data.updateLink || ""; 
+                document.getElementById('set-maintenance').checked = data.maintenance || false; 
+                document.getElementById('set-fake-live-min').value = data.fakeLiveMin !== undefined ? data.fakeLiveMin : 15;
+                document.getElementById('set-fake-live-max').value = data.fakeLiveMax !== undefined ? data.fakeLiveMax : 50;
+                
+                // Load Payment Number to Input
+                let passInput = document.getElementById('set-admin-payment-num');
+                if(!passInput) {
+                    // Inject input if it doesn't exist
+                    let passContainer = document.getElementById('set-admin-pass').parentNode.parentNode;
+                    let numHtml = `
+                    <div class="mt-4 pt-4 border-t border-blue-500/20">
+                        <h3 class="font-bold text-green-400 text-sm mb-2"><i class="fa-solid fa-mobile-screen"></i> Change Payment Receive Number</h3>
+                        <div class="flex gap-2">
+                            <input type="text" id="set-admin-payment-num" class="admin-input-style !mb-0 flex-1 text-sm py-2 px-3" placeholder="Ex: 01600678966" value="${data.paymentNumber || ''}">
+                            <button onclick="window.changePaymentNumber()" class="bg-green-600 hover:bg-green-700 px-4 rounded text-sm font-bold text-white">Update</button>
+                        </div>
+                    </div>`;
+                    passContainer.insertAdjacentHTML('beforeend', numHtml);
+                } else {
+                    passInput.value = data.paymentNumber || '';
+                }
+            }
+            const confSnap = await getDoc(doc(db, "app_settings", "siteConfig"));
+            if (confSnap.exists()) { 
+                const conf = confSnap.data(); 
+                document.getElementById('set-ad-points').value = conf.adPoints !== undefined ? conf.adPoints : 5;
+                document.getElementById('set-point-rate').value = conf.pointsPerTaka !== undefined ? conf.pointsPerTaka : 500;
+                document.getElementById('set-bonus-p1').value = conf.bonusPhase1 !== undefined ? conf.bonusPhase1 : 50; 
+                document.getElementById('set-bonus-p2').value = conf.bonusPhase2 !== undefined ? conf.bonusPhase2 : 10; 
+
+                document.getElementById('set-vip1-promo').checked = conf.vip1PromoActive !== false;
+                document.getElementById('set-vip1-promo-cost').value = conf.vip1PromoCost !== undefined ? conf.vip1PromoCost : 1000;
+                document.getElementById('set-vip1-reg-cost').value = conf.vip1RegCost !== undefined ? conf.vip1RegCost : 10000;
+
+                document.getElementById('set-vip1-price').value = conf.vip1Price !== undefined ? conf.vip1Price : 50;
+                document.getElementById('set-vip2-price').value = conf.vip2Price !== undefined ? conf.vip2Price : 100;
+                document.getElementById('set-vip3-price').value = conf.vip3Price !== undefined ? conf.vip3Price : 200;
+
+                document.getElementById('set-vip1-l1').value = conf.vip1L1 !== undefined ? conf.vip1L1 : 25;
+                document.getElementById('set-vip1-l2').value = conf.vip1L2 !== undefined ? conf.vip1L2 : 5;
+                document.getElementById('set-vip2-l1').value = conf.vip2L1 !== undefined ? conf.vip2L1 : 50;
+                document.getElementById('set-vip2-l2').value = conf.vip2L2 !== undefined ? conf.vip2L2 : 10;
+                document.getElementById('set-vip3-l1').value = conf.vip3L1 !== undefined ? conf.vip3L1 : 100;
+                document.getElementById('set-vip3-l2').value = conf.vip3L2 !== undefined ? conf.vip3L2 : 20;
+
+                document.getElementById('set-free-ads').value = conf.freeRefTargetAds !== undefined ? conf.freeRefTargetAds : 50;
+                document.getElementById('set-free-pts').value = conf.freeRefPoints !== undefined ? conf.freeRefPoints : 50;
+                
+                document.getElementById('set-vip1-limit').value = conf.vip1Limit !== undefined ? conf.vip1Limit : 1000;
+                document.getElementById('set-vip2-limit').value = conf.vip2Limit !== undefined ? conf.vip2Limit : 2000;
+                document.getElementById('set-vip3-limit').value = conf.vip3Limit !== undefined ? conf.vip3Limit : 5000;
+            }
+        } catch(e){}
+    };
+
+    window.saveSettings = async () => {
+        try {
+            await setDoc(doc(db, "app_settings", "main"), { 
+                notice: document.getElementById('set-notice').value, 
+                requiredVersion: parseInt(document.getElementById('set-app-version').value) || 1, 
+                updateLink: document.getElementById('set-update-link').value, 
+                maintenance: document.getElementById('set-maintenance').checked 
+            }, { merge: true });
+            Swal.fire('Saved!', '', 'success');
+        } catch(e){}
+    };
+
+    window.changePaymentNumber = async () => {
+        const num = document.getElementById('set-admin-payment-num').value.trim();
+        if(!num || num.length < 10) return Swal.fire('Error', 'Invalid Number', 'error');
+        try {
+            await setDoc(doc(db, "app_settings", "main"), { paymentNumber: num }, { merge: true });
+            Swal.fire('Saved!', 'Payment Number Updated', 'success');
+        } catch(e) { Swal.fire('Error', 'Failed', 'error'); }
+    };
+
 </script>
 </body>
 </html>
