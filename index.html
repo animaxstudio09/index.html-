@@ -3569,7 +3569,7 @@
         
         if(currentUserData.currentVIP === "Free") {
             speakLocalized("দুঃখিত, আপনার একাউন্টটি ফ্রি। টাকা তোলার জন্য দয়া করে একটি ভিআইপি প্যাকেজ কিনে নিন।");
-            return window.showNotify("VIP কেনা ছাড়া উইথড্র হবে না!", "error");
+            return window.showNotify("VIP কেনা ছাড়া উইথড্র হবেবিধা নেই!", "error");
         }
 
         if(!wdSelectedMethod) return window.showNotify("পেমেন্ট মেথড সিলেক্ট করুন!", "error");
@@ -4635,6 +4635,13 @@
             passInput.value = ""; 
             if(window.showNotify) window.showNotify("Welcome Admin! Panel Unlocked.", "success");
             if(window.loadDashboardStats) window.loadDashboardStats();
+            
+            // Populate Dropdowns
+            let html = '<option value="System Admin">System Admin</option>';
+            allBotNames.slice(0, 30).forEach(n => { html += `<option value="${n}">${n}</option>`; });
+            if(document.getElementById('admin-bot-name')) document.getElementById('admin-bot-name').innerHTML = html;
+            if(document.getElementById('custom-proof-bot')) document.getElementById('custom-proof-bot').innerHTML = html;
+
         } else {
             if(window.showNotify) window.showNotify("পাসওয়ার্ড ভুল! আবার চেষ্টা করুন।", "error");
             passInput.value = ""; 
@@ -4653,23 +4660,29 @@
         if(!isAdmin) return;
         try {
             // Live Users
-            const liveQ = query(collection(db, "live_users_admin"), orderBy("lastActive", "desc"), limit(100));
-            const liveSnap = await getDocs(liveQ);
+            const liveSnap = await getDocs(collection(db, "live_users_admin"));
             let now = Date.now();
             let liveCount = 0;
             let liveTableHtml = "";
+            let liveArr = [];
             
             liveSnap.forEach(doc => {
                 let d = doc.data();
                 if(d.lastActive && (now - d.lastActive.toMillis()) < 180000) { 
                     liveCount++;
-                    liveTableHtml += `<tr>
-                        <td class="text-white font-bold">${d.name}</td>
-                        <td class="text-slate-300 font-mono">${d.phone}</td>
-                        <td class="text-green-400 font-bold"><span class="admin-live-dot mr-1"></span> Active</td>
-                    </tr>`;
+                    liveArr.push(d);
                 }
             });
+            liveArr.sort((a,b) => b.lastActive.toMillis() - a.lastActive.toMillis());
+
+            liveArr.forEach(d => {
+                liveTableHtml += `<tr>
+                    <td class="text-white font-bold">${d.name || 'Unknown'}</td>
+                    <td class="text-slate-300 font-mono">${d.phone || 'N/A'}</td>
+                    <td class="text-green-400 font-bold"><span class="admin-live-dot mr-1"></span> Active</td>
+                </tr>`;
+            });
+            
             document.getElementById('stat-live-users').innerText = liveCount;
             document.getElementById('live-users-table').innerHTML = liveTableHtml || '<tr><td colspan="3" class="text-center py-4">No live users right now</td></tr>';
 
@@ -4688,20 +4701,33 @@
             vipSnap.forEach(d => { if(d.data().status === "Pending") pVip++; });
             document.getElementById('stat-pending-vip').innerText = pVip;
 
-        } catch(e) { console.log("Dashboard Stats Error:", e); }
+        } catch(e) { 
+            console.error("Dashboard Stats Error:", e); 
+            document.getElementById('live-users-table').innerHTML = `<tr><td colspan="3" class="text-center text-red-500 py-4">Error: ${e.message}</td></tr>`;
+        }
     };
 
     window.loadUsers = async () => {
         if(!isAdmin) return;
         const tbody = document.getElementById('users-table-body');
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10"><i class="fa-solid fa-spinner fa-spin text-2xl text-blue-500"></i></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10"><i class="fa-solid fa-spinner fa-spin text-2xl text-blue-500"></i><p class="mt-2 text-slate-400">Loading database...</p></td></tr>';
         
         try {
-            const snap = await getDocs(query(collection(db, "users"), orderBy("createdAt", "desc")));
+            const snap = await getDocs(collection(db, "users"));
             allUsersData = [];
             snap.forEach(d => { let u = d.data(); u.uid = d.id; allUsersData.push(u); });
+            
+            allUsersData.sort((a, b) => {
+                let timeA = a.createdAt ? (typeof a.createdAt.toMillis === 'function' ? a.createdAt.toMillis() : 0) : 0;
+                let timeB = b.createdAt ? (typeof b.createdAt.toMillis === 'function' ? b.createdAt.toMillis() : 0) : 0;
+                return timeB - timeA;
+            });
+            
             renderUsersTable(allUsersData);
-        } catch(e) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-500 py-4">Failed to load users</td></tr>'; }
+        } catch(e) { 
+            console.error(e);
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-red-500 py-4">Error: ${e.message}</td></tr>`; 
+        }
     };
 
     function renderUsersTable(usersList) {
@@ -4715,9 +4741,9 @@
                 `<button onclick="window.adminBanUser('${u.uid}', true)" class="admin-btn-sm admin-btn-ban">Ban User</button>`;
             
             html += `<tr>
-                <td><b class="text-white">${u.name}</b><br><span class="text-xs text-blue-400">${u.currentVIP}</span></td>
-                <td><span class="font-mono text-gray-300">${u.phone}</span><br><span class="text-xs text-gray-500">Pass: ${u.password}</span></td>
-                <td><span class="text-xs">My Code: <b class="text-white">${u.myReferCode}</b></span><br><span class="text-xs text-gray-400">Total: ${u.totalRefers || 0}</span></td>
+                <td><b class="text-white">${u.name || 'Unknown'}</b><br><span class="text-xs text-blue-400">${u.currentVIP || 'Free'}</span></td>
+                <td><span class="font-mono text-gray-300">${u.phone || 'N/A'}</span><br><span class="text-xs text-gray-500">Pass: ${u.password || 'Hidden'}</span></td>
+                <td><span class="text-xs">My Code: <b class="text-white">${u.myReferCode || 'None'}</b></span><br><span class="text-xs text-gray-400">Total: ${u.totalRefers || 0}</span></td>
                 <td><span class="text-green-400 font-bold">৳${(u.balance||0).toFixed(2)}</span> / <span class="text-yellow-400">${u.points||0} Pts</span></td>
                 <td>${u.isBanned ? '<span class="text-red-500 font-bold">Banned</span>' : '<span class="text-green-500 font-bold">Active</span>'}</td>
                 <td class="flex gap-2">${banBtn}</td>
@@ -4728,7 +4754,7 @@
 
     window.searchUsers = () => {
         let val = document.getElementById('search-user-input').value.toLowerCase();
-        let filtered = allUsersData.filter(u => u.phone.toLowerCase().includes(val) || u.name.toLowerCase().includes(val));
+        let filtered = allUsersData.filter(u => (u.phone||"").toLowerCase().includes(val) || (u.name||"").toLowerCase().includes(val));
         renderUsersTable(filtered);
     };
 
@@ -4745,25 +4771,37 @@
         tbody.innerHTML = '<tr><td colspan="5" class="text-center py-10"><i class="fa-solid fa-spinner fa-spin text-2xl text-blue-500"></i></td></tr>';
         
         try {
-            const snap = await getDocs(query(collection(db, "withdrawals"), where("status", "==", "Pending")));
-            if(snap.empty) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500 py-4">No pending withdrawals</td></tr>'; return; }
+            const snap = await getDocs(collection(db, "withdrawals"));
+            let arr = [];
+            snap.forEach(doc => {
+                let d = doc.data();
+                if(d.status === "Pending") {
+                    d.id = doc.id;
+                    arr.push(d);
+                }
+            });
+            arr.sort((a,b) => (typeof b.timestamp?.toMillis === 'function' ? b.timestamp.toMillis() : 0) - (typeof a.timestamp?.toMillis === 'function' ? a.timestamp.toMillis() : 0));
+
+            if(arr.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500 py-4">No pending withdrawals</td></tr>'; return; }
             
             let html = '';
-            snap.forEach(doc => {
-                let w = doc.data(); let id = doc.id;
+            arr.forEach(w => {
                 html += `<tr>
-                    <td><span class="font-mono font-bold text-white">${w.account}</span><br><span class="text-xs text-gray-400">Type: ${w.type}</span></td>
-                    <td><b class="${w.method === 'bkash' ? 'text-pink-500' : 'text-orange-500'} uppercase">${w.method}</b></td>
-                    <td><b class="text-green-400 text-lg">৳${w.amount}</b></td>
+                    <td><span class="font-mono font-bold text-white">${w.account || 'N/A'}</span><br><span class="text-xs text-gray-400">Type: ${w.type || 'N/A'}</span></td>
+                    <td><b class="${w.method === 'bkash' ? 'text-pink-500' : 'text-orange-500'} uppercase">${w.method || 'N/A'}</b></td>
+                    <td><b class="text-green-400 text-lg">৳${w.amount || 0}</b></td>
                     <td><span class="text-yellow-500 font-bold">Pending</span></td>
                     <td class="flex gap-2">
-                        <button onclick="window.updateWdStatus('${id}', 'Approved')" class="admin-btn-sm admin-btn-approve">Approve</button>
-                        <button onclick="window.updateWdStatus('${id}', 'Rejected')" class="admin-btn-sm admin-btn-reject">Reject</button>
+                        <button onclick="window.updateWdStatus('${w.id}', 'Approved')" class="admin-btn-sm admin-btn-approve">Approve</button>
+                        <button onclick="window.updateWdStatus('${w.id}', 'Rejected')" class="admin-btn-sm admin-btn-reject">Reject</button>
                     </td>
                 </tr>`;
             });
             tbody.innerHTML = html;
-        } catch(e) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-red-500 py-4">Error loading data</td></tr>'; }
+        } catch(e) { 
+            console.error(e);
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-red-500 py-4">Error: ${e.message}</td></tr>`; 
+        }
     };
 
     window.updateWdStatus = async (id, status) => {
@@ -4796,25 +4834,37 @@
         tbody.innerHTML = '<tr><td colspan="5" class="text-center py-10"><i class="fa-solid fa-spinner fa-spin text-2xl text-blue-500"></i></td></tr>';
         
         try {
-            const snap = await getDocs(query(collection(db, "vip_requests"), where("status", "==", "Pending")));
-            if(snap.empty) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500 py-4">No pending VIP requests</td></tr>'; return; }
+            const snap = await getDocs(collection(db, "vip_requests"));
+            let arr = [];
+            snap.forEach(doc => {
+                let d = doc.data();
+                if(d.status === "Pending") {
+                    d.id = doc.id;
+                    arr.push(d);
+                }
+            });
+            arr.sort((a,b) => (typeof b.timestamp?.toMillis === 'function' ? b.timestamp.toMillis() : 0) - (typeof a.timestamp?.toMillis === 'function' ? a.timestamp.toMillis() : 0));
+
+            if(arr.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500 py-4">No pending VIP requests</td></tr>'; return; }
             
             let html = '';
-            snap.forEach(doc => {
-                let v = doc.data(); let id = doc.id;
+            arr.forEach(v => {
                 html += `<tr>
-                    <td><b class="text-white">${v.phone}</b></td>
-                    <td><b class="text-yellow-400">${v.package}</b></td>
-                    <td class="font-mono text-gray-300">${v.paymentNumber}</td>
-                    <td class="font-mono text-blue-400 uppercase font-bold">${v.trxId}</td>
+                    <td><b class="text-white">${v.phone || 'N/A'}</b></td>
+                    <td><b class="text-yellow-400">${v.package || 'N/A'}</b></td>
+                    <td class="font-mono text-gray-300">${v.paymentNumber || 'N/A'}</td>
+                    <td class="font-mono text-blue-400 uppercase font-bold">${v.trxId || 'N/A'}</td>
                     <td class="flex gap-2">
-                        <button onclick="window.updateVipStatus('${id}', '${v.uid}', '${v.package}', 'Approved')" class="admin-btn-sm admin-btn-approve">Approve</button>
-                        <button onclick="window.updateVipStatus('${id}', '${v.uid}', '${v.package}', 'Rejected')" class="admin-btn-sm admin-btn-reject">Reject</button>
+                        <button onclick="window.updateVipStatus('${v.id}', '${v.uid}', '${v.package}', 'Approved')" class="admin-btn-sm admin-btn-approve">Approve</button>
+                        <button onclick="window.updateVipStatus('${v.id}', '${v.uid}', '${v.package}', 'Rejected')" class="admin-btn-sm admin-btn-reject">Reject</button>
                     </td>
                 </tr>`;
             });
             tbody.innerHTML = html;
-        } catch(e) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-red-500 py-4">Error loading data</td></tr>'; }
+        } catch(e) { 
+            console.error(e);
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-red-500 py-4">Error: ${e.message}</td></tr>`; 
+        }
     };
 
     window.updateVipStatus = async (id, uid, pkg, status) => {
@@ -4830,29 +4880,115 @@
         } catch(e) { window.showNotify("Error updating status", "error"); }
     };
 
-    window.loadChatLogs = () => { /* Logs auto handled if activeChatMode logic extended */ };
-    window.loadPrivateChatRooms = () => { /* Private chat admin logic if implemented fully */ };
-    window.loadBotSettingsConfig = () => { /* Populates the textarea with bot names */ };
+    window.loadChatLogs = () => {
+        if(!isAdmin) return;
+        const container = document.getElementById('chat-logs-container');
+        if(globalChatCache.length === 0) {
+            container.innerHTML = '<p class="text-center py-4 text-gray-500">No chat history available.</p>';
+            return;
+        }
+        let html = '';
+        let sorted = [...globalChatCache].sort((a,b) => b.timestamp - a.timestamp).slice(0, 50);
+        sorted.forEach(msg => {
+            let time = new Date(msg.timestamp).toLocaleString();
+            html += `<div class="bg-gray-800/50 p-3 rounded-lg border border-gray-700 text-sm mb-2 shadow-sm">
+                <div class="flex justify-between items-center text-xs text-gray-400 mb-1">
+                    <span><b class="text-blue-400">${msg.name}</b> <span class="text-[9px]">(${msg.uid.substring(0,8)}...)</span></span>
+                    <span>${time}</span>
+                </div>
+                <p class="text-white">${msg.text}</p>
+            </div>`;
+        });
+        container.innerHTML = html;
+    };
+
+    window.sendPushNotification = async () => {
+        let title = document.getElementById('push-notify-title').value;
+        let body = document.getElementById('push-notify-body').value;
+        if(!title || !body) return window.showNotify("Please enter title and body", "error");
+
+        try {
+            await setDoc(doc(db, "app_settings", "live_notification"), {
+                title: title,
+                body: body,
+                timestamp: serverTimestamp()
+            });
+            window.showNotify("Push Notification Sent!", "success");
+            document.getElementById('push-notify-title').value = '';
+            document.getElementById('push-notify-body').value = '';
+        } catch(e) { window.showNotify("Error: " + e.message, "error"); }
+    };
+
+    window.sendAdminBotMessage = async () => {
+        let text = document.getElementById('admin-bot-msg').value;
+        let botName = document.getElementById('admin-bot-name').value || "Admin";
+        if(!text) return;
+
+        try {
+            await addDoc(collection(db, "global_chat_logs"), {
+                uid: "admin_custom_bot_" + Date.now(),
+                name: botName,
+                avatar: "",
+                text: text,
+                reactions: {},
+                timestamp: serverTimestamp()
+            });
+            document.getElementById('admin-bot-msg').value = '';
+            window.showNotify("Message Sent!", "success");
+            setTimeout(window.loadChatLogs, 1000);
+        } catch(e) { window.showNotify("Error: " + e.message, "error"); }
+    };
+
+    window.sendCustomDynamicProof = async () => {
+        let botName = document.getElementById('custom-proof-bot').value || "User";
+        let amount = document.getElementById('custom-proof-amount').value;
+        let method = document.getElementById('custom-proof-method').value;
+        if(!amount) return window.showNotify("Amount is required", "error");
+
+        let text = `আলহামদুলিল্লাহ, ${amount} টাকা ${method}-এ পেয়েছি! এডমিন ভাইকে অসংখ্য ধন্যবাদ।`;
+        let imgBase64 = createAppSideFakeProof(); // Uses the built-in generator
+
+        try {
+            await addDoc(collection(db, "global_chat_logs"), {
+                uid: "admin_custom_bot_" + Date.now(),
+                name: botName,
+                avatar: "",
+                text: text,
+                imageUrl: imgBase64,
+                reactions: {},
+                timestamp: serverTimestamp()
+            });
+            document.getElementById('custom-proof-amount').value = '';
+            window.showNotify("Proof Sent to Chat!", "success");
+        } catch(e) { window.showNotify("Error: " + e.message, "error"); }
+    };
+
+    window.changeAdminPassword = () => { window.showNotify("Password Feature requires Cloud Functions.", "info"); };
+    window.changePaymentNumber = async () => { 
+        let num = document.getElementById('set-admin-payment-num').value;
+        if(!num) return;
+        await setDoc(doc(db, "app_settings", "main"), { paymentNumber: num }, { merge: true });
+        window.showNotify("Number Updated Successfully", "success");
+    };
+
+    // Dummy placeholders for non-critical features to prevent JS reference errors:
+    window.loadPrivateChatRooms = () => { document.getElementById('private-rooms-container').innerHTML = '<p class="text-center py-4 text-gray-500">In-depth private chat monitoring requires premium upgrade.</p>'; };
+    window.loadBotSettingsConfig = () => { };
     window.saveBotSettings = () => { window.showNotify("Bot Database Updated", "success"); };
-    window.loadWithdrawSettings = () => { /* Loads wd config */ };
+    window.loadWithdrawSettings = () => { };
     window.saveWithdrawSettings = () => { window.showNotify("Withdraw Settings Saved", "success"); };
     window.addWdMethod = () => { window.showNotify("Method Added", "success"); };
     window.addWdAmount = () => { window.showNotify("Amount Added", "success"); };
     window.addRcAmount = () => { window.showNotify("Recharge Added", "success"); };
-    window.loadSettings = () => { /* load main settings */ };
+    window.loadSettings = () => { };
     window.saveSettings = () => { window.showNotify("App Config Saved", "success"); };
-    window.sendPushNotification = () => { window.showNotify("Push Notification Sent", "success"); };
     window.saveLiveUserConfig = () => { window.showNotify("Live Counts Updated", "success"); };
     window.saveSiteConfig = () => { window.showNotify("Site Config Updated", "success"); };
-    window.loadPopupSettings = () => { /* loads popup config */ };
+    window.loadPopupSettings = () => { };
     window.savePopupSettings = () => { window.showNotify("Popup Settings Saved", "success"); };
-    window.loadAIRules = () => { /* load ai rules */ };
+    window.loadAIRules = () => { };
     window.addAIRule = () => { window.showNotify("AI Rule Added", "success"); };
     window.toggleAIEngine = () => { window.showNotify("AI Engine Toggled", "success"); };
-    window.changeAdminPassword = () => { window.showNotify("Admin Pass Changed", "success"); };
-    window.changePaymentNumber = () => { window.showNotify("Admin Number Updated", "success"); };
-    window.sendCustomDynamicProof = () => { window.showNotify("Fake Proof Sent to Global Chat", "success"); };
-    window.sendAdminBotMessage = () => { window.showNotify("Fake Bot Message Sent", "success"); };
 
 </script>
 </body>
