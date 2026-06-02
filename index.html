@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;700&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
 
     <style>
         /* =========================================
@@ -211,7 +212,7 @@
             background: #0f172a; 
             color: #f8fafc; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            display: none; /* hidden until login */
+            display: none; 
             position: fixed;
             inset: 0;
             z-index: 9999999;
@@ -337,6 +338,76 @@
         #admin-ai-bot .mea-visor { background: #000; border: 1px solid #3b82f6; }
         #admin-ai-bot .ai-tooltip { background: #3b82f6; color: #fff; }
         #admin-ai-bot .ai-tooltip::after { border-color: #3b82f6 transparent transparent transparent; }
+
+        /* =========================================
+           VIP AI CASINO STYLES (NEW INTEGRATION)
+           ========================================= */
+        #game-screen-casino { 
+            display: none; 
+            position: fixed; /* Makes it fullscreen overlay */
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at top, #36175e 0%, #0f0c29 100%); 
+            z-index: 9999999; /* Above absolutely everything */
+            flex-direction: column; 
+            font-family: 'Poppins', sans-serif; 
+        }
+        .casino-game-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: rgba(0,0,0,0.6); border-bottom: 2px solid #facc15; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 10; }
+        .casino-game-logo { font-family: 'Teko', sans-serif; font-size: 38px; font-weight: 700; color: #facc15; text-shadow: 0 2px 5px #000, 0 0 15px rgba(250,204,21,0.5); letter-spacing: 2px; line-height: 1; }
+        
+        .casino-multiplier-bar { display: flex; justify-content: center; gap: 8px; padding: 10px 0; z-index: 5; }
+        .casino-multi-item { width: 65px; height: 35px; display: flex; justify-content: center; align-items: center; background: #1a103c; border-radius: 8px; font-size: 24px; font-family: 'Teko', sans-serif; color: #666; border: 2px solid #3d2a73; transition: 0.3s; }
+        .casino-multi-item.active { background: linear-gradient(180deg, #facc15, #d97706); border-color: #fff; color: #000; transform: scale(1.1); box-shadow: 0 0 15px rgba(250, 204, 21, 0.6); z-index: 10; font-weight: bold;}
+
+        #grid-container-casino { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; padding: 0 5px; perspective: 800px; }
+        .casino-reels-wrapper { display: flex; gap: 4px; background: rgba(0,0,0,0.6); padding: 6px; border-radius: 12px; border: 3px solid #facc15; box-shadow: inset 0 0 25px rgba(0,0,0,0.9), 0 10px 20px rgba(0,0,0,0.6); }
+        .casino-reel { display: flex; flex-direction: column; gap: 4px; width: 68px; height: 328px; position: relative; overflow: hidden; }
+        
+        .casino-card { width: 68px; height: 79px; border-radius: 6px; display: flex; justify-content: center; align-items: center; font-size: 40px; font-weight: 800; position: absolute; transition: top 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 1; box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
+        .casino-card.low-val { background: #f8f9fa; border: 2px solid #cbd5e1; }
+        .casino-card.low-val.red { color: #e11d48; } .casino-card.low-val.black { color: #1e293b; }
+        .casino-card.high-val { background: linear-gradient(135deg, #1a1a1a 0%, #333 100%); border: 2px solid #facc15; color: #facc15; }
+        .casino-card.high-val::before { content: '★'; position: absolute; top: 2px; right: 4px; font-size: 12px; color: #facc15; text-shadow: 0 0 5px #facc15;}
+        .casino-card .top-left { position: absolute; top: 2px; left: 4px; font-size: 14px; font-weight: bold; line-height: 1; }
+        
+        .casino-card.gold { background: linear-gradient(135deg, #fffde7 0%, #ffc107 50%, #ff8f00 100%); border: 2px solid #fff; color: #000; box-shadow: inset 0 0 15px rgba(255,255,255,0.8); }
+        .casino-card.wild { background: radial-gradient(circle, #ec4899 0%, #9d174d 100%); color: #fff; border: 2px solid #facc15; box-shadow: 0 0 15px rgba(236,72,153,0.6); }
+        .casino-card.wild::after { content: 'WILD'; font-size: 18px; font-family: 'Teko', sans-serif; font-weight: bold; color: #facc15; text-shadow: 0 2px 2px #000; letter-spacing: 1px; }
+        .casino-card.wild .main-icon, .casino-card.wild .top-left, .casino-card.wild::before { display: none; }
+
+        @keyframes casinoDropIn { 0% { transform: translateY(-350px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(0); opacity: 1; } }
+        .casino-anim-drop { animation: casinoDropIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes casinoPopMatch { 0% { transform: scale(1); opacity: 1; } 40% { transform: scale(1.15); box-shadow: 0 0 20px #00ffaa; z-index: 20; opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
+        .casino-anim-pop { animation: casinoPopMatch 0.3s ease-in forwards; border-color: #00ffaa !important; }
+        .turbo .casino-anim-drop { animation-duration: 0.15s; } .turbo .casino-anim-pop { animation-duration: 0.15s; } .turbo .casino-card { transition: top 0.15s linear; }
+
+        .casino-combo-popup { position: absolute; font-family: 'Teko', sans-serif; font-size: 75px; font-weight: bold; color: #ff3b3b; text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff, 0 5px 15px rgba(0,0,0,0.8); z-index: 100; pointer-events: none; opacity: 0; transform: scale(0.5); }
+        .casino-combo-popup.show { animation: casinoFloatUp 0.8s forwards; }
+        @keyframes casinoFloatUp { 0% { opacity: 1; transform: scale(1) translateY(0); } 100% { opacity: 0; transform: scale(1.2) translateY(-80px); } }
+
+        .casino-control-panel { background: linear-gradient(to top, #000 80%, transparent); padding: 5px 15px 25px 15px; position: relative; z-index: 10; border-top: 1px solid rgba(255,255,255,0.05); }
+        .casino-win-display-area { text-align: center; margin-bottom: 5px; height: 35px; display: flex; justify-content: center; align-items: center; }
+        .casino-win-display-text { font-size: 32px; font-weight: 800; color: #4ade80; text-shadow: 0 2px 8px rgba(74,222,128,0.4); opacity: 0; transition: 0.2s; font-family: 'Teko', sans-serif; letter-spacing: 2px;}
+        .casino-win-display-text.show { opacity: 1; transform: scale(1.1); }
+
+        .casino-controls-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 40px; border: 1px solid #3d2a73; }
+        .casino-side-btn { width: 45px; height: 45px; border-radius: 50%; background: #1a103c; border: 2px solid #3d2a73; color: #a78bfa; font-size: 16px; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; position: relative; }
+        .casino-side-btn:active { transform: scale(0.9); }
+        .casino-bet-box { flex: 1; display: flex; flex-direction: column; align-items: center; }
+        .casino-bet-label { font-size: 10px; color: #a78bfa; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; margin-bottom: 2px; }
+        .casino-bet-adjust { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; }
+        .casino-bet-adjust button { width: 30px; height: 30px; border-radius: 5px; background: #2e1a5e; color: #fff; font-weight: bold; font-size: 16px; border: 1px solid #4c2889; cursor: pointer;}
+        .casino-bet-amount { font-size: 26px; font-weight: 800; color: #facc15; min-width: 50px; text-align: center; font-family: 'Teko', sans-serif;}
+
+        .casino-spin-btn { width: 75px; height: 75px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #facc15, #b45309); border: 3px solid #fff; box-shadow: 0 0 20px rgba(250,204,21, 0.4), inset 0 -5px 10px rgba(0,0,0,0.5); color: #000; font-size: 32px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; }
+        .casino-spin-btn:active { transform: scale(0.9); }
+        .casino-spin-btn.spinning { filter: grayscale(0.8); pointer-events: none; }
+        .casino-spin-btn.spinning i { animation: rotateIcon 1s linear infinite; }
+
+        #casino-win-celebration { position: absolute; inset: 0; background: rgba(0,0,0,0.9); z-index: 999; display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(5px);}
+        .casino-celeb-title { font-family: 'Teko', sans-serif; font-size: 90px; font-weight: bold; text-shadow: 0 10px 20px rgba(0,0,0,0.9); animation: popZoom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; text-align: center;}
+        .casino-celeb-coins { font-size: 60px; font-weight: 800; color: #facc15; text-shadow: 0 0 30px rgba(250,204,21,0.8); animation: popZoom 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;}
+        .t-big { background: linear-gradient(to bottom, #fff, #4ade80); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .t-mega { background: linear-gradient(to bottom, #fff, #fb7185); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 120px;}
 
     </style>
 </head>
@@ -801,20 +872,72 @@
             <script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></script>
         </div>
 
-        <!-- 🟢 BOTTOM NAV WITH CHAT UNREAD BADGE 🟢 -->
-        <nav class="absolute bottom-0 left-0 w-full glass border-t border-white/10 bottom-nav">
+        <!-- 🟢 5-BUTTON BOTTOM NAV WITH CENTER CASINO BUTTON 🟢 -->
+        <nav class="absolute bottom-0 left-0 w-full glass border-t border-white/10 bottom-nav px-3 z-50 flex items-center justify-between">
             <button id="nav-home" onclick="if(window.switchTab) window.switchTab('home')" class="nav-btn text-blue-400 transform scale-110"><i class="fa-solid fa-home"></i> Home</button>
-            <button id="nav-leaderboard" onclick="if(window.switchTab) window.switchTab('leaderboard')" class="nav-btn"><i class="fa-solid fa-trophy"></i> Rank</button>
             <button id="nav-box" onclick="if(window.switchTab) window.switchTab('box')" class="nav-btn relative">
                 <span class="absolute top-0 right-[25%] flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span>
                 <i class="fa-solid fa-box-open"></i> Box
             </button>
+            
+            <!-- BIG CENTER BUTTON FOR CASINO -->
+            <button id="nav-casino" onclick="if(window.switchTab) window.switchTab('casino')" class="relative -top-5 w-[65px] h-[65px] bg-gradient-to-tr from-yellow-400 to-yellow-600 rounded-full flex flex-col items-center justify-center text-black font-bold border-[4px] border-[#0b0e14] transition-transform active:scale-95 z-50 flex-shrink-0 cursor-pointer">
+                <i class="fa-solid fa-dice text-[26px] mt-1"></i>
+                <span class="text-[10px] uppercase tracking-widest leading-none mt-1 font-black">Play</span>
+            </button>
+
             <button id="nav-chat" onclick="if(window.switchTab) window.switchTab('chat')" class="nav-btn relative">
                 <span id="chat-unread-badge" class="absolute top-0 right-[20%] flex h-3.5 w-3.5 items-center justify-center bg-red-500 text-white text-[8px] font-bold rounded-full hidden border border-[#0b0e14]">0</span>
                 <i class="fa-solid fa-comments"></i> Chat
             </button>
             <button id="nav-refer" onclick="if(window.switchTab) window.switchTab('refer')" class="nav-btn"><i class="fa-solid fa-users"></i> Refer</button>
         </nav>
+    </div>
+</div>
+
+<!-- 🎰 CASINO GAME OVERLAY (Fullscreen exactly as requested) 🎰 -->
+<div id="game-screen-casino">
+    <div class="casino-game-top-bar">
+        <button onclick="if(window.closeCasinoGame) window.closeCasinoGame()" class="w-10 h-10 bg-black/50 rounded-full text-white flex justify-center items-center hover:bg-white/20 border border-purple-500/30"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="casino-game-logo">RT 777</div>
+        <div class="text-black font-extrabold bg-gradient-to-r from-yellow-400 to-yellow-500 px-4 py-1.5 rounded-full text-sm flex items-center gap-2">
+            <i class="fa-solid fa-coins"></i> <span id="game-bal-casino">0</span>
+        </div>
+    </div>
+
+    <div class="casino-multiplier-bar">
+        <div class="casino-multi-item active" id="mul-1">x1</div>
+        <div class="casino-multi-item" id="mul-2">x2</div>
+        <div class="casino-multi-item" id="mul-3">x3</div>
+        <div class="casino-multi-item" id="mul-5">x5</div>
+    </div>
+
+    <div id="grid-container-casino">
+        <div id="combo-text" class="casino-combo-popup">COMBO 1</div>
+        <div class="casino-reels-wrapper" id="rt-grid"></div>
+    </div>
+
+    <div class="casino-control-panel">
+        <div class="casino-win-display-area"><div class="casino-win-display-text" id="win-display">+0</div></div>
+        <div class="casino-controls-row">
+            <button class="casino-side-btn" id="btn-turbo" onclick="if(window.toggleTurbo) window.toggleTurbo()"><i class="fa-solid fa-bolt"></i></button>
+            <div class="casino-bet-box">
+                <span class="casino-bet-label">Bet Amount</span>
+                <div class="casino-bet-adjust">
+                    <button onclick="if(window.changeBet) window.changeBet(-1)"><i class="fa-solid fa-minus text-sm"></i></button>
+                    <span class="casino-bet-amount" id="bet-amt">50</span>
+                    <button onclick="if(window.changeBet) window.changeBet(1)"><i class="fa-solid fa-plus text-sm"></i></button>
+                </div>
+            </div>
+            <button class="casino-side-btn text-gray-600" onclick="window.showNotify('Auto-spin coming soon!', 'info')"><i class="fa-solid fa-robot"></i></button>
+            <button class="casino-spin-btn" id="btn-spin" onclick="if(window.handleSpinClick) window.handleSpinClick()"><i class="fa-solid fa-rotate-right"></i></button>
+        </div>
+    </div>
+
+    <div id="casino-win-celebration">
+        <div class="casino-celeb-title" id="celeb-title">BIG WIN!</div>
+        <div class="casino-celeb-coins"><i class="fa-solid fa-coins"></i> <span id="celeb-amount">0</span></div>
+        <p class="text-gray-300 text-sm mt-8 animate-pulse bg-black/80 px-6 py-2 rounded-full cursor-pointer border border-white/20" onclick="if(window.closeCelebration) window.closeCelebration()">Tap to continue</p>
     </div>
 </div>
 
@@ -1953,6 +2076,218 @@
     let allBotNames = [...botMaleArray, ...botFemaleArray];
     let allUsersData = [];
 
+    // ==========================================
+    // 🎰 RT 777 CASINO GAME FULL LOGIC 🎰
+    // ==========================================
+    window.casinoBetAmt = 50;
+    window.casinoTurbo = false;
+    window.isSpinning = false;
+
+    window.openCasinoGame = () => {
+        document.getElementById('game-screen-casino').style.display = 'flex';
+        if(currentUserData) {
+            document.getElementById('game-bal-casino').innerText = (currentUserData.balance || 0).toFixed(2);
+        }
+        window.renderInitialGrid();
+    };
+
+    window.closeCasinoGame = () => {
+        document.getElementById('game-screen-casino').style.display = 'none';
+        window.switchTab('home');
+    };
+
+    window.toggleTurbo = () => {
+        window.casinoTurbo = !window.casinoTurbo;
+        const rtGrid = document.getElementById('grid-container-casino');
+        if(window.casinoTurbo) rtGrid.classList.add('turbo');
+        else rtGrid.classList.remove('turbo');
+        
+        const btnTurbo = document.getElementById('btn-turbo');
+        if(window.casinoTurbo) {
+            btnTurbo.classList.add('text-yellow-400');
+            btnTurbo.classList.remove('text-[#a78bfa]');
+        } else {
+            btnTurbo.classList.remove('text-yellow-400');
+            btnTurbo.classList.add('text-[#a78bfa]');
+        }
+    };
+
+    window.changeBet = (dir) => {
+        if(window.isSpinning) return;
+        const bets = [10, 20, 50, 100, 200, 500, 1000];
+        let idx = bets.indexOf(window.casinoBetAmt);
+        if(idx === -1) idx = 2; // Default 50
+        idx += dir;
+        if(idx < 0) idx = 0;
+        if(idx >= bets.length) idx = bets.length - 1;
+        window.casinoBetAmt = bets[idx];
+        document.getElementById('bet-amt').innerText = window.casinoBetAmt;
+    };
+
+    window.renderInitialGrid = () => {
+        const wrapper = document.getElementById('rt-grid');
+        if(wrapper.innerHTML.trim() !== '') return;
+        
+        let html = '';
+        for(let c=0; c<5; c++) { 
+            html += `<div class="casino-reel" id="reel-${c}">`;
+            for(let r=0; r<4; r++) { 
+                html += `<div class="casino-card low-val black" style="top: ${r * 83}px">
+                    <span class="top-left">♠</span>
+                    <span class="main-icon">J</span>
+                </div>`;
+            }
+            html += `</div>`;
+        }
+        wrapper.innerHTML = html;
+    };
+
+    window.handleSpinClick = async () => {
+        if (window.isSpinning) return;
+        if (!currentUserData) {
+            window.showNotify("অনুগ্রহ করে আগে লগইন করুন!", "error");
+            return;
+        }
+
+        if ((currentUserData.balance || 0) < window.casinoBetAmt) {
+            window.showNotify("আপনার ব্যালেন্সে পর্যাপ্ত টাকা নেই!", "error");
+            return;
+        }
+
+        window.isSpinning = true;
+        const spinBtn = document.getElementById('btn-spin');
+        spinBtn.classList.add('spinning');
+        document.getElementById('win-display').classList.remove('show');
+        document.getElementById('win-display').innerText = "+0";
+
+        // Update balance instantly for visual effect
+        let newBal = currentUserData.balance - window.casinoBetAmt;
+        document.getElementById('game-bal-casino').innerText = newBal.toFixed(2);
+        document.getElementById('balance').innerText = newBal.toFixed(2);
+        document.getElementById('total-balance').innerText = (newBal + (currentUserData.referBalance || 0)).toFixed(2);
+
+        const wrapper = document.getElementById('rt-grid');
+        const symbols = [
+            { type: 'low-val black', top: '♠', main: 'J', multi: 0 },
+            { type: 'low-val red', top: '♥', main: 'Q', multi: 0 },
+            { type: 'low-val black', top: '♣', main: 'K', multi: 0 },
+            { type: 'low-val red', top: '♦', main: 'A', multi: 0 },
+            { type: 'high-val', top: '⭐', main: '7', multi: 2 },
+            { type: 'high-val', top: '🔔', main: '8', multi: 3 },
+            { type: 'gold', top: '', main: '777', multi: 10 },
+            { type: 'wild', top: '', main: '', multi: 5 }
+        ];
+
+        let finalGrid = [];
+        let html = '';
+        
+        // Random Symbol Generator with Weights
+        const getRandomSymbol = () => {
+            let rand = Math.random() * 100;
+            if(rand < 20) return symbols[0];
+            if(rand < 40) return symbols[1];
+            if(rand < 60) return symbols[2];
+            if(rand < 80) return symbols[3];
+            if(rand < 90) return symbols[4];
+            if(rand < 96) return symbols[5];
+            if(rand < 99) return symbols[7]; // Wild
+            return symbols[6]; // Gold 777
+        };
+
+        for(let c=0; c<5; c++) {
+            let col = [];
+            html += `<div class="casino-reel" id="reel-${c}">`;
+            for(let r=0; r<4; r++) {
+                let sym = getRandomSymbol();
+                col.push(sym);
+                let delay = window.casinoTurbo ? (c * 0.05 + r * 0.02) : (c * 0.15 + r * 0.05);
+                html += `<div class="casino-card ${sym.type} casino-anim-drop" style="top: ${r * 83}px; animation-delay: ${delay}s">
+                    <span class="top-left">${sym.top}</span>
+                    <span class="main-icon">${sym.main}</span>
+                </div>`;
+            }
+            finalGrid.push(col);
+            html += `</div>`;
+        }
+        wrapper.innerHTML = html;
+
+        // Calculate Match Winnings
+        let winMultiplier = 0;
+        let winningCards = []; 
+        for(let r=0; r<4; r++) {
+            let matchCount = 1;
+            let currentSym = finalGrid[0][r].main;
+            let lineWins = [];
+            lineWins.push({c:0, r:r});
+            
+            for(let c=1; c<5; c++) {
+                if(finalGrid[c][r].main === currentSym || finalGrid[c][r].type.includes('wild') || currentSym === '') {
+                    if(currentSym === '' && !finalGrid[c][r].type.includes('wild')) currentSym = finalGrid[c][r].main;
+                    matchCount++;
+                    lineWins.push({c:c, r:r});
+                } else {
+                    break;
+                }
+            }
+            
+            if(matchCount >= 3) {
+                let multi = finalGrid[0][r].multi || 1;
+                if(matchCount === 4) multi *= 2;
+                if(matchCount === 5) multi *= 5;
+                winMultiplier += multi;
+                winningCards = winningCards.concat(lineWins);
+            }
+        }
+
+        let winAmount = winMultiplier > 0 ? (window.casinoBetAmt * winMultiplier) : 0;
+        let animWaitTime = window.casinoTurbo ? 600 : 1500;
+        
+        setTimeout(async () => {
+            if(winAmount > 0) {
+                winningCards.forEach(pos => {
+                    let reel = wrapper.children[pos.c];
+                    let card = reel.children[pos.r];
+                    if(card) card.classList.add('casino-anim-pop');
+                });
+                
+                document.getElementById('combo-text').innerText = `WIN x${winMultiplier}`;
+                document.getElementById('combo-text').classList.add('show');
+                setTimeout(() => document.getElementById('combo-text').classList.remove('show'), 1000);
+                
+                document.getElementById('win-display').innerText = `+${winAmount}`;
+                document.getElementById('win-display').classList.add('show');
+                
+                if(winMultiplier >= 5) {
+                    document.getElementById('celeb-amount').innerText = winAmount;
+                    document.getElementById('casino-win-celebration').style.display = 'flex';
+                    if(window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                }
+            }
+
+            try {
+                let updatedBalance = (currentUserData.balance || 0) - window.casinoBetAmt + winAmount;
+                await setDoc(doc(db, "users", currentUserData.uid), {
+                    balance: updatedBalance
+                }, { merge: true });
+                
+                document.getElementById('game-bal-casino').innerText = updatedBalance.toFixed(2);
+                
+                if(winAmount > 0) {
+                    await logPointHistory(currentUserData.uid, `Casino Game Win (Bet: ${window.casinoBetAmt})`, `+৳${winAmount}`, "text-green-400");
+                } else {
+                    await logPointHistory(currentUserData.uid, `Casino Game Spin`, `-৳${window.casinoBetAmt}`, "text-red-400");
+                }
+            } catch(e) { console.error(e); }
+
+            spinBtn.classList.remove('spinning');
+            window.isSpinning = false;
+        }, animWaitTime);
+    };
+
+    window.closeCelebration = () => {
+        document.getElementById('casino-win-celebration').style.display = 'none';
+    };
+
     // 🟢 ADMIN NAVIGATION LOGIC 🟢
     window.adminSwitchTab = (tabId) => {
         document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('admin-active-tab'));
@@ -2012,7 +2347,7 @@
     
     window.switchTab = (tabId) => {
         let currentActive = localStorage.getItem('active_tab');
-        if (currentActive === tabId) {
+        if (currentActive === tabId && tabId !== 'casino') {
             let currentEl = document.getElementById(tabId);
             if (currentEl && currentEl.classList.contains('active-tab')) return; 
         }
@@ -2039,9 +2374,20 @@
         });
         
         const activeNav = document.getElementById(`nav-${tabId}`);
-        if(activeNav) { 
+        if(activeNav && tabId !== 'casino') { 
             activeNav.style.color = ''; 
             activeNav.classList.add('text-blue-400', 'scale-110'); 
+        }
+
+        // 🟢 CASINO NAV BUTTON STYLING 🟢
+        const casinoBtn = document.getElementById('nav-casino');
+        if(tabId === 'casino') {
+            casinoBtn.classList.remove('from-yellow-400', 'to-yellow-600', 'text-black');
+            casinoBtn.classList.add('from-blue-500', 'to-cyan-400', 'text-white', 'shadow-[0_0_20px_rgba(59,130,246,0.6)]');
+            setTimeout(() => { window.openCasinoGame(); }, 50);
+        } else {
+            casinoBtn.classList.add('from-yellow-400', 'to-yellow-600', 'text-black');
+            casinoBtn.classList.remove('from-blue-500', 'to-cyan-400', 'text-white', 'shadow-[0_0_20px_rgba(59,130,246,0.6)]');
         }
 
         if(tabId === 'chat' && window.setChatMode) { 
@@ -2815,13 +3161,11 @@
                 if(data.timestamp) {
                     let timeId = data.timestamp.toMillis();
                     
-                    // Save to local array for history
                     let notifs = JSON.parse(localStorage.getItem('earnpro_notifs') || '[]');
                     let exists = notifs.find(n => n.time === timeId);
                     
                     if(!exists) {
                         notifs.push({title: data.title, body: data.body, time: timeId});
-                        // keep only last 20
                         if(notifs.length > 20) notifs.shift();
                         localStorage.setItem('earnpro_notifs', JSON.stringify(notifs));
                         
@@ -2903,11 +3247,6 @@
         setTimeout(showFakeNotification, randomDelay);
     }
     
-    setTimeout(() => {
-        startFakeLiveUsers();
-        setTimeout(showFakeNotification, 5000); 
-    }, 1500);
-
     function isRunningInApp() {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const isAndroidWebView = /wv/.test(userAgent) || /Android.*AppleWebKit.*Version\/[\d.]+.*Chrome\/[\d.]+.*Mobile/i.test(userAgent);
@@ -4571,6 +4910,7 @@
         else if(t.match(/(ভিআইপি|vip|প্যাকেজ|কিনবো|কিনব)/)) { reply = "ভিআইপি প্যাকেজ পেজ খুলছি।"; action = () => window.openVipPackages(); }
         else if(t.match(/(চ্যাট|chat|মেসেজ|message|কথা বলবো)/)) { reply = "চ্যাট পেজ খুলছি। সবার সাথে কথা বলুন।"; action = () => window.switchTab('chat'); }
         else if(t.match(/(বক্স|box|স্পিন|spin|মিস্ট্রি)/)) { reply = "মিস্ট্রি বক্স খুলছি। প্রতিদিন ২টি বক্স খুলতে পারবেন।"; action = () => window.switchTab('box'); }
+        else if(t.match(/(গেম|খেলা|ক্যাসিনো|casino|play|game)/)) { reply = "ক্যাসিনো গেম চালু করছি। গুড লাক!"; action = () => window.switchTab('casino'); }
         else if(t.match(/(রেফার|refer|ইনভাইট)/)) { reply = "রেফার পেজে যাচ্ছি। বন্ধুদের ইনভাইট করে বোনাস পান।"; action = () => window.switchTab('refer'); }
         else if(t.match(/(প্রোফাইল|profile|একাউন্ট)/)) { reply = "প্রোফাইল পেজ খুলছি।"; action = () => window.switchTab('profile'); }
         else if(t.match(/(এডমিন|সাপোর্ট|admin|support|টেলিগ্রাম|telegram)/)) { reply = "অ্যাডমিনের টেলিগ্রাম গ্রুপ খুলছি।"; action = () => window.contactSupport(); }
