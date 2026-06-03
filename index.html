@@ -901,7 +901,7 @@
         <button onclick="if(window.closeCasinoGame) window.closeCasinoGame()" class="w-10 h-10 bg-black/50 rounded-full text-white flex justify-center items-center hover:bg-white/20 border border-purple-500/30"><i class="fa-solid fa-arrow-left"></i></button>
         <div class="casino-game-logo">RT 777</div>
         <div class="text-black font-extrabold bg-gradient-to-r from-yellow-400 to-yellow-500 px-4 py-1.5 rounded-full text-sm flex items-center gap-2">
-            <i class="fa-solid fa-coins"></i> <span id="game-bal-casino">0</span>
+            <i class="fa-solid fa-star"></i> <span id="game-bal-casino">0</span> Pts
         </div>
     </div>
 
@@ -922,7 +922,7 @@
         <div class="casino-controls-row">
             <button class="casino-side-btn" id="btn-turbo" onclick="if(window.toggleTurbo) window.toggleTurbo()"><i class="fa-solid fa-bolt"></i></button>
             <div class="casino-bet-box">
-                <span class="casino-bet-label">Bet Amount</span>
+                <span class="casino-bet-label">Bet Amount (Points)</span>
                 <div class="casino-bet-adjust">
                     <button onclick="if(window.changeBet) window.changeBet(-1)"><i class="fa-solid fa-minus text-sm"></i></button>
                     <span class="casino-bet-amount" id="bet-amt">50</span>
@@ -936,7 +936,7 @@
 
     <div id="casino-win-celebration">
         <div class="casino-celeb-title" id="celeb-title">BIG WIN!</div>
-        <div class="casino-celeb-coins"><i class="fa-solid fa-coins"></i> <span id="celeb-amount">0</span></div>
+        <div class="casino-celeb-coins"><i class="fa-solid fa-star"></i> <span id="celeb-amount">0</span> Pts</div>
         <p class="text-gray-300 text-sm mt-8 animate-pulse bg-black/80 px-6 py-2 rounded-full cursor-pointer border border-white/20" onclick="if(window.closeCelebration) window.closeCelebration()">Tap to continue</p>
     </div>
 </div>
@@ -1905,8 +1905,7 @@
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 <div><label class="block text-[10px] text-gray-400 mb-1">Ad View Points</label><input type="number" id="set-ad-points" class="admin-input-style !mb-0 text-sm py-1.5 px-3" placeholder="5"></div>
                                 <div><label class="block text-[10px] text-gray-400 mb-1">Points per 1 Taka (Rate)</label><input type="number" id="set-point-rate" class="admin-input-style !mb-0 text-sm py-1.5 px-3" placeholder="500"></div>
-                                <div><label class="block text-[10px] text-gray-400 mb-1">Daily Bonus (1-14 Days)</label><input type="number" id="set-bonus-p1" class="admin-input-style !mb-0 text-sm py-1.5 px-3" placeholder="50"></div>
-                                <div><label class="block text-[10px] text-gray-400 mb-1">Daily Bonus (14+ Days)</label><input type="number" id="set-bonus-p2" class="admin-input-style !mb-0 text-sm py-1.5 px-3" placeholder="10"></div>
+                                <div><label class="block text-[10px] text-green-400 mb-1">Daily Bonus Taka (৳)</label><input type="number" id="set-daily-bonus-taka" class="admin-input-style !mb-0 text-sm py-1.5 px-3" placeholder="1"></div>
                             </div>
                         </div>
 
@@ -2009,6 +2008,70 @@
     </div>
 </div>
 
+<!-- 🟢 ADMIN FULL EDIT USER MODAL 🟢 -->
+<div id="admin-edit-user-modal" class="modal-overlay z-[9999999]">
+    <div class="admin-glass-panel p-6 w-[95%] max-w-lg bg-[#0f172a] shadow-2xl relative overflow-hidden">
+        <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+            <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-user-pen text-blue-400 mr-2"></i> Edit User Profile</h3>
+            <button onclick="document.getElementById('admin-edit-user-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+        
+        <input type="hidden" id="edit-u-uid">
+        
+        <div class="grid grid-cols-2 gap-3 mb-3">
+            <div>
+                <label class="block text-[10px] text-gray-400 mb-1">Name</label>
+                <input type="text" id="edit-u-name" class="admin-input-style !mb-0 !py-2 text-sm">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 mb-1">Phone</label>
+                <input type="text" id="edit-u-phone" class="admin-input-style !mb-0 !py-2 text-sm">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 mb-1">Password</label>
+                <input type="text" id="edit-u-pass" class="admin-input-style !mb-0 !py-2 text-sm">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 mb-1">VIP Level</label>
+                <select id="edit-u-vip" class="admin-input-style !mb-0 !py-2 text-sm text-yellow-400 font-bold">
+                    <option value="Free">Free</option>
+                    <option value="VIP 1">VIP 1</option>
+                    <option value="VIP 2">VIP 2</option>
+                    <option value="VIP 3">VIP 3</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 mb-1">Balance (Tk)</label>
+                <input type="number" id="edit-u-bal" class="admin-input-style !mb-0 !py-2 text-sm">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 mb-1">Points</label>
+                <input type="number" id="edit-u-pts" class="admin-input-style !mb-0 !py-2 text-sm">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 mb-1">Total Refers</label>
+                <input type="number" id="edit-u-ref" class="admin-input-style !mb-0 !py-2 text-sm">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 mb-1">Refer Balance (Tk)</label>
+                <input type="number" id="edit-u-refbal" class="admin-input-style !mb-0 !py-2 text-sm">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 mb-1">Friends Count</label>
+                <input type="number" id="edit-u-friends" class="admin-input-style !mb-0 !py-2 text-sm">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 mb-1">Likes Count</label>
+                <input type="number" id="edit-u-likes" class="admin-input-style !mb-0 !py-2 text-sm">
+            </div>
+        </div>
+
+        <button onclick="window.saveAdminEditUser()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl mt-2 transition active:scale-95 shadow-lg shadow-blue-500/30">
+            <i class="fa-solid fa-floppy-disk mr-2"></i> Save Changes
+        </button>
+    </div>
+</div>
+
 <script>
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function(e) {
@@ -2039,6 +2102,7 @@
     window.isSignupMode = false;
     window.currentAdminNumber = "01600678966"; 
     let isAdmin = false; 
+    let realLiveUserCount = 0;
 
     // 🟢 FIREBASE CONFIGURATION MUST BE INITIALIZED HERE 🟢
     let currentUserData = null;
@@ -2086,7 +2150,7 @@
     window.openCasinoGame = () => {
         document.getElementById('game-screen-casino').style.display = 'flex';
         if(currentUserData) {
-            document.getElementById('game-bal-casino').innerText = (currentUserData.balance || 0).toFixed(2);
+            document.getElementById('game-bal-casino').innerText = (currentUserData.points || 0);
         }
         window.renderInitialGrid();
     };
@@ -2114,9 +2178,9 @@
 
     window.changeBet = (dir) => {
         if(window.isSpinning) return;
-        const bets = [10, 20, 50, 100, 200, 500, 1000];
+        const bets = [10, 50, 100, 200, 500, 1000, 5000];
         let idx = bets.indexOf(window.casinoBetAmt);
-        if(idx === -1) idx = 2; // Default 50
+        if(idx === -1) idx = 1; // Default 50
         idx += dir;
         if(idx < 0) idx = 0;
         if(idx >= bets.length) idx = bets.length - 1;
@@ -2149,8 +2213,8 @@
             return;
         }
 
-        if ((currentUserData.balance || 0) < window.casinoBetAmt) {
-            window.showNotify("আপনার ব্যালেন্সে পর্যাপ্ত টাকা নেই!", "error");
+        if ((currentUserData.points || 0) < window.casinoBetAmt) {
+            window.showNotify("আপনার পর্যাপ্ত পয়েন্ট নেই!", "error");
             return;
         }
 
@@ -2160,11 +2224,10 @@
         document.getElementById('win-display').classList.remove('show');
         document.getElementById('win-display').innerText = "+0";
 
-        // Update balance instantly for visual effect
-        let newBal = currentUserData.balance - window.casinoBetAmt;
-        document.getElementById('game-bal-casino').innerText = newBal.toFixed(2);
-        document.getElementById('balance').innerText = newBal.toFixed(2);
-        document.getElementById('total-balance').innerText = (newBal + (currentUserData.referBalance || 0)).toFixed(2);
+        // Update Points instantly for visual effect
+        let newPts = currentUserData.points - window.casinoBetAmt;
+        document.getElementById('game-bal-casino').innerText = newPts;
+        document.getElementById('user-points-ui').innerText = newPts;
 
         const wrapper = document.getElementById('rt-grid');
         const symbols = [
@@ -2181,7 +2244,6 @@
         let finalGrid = [];
         let html = '';
         
-        // Random Symbol Generator with Weights
         const getRandomSymbol = () => {
             let rand = Math.random() * 100;
             if(rand < 20) return symbols[0];
@@ -2265,17 +2327,17 @@
             }
 
             try {
-                let updatedBalance = (currentUserData.balance || 0) - window.casinoBetAmt + winAmount;
+                let updatedPoints = (currentUserData.points || 0) - window.casinoBetAmt + winAmount;
                 await setDoc(doc(db, "users", currentUserData.uid), {
-                    balance: updatedBalance
+                    points: updatedPoints
                 }, { merge: true });
                 
-                document.getElementById('game-bal-casino').innerText = updatedBalance.toFixed(2);
+                document.getElementById('game-bal-casino').innerText = updatedPoints;
                 
                 if(winAmount > 0) {
-                    await logPointHistory(currentUserData.uid, `Casino Game Win (Bet: ${window.casinoBetAmt})`, `+৳${winAmount}`, "text-green-400");
+                    await logPointHistory(currentUserData.uid, `Casino Game Win (Bet: ${window.casinoBetAmt})`, `+${winAmount} Pts`, "text-green-400");
                 } else {
-                    await logPointHistory(currentUserData.uid, `Casino Game Spin`, `-৳${window.casinoBetAmt}`, "text-red-400");
+                    await logPointHistory(currentUserData.uid, `Casino Game Spin`, `-${window.casinoBetAmt} Pts`, "text-red-400");
                 }
             } catch(e) { console.error(e); }
 
@@ -2758,7 +2820,7 @@
         freeRefPoints: 50,
         freeRefTargetAds: 50,
         
-        bonusPhase1: 50, bonusPhase2: 10
+        dailyBonusTaka: 1
     };
 
     function checkSiteConfig() {
@@ -2794,6 +2856,28 @@
                 sel.options[0].setAttribute('data-price', siteConfig.vip1Price);
                 sel.options[1].setAttribute('data-price', siteConfig.vip2Price);
                 sel.options[2].setAttribute('data-price', siteConfig.vip3Price);
+            }
+
+            // Populate Admin Panel Config Inputs
+            if(isAdmin) {
+                document.getElementById('set-ad-points').value = siteConfig.adPoints;
+                document.getElementById('set-point-rate').value = siteConfig.pointsPerTaka;
+                document.getElementById('set-daily-bonus-taka').value = siteConfig.dailyBonusTaka || 1;
+                
+                document.getElementById('set-vip1-promo').checked = siteConfig.vip1PromoActive;
+                document.getElementById('set-vip1-promo-cost').value = siteConfig.vip1PromoCost;
+                document.getElementById('set-vip1-reg-cost').value = siteConfig.vip1RegCost;
+
+                document.getElementById('set-vip1-price').value = siteConfig.vip1Price;
+                document.getElementById('set-vip2-price').value = siteConfig.vip2Price;
+                document.getElementById('set-vip3-price').value = siteConfig.vip3Price;
+
+                document.getElementById('set-vip1-l1').value = siteConfig.vip1L1; document.getElementById('set-vip1-l2').value = siteConfig.vip1L2;
+                document.getElementById('set-vip2-l1').value = siteConfig.vip2L1; document.getElementById('set-vip2-l2').value = siteConfig.vip2L2;
+                document.getElementById('set-vip3-l1').value = siteConfig.vip3L1; document.getElementById('set-vip3-l2').value = siteConfig.vip3L2;
+
+                document.getElementById('set-free-ads').value = siteConfig.freeRefTargetAds;
+                document.getElementById('set-free-pts').value = siteConfig.freeRefPoints;
             }
 
             updateUI(); 
@@ -3025,6 +3109,7 @@
         window.showNotify("অ্যাড ওপেন হচ্ছে... ৩০ সেকেন্ড অপেক্ষা করুন!", "info");
     }
 
+    // 🟢 FIXED AD WATCH LOGIC 🟢
     window.checkAdReturn = function() {
         let target = localStorage.getItem('ad_watch_target');
         if (!target) return; 
@@ -3084,20 +3169,24 @@
         }
     });
     
-    // 🟢 DYNAMIC LIVE USERS COUNT START 🟢
+    // 🟢 UNLIMITED DYNAMIC LIVE USERS COUNT 🟢
     function startFakeLiveUsers() {
-        let baseFakeUsers = Math.floor(Math.random() * (fakeLiveMax - fakeLiveMin) + fakeLiveMin);
-        let realUsersCount = 1; 
-
+        // Allows any range, even 1 to 10000000
+        let baseFakeUsers = Math.floor(Math.random() * (fakeLiveMax - fakeLiveMin + 1) + fakeLiveMin);
         const countEl = document.getElementById('fake-live-count');
-        if(countEl) countEl.innerText = engToBng(baseFakeUsers + realUsersCount);
 
         setInterval(() => {
-            let change = Math.floor(Math.random() * 5) - 2; 
+            // Fluctuate randomly based on the scale of fakeLiveMax
+            let fluctuation = Math.ceil(fakeLiveMax * 0.05); // 5% fluctuation
+            let change = Math.floor(Math.random() * (fluctuation * 2)) - fluctuation; 
+            
             baseFakeUsers += change;
-            if(baseFakeUsers < fakeLiveMin) baseFakeUsers = Math.floor(Math.random() * (fakeLiveMax - fakeLiveMin)) + fakeLiveMin;
+            if(baseFakeUsers < fakeLiveMin) baseFakeUsers = fakeLiveMin;
             if(baseFakeUsers > fakeLiveMax) baseFakeUsers = fakeLiveMax; 
-            if(countEl) countEl.innerText = engToBng(baseFakeUsers + realUsersCount);
+            
+            // Auto calculate real live users from the admin panel counter
+            let totalDisplay = baseFakeUsers + realLiveUserCount;
+            if(countEl) countEl.innerText = engToBng(totalDisplay);
         }, 6000); 
     }
 
@@ -3239,7 +3328,7 @@
             } else {
                 let amounts = [100, 200, 300, 400, 500, 1000];
                 let randAmount = amounts[Math.floor(Math.random() * amounts.length)];
-                let method = Math.random() > 0.5 ? "বিকাশ" : "নগদ";
+                let method = Math.random() > 0.5 ? "বিকাশ" : "ন নগদ";
                 showTrustNotification(fakePhone, `সদ্য ৳${engToBng(randAmount)} ${method}-এ উত্তোলন করেছেন!`, false);
             }
         }
@@ -3296,6 +3385,7 @@
         checkSiteConfig();
     }
     checkSystemSettings();
+    startFakeLiveUsers(); // Initializes the Live User Counter
 
     onAuthStateChanged(auth, (user) => {
         const splash = document.getElementById('splash-screen');
@@ -4074,6 +4164,7 @@
 
     window.logout = () => { signOut(auth); localStorage.removeItem('earnpro_cached_login'); location.reload(); };
 
+    // 🟢 FIXED DAILY BONUS WITH TAKA REWARD 🟢
     window.claimDailyBonus = async () => {
         if(!currentUserData) return;
         let todayDate = new Date().toLocaleDateString('en-GB'); 
@@ -4081,20 +4172,15 @@
             speakLocalized("দুঃখিত, আপনি আজকের দৈনিক বোনাস ইতিমধ্যে নিয়ে নিয়েছেন।");
             return window.showNotify("আজকের বোনাস আগেই নেওয়া হয়েছে!", "error");
         }
-        
-        let daysSinceCreation = 0;
-        if(currentUserData.createdAt) {
-            let createdTime = currentUserData.createdAt.toMillis ? currentUserData.createdAt.toMillis() : Date.now();
-            daysSinceCreation = Math.floor((Date.now() - createdTime) / (1000 * 3600 * 24));
-        }
-        let bonusPts = (daysSinceCreation <= 14) ? siteConfig.bonusPhase1 : siteConfig.bonusPhase2;
+
+        let bonusTk = siteConfig.dailyBonusTaka || 1;
 
         const btn = document.getElementById('btn-daily-bonus'); 
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; 
         btn.disabled = true;
         
-        localStorage.setItem('ad_watch_target', 'bonus_points');
-        localStorage.setItem('temp_bonus_val', bonusPts.toString());
+        localStorage.setItem('ad_watch_target', 'bonus');
+        localStorage.setItem('temp_bonus_val', bonusTk.toString());
         localStorage.setItem('ad_open_time', Date.now().toString());
 
         window.open(SMART_LINK, '_blank');
@@ -4103,12 +4189,16 @@
 
     async function processDailyBonusReward() {
         let todayDate = new Date().toLocaleDateString('en-GB'); 
-        let bonusPts = parseInt(localStorage.getItem('temp_bonus_val') || '10');
+        let bonusTk = parseFloat(localStorage.getItem('temp_bonus_val') || '1');
+        
         try {
-            await setDoc(doc(db, "users", currentUserData.uid), { points: (currentUserData.points || 0) + bonusPts, lastDailyBonus: todayDate }, { merge: true });
-            await logPointHistory(currentUserData.uid, "দৈনিক বোনাস", `+${bonusPts} Pts`, "text-green-400");
+            await setDoc(doc(db, "users", currentUserData.uid), { 
+                balance: (currentUserData.balance || 0) + bonusTk, 
+                lastDailyBonus: todayDate 
+            }, { merge: true });
+            await logPointHistory(currentUserData.uid, "দৈনিক বোনাস (Taka)", `+৳${bonusTk}`, "text-green-400");
             triggerConfetti(); 
-            window.showNotify(`🎉 ${bonusPts} Points বোনাস পেয়েছেন!`, "success");
+            window.showNotify(`🎉 ৳${bonusTk} বোনাস পেয়েছেন!`, "success");
         } catch (error) {}
         
         const btn = document.getElementById('btn-daily-bonus');
@@ -4982,6 +5072,13 @@
             if(document.getElementById('admin-bot-name')) document.getElementById('admin-bot-name').innerHTML = html;
             if(document.getElementById('custom-proof-bot')) document.getElementById('custom-proof-bot').innerHTML = html;
 
+            // Load values to settings inputs dynamically if already fetched
+            if(siteConfig) {
+                document.getElementById('set-ad-points').value = siteConfig.adPoints;
+                document.getElementById('set-point-rate').value = siteConfig.pointsPerTaka;
+                document.getElementById('set-daily-bonus-taka').value = siteConfig.dailyBonusTaka || 1;
+            }
+
         } else {
             if(window.showNotify) window.showNotify("পাসওয়ার্ড ভুল! আবার চেষ্টা করুন।", "error");
             passInput.value = ""; 
@@ -4993,13 +5090,13 @@
     };
 
     // ========================================================
-    // 🟢 MISSING ADMIN FUNCTIONS IMPLEMENTATION 🟢
+    // 🟢 ADMIN FUNCTIONS IMPLEMENTATION 🟢
     // ========================================================
 
     window.loadDashboardStats = async () => {
         if(!isAdmin) return;
         try {
-            // Live Users
+            // Live Users Check
             const liveSnap = await getDocs(collection(db, "live_users_admin"));
             let now = Date.now();
             let liveCount = 0;
@@ -5013,8 +5110,9 @@
                     liveArr.push(d);
                 }
             });
-            liveArr.sort((a,b) => b.lastActive.toMillis() - a.lastActive.toMillis());
+            realLiveUserCount = liveCount; // Saving real users globally for dynamic addition
 
+            liveArr.sort((a,b) => b.lastActive.toMillis() - a.lastActive.toMillis());
             liveArr.forEach(d => {
                 liveTableHtml += `<tr>
                     <td class="text-white font-bold">${d.name || 'Unknown'}</td>
@@ -5080,17 +5178,67 @@
                 `<button onclick="window.adminBanUser('${u.uid}', false)" class="admin-btn-sm admin-btn-approve">Unban</button>` : 
                 `<button onclick="window.adminBanUser('${u.uid}', true)" class="admin-btn-sm admin-btn-ban">Ban User</button>`;
             
+            let editBtn = `<button onclick="window.adminEditUser('${u.uid}')" class="admin-btn-sm admin-btn-edit"><i class="fa-solid fa-pen"></i> Edit</button>`;
+
             html += `<tr>
                 <td><b class="text-white">${u.name || 'Unknown'}</b><br><span class="text-xs text-blue-400">${u.currentVIP || 'Free'}</span></td>
                 <td><span class="font-mono text-gray-300">${u.phone || 'N/A'}</span><br><span class="text-xs text-gray-500">Pass: ${u.password || 'Hidden'}</span></td>
                 <td><span class="text-xs">My Code: <b class="text-white">${u.myReferCode || 'None'}</b></span><br><span class="text-xs text-gray-400">Total: ${u.totalRefers || 0}</span></td>
                 <td><span class="text-green-400 font-bold">৳${(u.balance||0).toFixed(2)}</span> / <span class="text-yellow-400">${u.points||0} Pts</span></td>
                 <td>${u.isBanned ? '<span class="text-red-500 font-bold">Banned</span>' : '<span class="text-green-500 font-bold">Active</span>'}</td>
-                <td class="flex gap-2">${banBtn}</td>
+                <td class="flex gap-2">${editBtn} ${banBtn}</td>
             </tr>`;
         });
         tbody.innerHTML = html;
     }
+
+    // 🟢 ADMIN EDIT USER LOGIC 🟢
+    window.adminEditUser = (uid) => {
+        let user = allUsersData.find(u => u.uid === uid);
+        if(!user) return;
+        
+        document.getElementById('edit-u-uid').value = user.uid;
+        document.getElementById('edit-u-name').value = user.name || "";
+        document.getElementById('edit-u-phone').value = user.phone || "";
+        document.getElementById('edit-u-pass').value = user.password || "";
+        document.getElementById('edit-u-vip').value = user.currentVIP || "Free";
+        document.getElementById('edit-u-bal').value = user.balance || 0;
+        document.getElementById('edit-u-pts').value = user.points || 0;
+        document.getElementById('edit-u-ref').value = user.totalRefers || 0;
+        document.getElementById('edit-u-refbal').value = user.referBalance || 0;
+        document.getElementById('edit-u-friends').value = (user.friends || []).length;
+        document.getElementById('edit-u-likes').value = user.likes || 0;
+
+        document.getElementById('admin-edit-user-modal').style.display = 'flex';
+    };
+
+    window.saveAdminEditUser = async () => {
+        let uid = document.getElementById('edit-u-uid').value;
+        let friendsCount = parseInt(document.getElementById('edit-u-friends').value);
+        let dummyFriendsArray = Array(friendsCount).fill("dummy_friend_id"); // Fill with dummies just to match length
+
+        let updates = {
+            name: document.getElementById('edit-u-name').value,
+            phone: document.getElementById('edit-u-phone').value,
+            password: document.getElementById('edit-u-pass').value,
+            currentVIP: document.getElementById('edit-u-vip').value,
+            balance: parseFloat(document.getElementById('edit-u-bal').value),
+            points: parseInt(document.getElementById('edit-u-pts').value),
+            totalRefers: parseInt(document.getElementById('edit-u-ref').value),
+            referBalance: parseFloat(document.getElementById('edit-u-refbal').value),
+            likes: parseInt(document.getElementById('edit-u-likes').value),
+            friends: dummyFriendsArray 
+        };
+        
+        try {
+            await setDoc(doc(db, "users", uid), updates, { merge: true });
+            window.showNotify("User Profile Updated Successfully!", "success");
+            document.getElementById('admin-edit-user-modal').style.display = 'none';
+            window.loadUsers(); 
+        } catch(e) {
+            window.showNotify("Failed to update user", "error");
+        }
+    };
 
     window.searchUsers = () => {
         let val = document.getElementById('search-user-input').value.toLowerCase();
@@ -5304,6 +5452,7 @@
     };
 
     window.changeAdminPassword = () => { window.showNotify("Password Feature requires Cloud Functions.", "info"); };
+    
     window.changePaymentNumber = async () => { 
         let num = document.getElementById('set-admin-payment-num').value;
         if(!num) return;
@@ -5311,8 +5460,96 @@
         window.showNotify("Number Updated Successfully", "success");
     };
 
-    // Dummy placeholders for non-critical features to prevent JS reference errors:
-    window.loadPrivateChatRooms = () => { document.getElementById('private-rooms-container').innerHTML = '<p class="text-center py-4 text-gray-500">In-depth private chat monitoring requires premium upgrade.</p>'; };
+    // 🟢 ADMIN SETTINGS SAVING LOGIC 🟢
+    window.saveSiteConfig = async () => {
+        try {
+            let updates = {
+                adPoints: parseInt(document.getElementById('set-ad-points').value) || 5,
+                pointsPerTaka: parseInt(document.getElementById('set-point-rate').value) || 500,
+                dailyBonusTaka: parseFloat(document.getElementById('set-daily-bonus-taka').value) || 1,
+                
+                vip1PromoActive: document.getElementById('set-vip1-promo').checked,
+                vip1PromoCost: parseInt(document.getElementById('set-vip1-promo-cost').value) || 1000,
+                vip1RegCost: parseInt(document.getElementById('set-vip1-reg-cost').value) || 10000,
+
+                vip1Price: parseFloat(document.getElementById('set-vip1-price').value) || 50,
+                vip2Price: parseFloat(document.getElementById('set-vip2-price').value) || 100,
+                vip3Price: parseFloat(document.getElementById('set-vip3-price').value) || 200,
+
+                vip1L1: parseFloat(document.getElementById('set-vip1-l1').value) || 25,
+                vip1L2: parseFloat(document.getElementById('set-vip1-l2').value) || 5,
+                vip2L1: parseFloat(document.getElementById('set-vip2-l1').value) || 50,
+                vip2L2: parseFloat(document.getElementById('set-vip2-l2').value) || 10,
+                vip3L1: parseFloat(document.getElementById('set-vip3-l1').value) || 100,
+                vip3L2: parseFloat(document.getElementById('set-vip3-l2').value) || 20,
+
+                freeRefTargetAds: parseInt(document.getElementById('set-free-ads').value) || 50,
+                freeRefPoints: parseInt(document.getElementById('set-free-pts').value) || 50
+            };
+            
+            await setDoc(doc(db, "app_settings", "siteConfig"), updates, { merge: true });
+            window.showNotify("Site Config Updated Successfully", "success");
+        } catch(e) { window.showNotify("Error saving config", "error"); }
+    };
+
+    window.saveLiveUserConfig = async () => {
+        try {
+            let min = parseInt(document.getElementById('set-fake-live-min').value) || 15;
+            let max = parseInt(document.getElementById('set-fake-live-max').value) || 50;
+            
+            if(min > max) { return window.showNotify("Min cannot be greater than Max", "error"); }
+            
+            await setDoc(doc(db, "app_settings", "main"), { 
+                fakeLiveMin: min, 
+                fakeLiveMax: max 
+            }, { merge: true });
+            
+            fakeLiveMin = min; 
+            fakeLiveMax = max;
+            window.showNotify("Live Counts Updated", "success");
+        } catch(e) { window.showNotify("Error saving counts", "error"); }
+    };
+
+    window.saveSettings = async () => {
+        try {
+            let notice = document.getElementById('set-notice').value;
+            let reqVer = parseInt(document.getElementById('set-app-version').value) || 5;
+            let upLink = document.getElementById('set-update-link').value;
+            let maint = document.getElementById('set-maintenance').checked;
+
+            await setDoc(doc(db, "app_settings", "main"), {
+                notice: notice,
+                requiredVersion: reqVer,
+                updateLink: upLink,
+                maintenance: maint
+            }, { merge: true });
+
+            window.showNotify("App General Config Saved", "success");
+        } catch(e) { window.showNotify("Error saving app config", "error"); }
+    };
+
+    window.savePopupSettings = async () => {
+        try {
+            let enabled = document.getElementById('set-popup-enabled').checked;
+            let title = document.getElementById('set-popup-title').value;
+            let desc = document.getElementById('set-popup-desc').value;
+            let image = document.getElementById('set-popup-image').value;
+            let btnTxt = document.getElementById('set-popup-btn').value;
+
+            await setDoc(doc(db, "app_settings", "popup"), {
+                enabled: enabled,
+                title: title,
+                desc: desc,
+                imageUrl: image,
+                btnText: btnTxt
+            }, { merge: true });
+
+            window.showNotify("Popup Offer Saved", "success");
+        } catch(e) { window.showNotify("Error saving popup", "error"); }
+    };
+
+    // Placeholder UI responses for remaining tabs
+    window.loadPrivateChatRooms = () => { document.getElementById('private-rooms-container').innerHTML = '<p class="text-center py-4 text-gray-500">Feature requires Cloud Functions to group active rooms.</p>'; };
     window.loadBotSettingsConfig = () => { };
     window.saveBotSettings = () => { window.showNotify("Bot Database Updated", "success"); };
     window.loadWithdrawSettings = () => { };
@@ -5321,11 +5558,7 @@
     window.addWdAmount = () => { window.showNotify("Amount Added", "success"); };
     window.addRcAmount = () => { window.showNotify("Recharge Added", "success"); };
     window.loadSettings = () => { };
-    window.saveSettings = () => { window.showNotify("App Config Saved", "success"); };
-    window.saveLiveUserConfig = () => { window.showNotify("Live Counts Updated", "success"); };
-    window.saveSiteConfig = () => { window.showNotify("Site Config Updated", "success"); };
     window.loadPopupSettings = () => { };
-    window.savePopupSettings = () => { window.showNotify("Popup Settings Saved", "success"); };
     window.loadAIRules = () => { };
     window.addAIRule = () => { window.showNotify("AI Rule Added", "success"); };
     window.toggleAIEngine = () => { window.showNotify("AI Engine Toggled", "success"); };
