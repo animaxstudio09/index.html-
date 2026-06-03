@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EarnPro - Earning App </title>
+    <title>EarnPro - Earning App & Admin</title>
     
     <link rel="icon" type="image/png" sizes="192x192" href="logo.png">
     <link rel="icon" type="image/png" sizes="512x512" href="logo.png">
@@ -345,7 +345,7 @@
         #game-screen-casino { 
             display: none; 
             position: fixed; /* Makes it fullscreen overlay */
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0; left: 50%; width: 100%; max-width: 450px; height: 100vh; height: 100dvh; transform: translateX(-50%);
             background: radial-gradient(circle at top, #36175e 0%, #0f0c29 100%); 
             z-index: 9999999; /* Above absolutely everything */
             flex-direction: column; 
@@ -925,7 +925,7 @@
                 <span class="casino-bet-label">Bet Amount (Points)</span>
                 <div class="casino-bet-adjust">
                     <button onclick="if(window.changeBet) window.changeBet(-1)"><i class="fa-solid fa-minus text-sm"></i></button>
-                    <span class="casino-bet-amount" id="bet-amt">50</span>
+                    <input type="number" class="casino-bet-amount bg-transparent border-none text-center outline-none w-[60px]" id="bet-amt" value="50" min="10">
                     <button onclick="if(window.changeBet) window.changeBet(1)"><i class="fa-solid fa-plus text-sm"></i></button>
                 </div>
             </div>
@@ -1100,7 +1100,7 @@
             
             <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
                 <h4 class="font-bold text-blue-400 mb-1">১. কীভাবে কাজ করবেন (Ad Task):</h4>
-                <p>অ্যাড টাস্কে ক্লিক করার পর একটি পেজ বা অ্যাড ওপেন হবে। আপনাকে অবশ্যই সেখানে <b>কমপক্ষে ৫ সেকেন্ড</b> অপেক্ষা করতে হবে। ৫ সেকেন্ডের আগে ব্যাক করলে পয়েন্ট পাবেন না। প্রতিদিন ২০টি অ্যাড দেখার লিমিট থাকে। পয়েন্ট জমিয়ে এক্সচেঞ্জ করে টাকা নিতে পারবেন।</p>
+                <p>অ্যাড টাস্কে ক্লিক করার পর একটি পেজ বা অ্যাড ওপেন হবে। আপনাকে অবশ্যই সেখানে <b>কমপক্ষে ৫ সেকেন্ড</b> অপেক্ষা করতে হবে। ৫ সেকেন্ডের আগে ব্যাক করলে পয়েন্ট পাবেন সমাধানে। প্রতিদিন ২০টি অ্যাড দেখার লিমিট থাকে। পয়েন্ট জমিয়ে এক্সচেঞ্জ করে টাকা নিতে পারবেন।</p>
             </div>
 
             <div class="bg-[#0b0e14] p-3 rounded-lg border border-gray-800">
@@ -1177,7 +1177,7 @@
         </div>
         
         <div id="wd-free-warning" class="bg-red-500/10 border border-red-500/30 p-3 rounded-xl mb-4 hidden">
-            <p class="text-xs text-red-400 font-bold mb-3 leading-relaxed">⚠️ ফ্রি একাউন্টে টাকা উত্তোলন করা যায় পণ্ডিত। টাকা তুলতে হলে আপনাকে আগে VIP প্যাকেজ কিনে একাউন্ট অ্যাক্টিভ করতে হবে।</p>
+            <p class="text-xs text-red-400 font-bold mb-3 leading-relaxed">⚠️ ফ্রি একাউন্টে টাকা উত্তোলন করা যায় না। টাকা তুলতে হলে আপনাকে আগে VIP প্যাকেজ কিনে একাউন্ট অ্যাক্টিভ করতে হবে।</p>
             <button onclick="document.getElementById('withdraw-modal').style.display='none'; if(window.openVipPackages) window.openVipPackages();" class="w-full bg-red-600 py-2 rounded-lg text-sm font-bold text-white shadow-lg active:scale-95">VIP আপগ্রেড করুন</button>
         </div>
 
@@ -1216,7 +1216,12 @@
             <input type="number" id="wd-number" placeholder="017XXXXXXXX" class="input-style mb-4" required>
 
             <label class="text-sm text-gray-300 mb-2 block font-bold">টাকার পরিমাণ সিলেক্ট করুন</label>
-            <div id="dynamic-amounts-container" class="grid grid-cols-3 gap-2 mb-6"></div>
+            <div id="dynamic-amounts-container" class="grid grid-cols-3 gap-2 mb-2"></div>
+            
+            <div class="mt-4 mb-6">
+                <label class="text-sm text-gray-300 mb-2 block font-bold">অথবা নিজের ইচ্ছামত এমাউন্ট লিখুন (মিনিমাম ১০০৳)</label>
+                <input type="number" id="custom-wd-amount" placeholder="যেমন: 150" class="input-style !mb-0" min="100">
+            </div>
 
             <button type="submit" id="btn-withdraw" class="w-full bg-blue-600 hover:bg-blue-500 transition py-4 rounded-xl font-bold active:scale-95 shadow-lg shadow-blue-500/30 text-white">উত্তোলন রিকোয়েস্ট দিন</button>
         </form>
@@ -1316,12 +1321,12 @@
             
             <div>
                 <h4 class="font-bold text-white mb-1">২. ডাটা প্রাইভেসি:</h4>
-                <p>অ্যাকাউন্ট খোলার সময় আপনার ব্যবহৃত ফোন নাম্বার এবং নাম সম্পূর্ণ সুরক্ষিত। আমরা এই তথ্যগুলো শুধু আপনার পেমেন্ট ভেরিফিকেশন এবং আইডেন্টিটির জন্য ব্যবহার করি। তৃতীয় কোনো পক্ষের কাছে আপনার ডাটা বিক্রি করা হয় সমাধানে হয় না।</p>
+                <p>অ্যাকাউন্ট খোলার সময় আপনার ব্যবহৃত ফোন নাম্বার এবং নাম সম্পূর্ণ সুরক্ষিত। আমরা এই তথ্যগুলো শুধু আপনার পেমেন্ট ভেরিফিকেশন এবং আইডেন্টিটির জন্য ব্যবহার করি। তৃতীয় কোনো পক্ষের কাছে আপনার ডাটা বিক্রি করা হয় না।</p>
             </div>
             
             <div>
                 <h4 class="font-bold text-white mb-1">৩. এক মোবাইল, এক একাউন্ট:</h4>
-                <p>অ্যাপটি মাল্টি-অ্যাকাউন্ট (একই ডিভাইস দিয়ে বারবার নতুন অ্যাকাউন্ট খোলা) সাপোর্ট করে সমাধানে। আমাদের সিস্টেম খুবই অ্যাডভান্সড। যদি কেউ নিজের রেফার কোড নিজে ব্যবহার করার জন্য ফেক অ্যাকাউন্ট বানায়, তবে তার সব অ্যাকাউন্ট ব্যান করে ব্যালেন্স জিরো করে দেওয়া হবে।</p>
+                <p>অ্যাপটি মাল্টি-অ্যাকাউন্ট (একই ডিভাইস দিয়ে বারবার নতুন অ্যাকাউন্ট খোলা) সাপোর্ট করে না। আমাদের সিস্টেম খুবই অ্যাডভান্সড। যদি কেউ নিজের রেফার কোড নিজে ব্যবহার করার জন্য ফেক অ্যাকাউন্ট বানায়, তবে তার সব অ্যাকাউন্ট ব্যান করে ব্যালেন্স জিরো করে দেওয়া হবে।</p>
             </div>
 
             <div>
@@ -2178,14 +2183,11 @@
 
     window.changeBet = (dir) => {
         if(window.isSpinning) return;
-        const bets = [10, 50, 100, 200, 500, 1000, 5000];
-        let idx = bets.indexOf(window.casinoBetAmt);
-        if(idx === -1) idx = 1; // Default 50
-        idx += dir;
-        if(idx < 0) idx = 0;
-        if(idx >= bets.length) idx = bets.length - 1;
-        window.casinoBetAmt = bets[idx];
-        document.getElementById('bet-amt').innerText = window.casinoBetAmt;
+        let currentBet = parseInt(document.getElementById('bet-amt').value) || 50;
+        currentBet += (dir * 10);
+        if(currentBet < 10) currentBet = 10;
+        document.getElementById('bet-amt').value = currentBet;
+        window.casinoBetAmt = currentBet;
     };
 
     window.renderInitialGrid = () => {
@@ -2213,6 +2215,9 @@
             return;
         }
 
+        window.casinoBetAmt = parseInt(document.getElementById('bet-amt').value) || 50;
+        if(window.casinoBetAmt < 10) return window.showNotify("মিনিমাম ১০ পয়েন্ট দিয়ে খেলতে হবে!", "error");
+
         if ((currentUserData.points || 0) < window.casinoBetAmt) {
             window.showNotify("আপনার পর্যাপ্ত পয়েন্ট নেই!", "error");
             return;
@@ -2223,6 +2228,15 @@
         spinBtn.classList.add('spinning');
         document.getElementById('win-display').classList.remove('show');
         document.getElementById('win-display').innerText = "+0";
+
+        // Casino Audio Setup
+        let spinAudio = new Audio('https://actions.google.com/sounds/v1/tools/ratchet_wrench_fast.ogg');
+        let dropAudio = new Audio('https://actions.google.com/sounds/v1/impacts/wood_plank_drop.ogg');
+        let winAudio = new Audio('https://actions.google.com/sounds/v1/cartoon/clown_horn.ogg');
+        
+        if(document.getElementById('toggle-sound').checked) {
+            spinAudio.volume = 0.3; spinAudio.play().catch(e=>{});
+        }
 
         // Update Points instantly for visual effect
         let newPts = currentUserData.points - window.casinoBetAmt;
@@ -2246,12 +2260,14 @@
         
         const getRandomSymbol = () => {
             let rand = Math.random() * 100;
-            if(rand < 20) return symbols[0];
-            if(rand < 40) return symbols[1];
-            if(rand < 60) return symbols[2];
-            if(rand < 80) return symbols[3];
-            if(rand < 90) return symbols[4];
-            if(rand < 96) return symbols[5];
+            let userPts = currentUserData.points || 0;
+            let boost = userPts < 100 ? 5 : 0; // AI emotion logic to keep them playing
+            if(rand < 25 - boost) return symbols[0];
+            if(rand < 50 - boost) return symbols[1];
+            if(rand < 70 - boost) return symbols[2];
+            if(rand < 85 - boost) return symbols[3];
+            if(rand < 92 - (boost/2)) return symbols[4];
+            if(rand < 96 - (boost/2)) return symbols[5];
             if(rand < 99) return symbols[7]; // Wild
             return symbols[6]; // Gold 777
         };
@@ -2267,6 +2283,10 @@
                     <span class="top-left">${sym.top}</span>
                     <span class="main-icon">${sym.main}</span>
                 </div>`;
+
+                if(document.getElementById('toggle-sound').checked) {
+                    setTimeout(() => { let da = dropAudio.cloneNode(); da.volume = 0.2; da.play().catch(e=>{}); }, delay * 1000);
+                }
             }
             finalGrid.push(col);
             html += `</div>`;
@@ -2278,11 +2298,15 @@
         let winningCards = []; 
         for(let r=0; r<4; r++) {
             let matchCount = 1;
+            let wildCount = 0;
             let currentSym = finalGrid[0][r].main;
             let lineWins = [];
             lineWins.push({c:0, r:r});
             
+            if(finalGrid[0][r].type.includes('wild')) wildCount++;
+
             for(let c=1; c<5; c++) {
+                if(finalGrid[c][r].type.includes('wild')) wildCount++;
                 if(finalGrid[c][r].main === currentSym || finalGrid[c][r].type.includes('wild') || currentSym === '') {
                     if(currentSym === '' && !finalGrid[c][r].type.includes('wild')) currentSym = finalGrid[c][r].main;
                     matchCount++;
@@ -2296,6 +2320,7 @@
                 let multi = finalGrid[0][r].multi || 1;
                 if(matchCount === 4) multi *= 2;
                 if(matchCount === 5) multi *= 5;
+                if(wildCount >= 3) multi *= 5; // MASSIVE WIN logic for 3+ wilds
                 winMultiplier += multi;
                 winningCards = winningCards.concat(lineWins);
             }
@@ -2306,6 +2331,9 @@
         
         setTimeout(async () => {
             if(winAmount > 0) {
+                if(document.getElementById('toggle-sound').checked) {
+                    winAudio.volume = 0.5; winAudio.play().catch(e=>{});
+                }
                 winningCards.forEach(pos => {
                     let reel = wrapper.children[pos.c];
                     let card = reel.children[pos.r];
@@ -2803,7 +2831,7 @@
     let siteConfig = {
         adPoints: 5,
         pointsPerTaka: 500,  
-        minWithdraw: 50,
+        minWithdraw: 100,
         
         vip1PromoActive: true,
         vip1PromoCost: 1000,
@@ -2831,16 +2859,18 @@
             
             if(siteConfig.vip1PromoActive) {
                 document.getElementById('vip1-point-cost').innerText = siteConfig.vip1PromoCost;
-                document.getElementById('vip1-reg-cost').style.display = 'block';
-                document.getElementById('vip1-reg-cost').innerText = siteConfig.vip1RegCost + " Pts";
-                document.getElementById('promo-badge').style.display = 'inline-block';
+                if(document.getElementById('vip1-reg-cost')) {
+                    document.getElementById('vip1-reg-cost').style.display = 'block';
+                    document.getElementById('vip1-reg-cost').innerText = siteConfig.vip1RegCost + " Pts";
+                }
+                if(document.getElementById('promo-badge')) document.getElementById('promo-badge').style.display = 'inline-block';
             } else {
                 document.getElementById('vip1-point-cost').innerText = siteConfig.vip1RegCost;
-                document.getElementById('vip1-reg-cost').style.display = 'none';
-                document.getElementById('promo-badge').style.display = 'none';
+                if(document.getElementById('vip1-reg-cost')) document.getElementById('vip1-reg-cost').style.display = 'none';
+                if(document.getElementById('promo-badge')) document.getElementById('promo-badge').style.display = 'none';
             }
             
-            if(document.getElementById('rules-l1-v1')) {
+            if(document.getElementById('rule-v1l1')) {
                 document.getElementById('rule-v1l1').innerText = engToBng(siteConfig.vip1L1) + '৳';
                 document.getElementById('rule-v1l2').innerText = engToBng(siteConfig.vip1L2) + '৳';
                 document.getElementById('rule-v2l1').innerText = engToBng(siteConfig.vip2L1) + '৳';
@@ -2849,10 +2879,12 @@
                 document.getElementById('rule-v3l2').innerText = engToBng(siteConfig.vip3L2) + '৳';
             }
 
-            document.getElementById('prog-target').innerText = siteConfig.vip1PromoActive ? siteConfig.vip1PromoCost : siteConfig.vip1RegCost;
+            if(document.getElementById('prog-target')) {
+                document.getElementById('prog-target').innerText = siteConfig.vip1PromoActive ? siteConfig.vip1PromoCost : siteConfig.vip1RegCost;
+            }
             
             let sel = document.getElementById('vip-select');
-            if(sel) {
+            if(sel && sel.options.length >= 3) {
                 sel.options[0].setAttribute('data-price', siteConfig.vip1Price);
                 sel.options[1].setAttribute('data-price', siteConfig.vip2Price);
                 sel.options[2].setAttribute('data-price', siteConfig.vip3Price);
@@ -2860,24 +2892,27 @@
 
             // Populate Admin Panel Config Inputs
             if(isAdmin) {
-                document.getElementById('set-ad-points').value = siteConfig.adPoints;
-                document.getElementById('set-point-rate').value = siteConfig.pointsPerTaka;
-                document.getElementById('set-daily-bonus-taka').value = siteConfig.dailyBonusTaka || 1;
+                if(document.getElementById('set-ad-points')) document.getElementById('set-ad-points').value = siteConfig.adPoints;
+                if(document.getElementById('set-point-rate')) document.getElementById('set-point-rate').value = siteConfig.pointsPerTaka;
+                if(document.getElementById('set-daily-bonus-taka')) document.getElementById('set-daily-bonus-taka').value = siteConfig.dailyBonusTaka || 1;
                 
-                document.getElementById('set-vip1-promo').checked = siteConfig.vip1PromoActive;
-                document.getElementById('set-vip1-promo-cost').value = siteConfig.vip1PromoCost;
-                document.getElementById('set-vip1-reg-cost').value = siteConfig.vip1RegCost;
+                if(document.getElementById('set-vip1-promo')) document.getElementById('set-vip1-promo').checked = siteConfig.vip1PromoActive;
+                if(document.getElementById('set-vip1-promo-cost')) document.getElementById('set-vip1-promo-cost').value = siteConfig.vip1PromoCost;
+                if(document.getElementById('set-vip1-reg-cost')) document.getElementById('set-vip1-reg-cost').value = siteConfig.vip1RegCost;
 
-                document.getElementById('set-vip1-price').value = siteConfig.vip1Price;
-                document.getElementById('set-vip2-price').value = siteConfig.vip2Price;
-                document.getElementById('set-vip3-price').value = siteConfig.vip3Price;
+                if(document.getElementById('set-vip1-price')) document.getElementById('set-vip1-price').value = siteConfig.vip1Price;
+                if(document.getElementById('set-vip2-price')) document.getElementById('set-vip2-price').value = siteConfig.vip2Price;
+                if(document.getElementById('set-vip3-price')) document.getElementById('set-vip3-price').value = siteConfig.vip3Price;
 
-                document.getElementById('set-vip1-l1').value = siteConfig.vip1L1; document.getElementById('set-vip1-l2').value = siteConfig.vip1L2;
-                document.getElementById('set-vip2-l1').value = siteConfig.vip2L1; document.getElementById('set-vip2-l2').value = siteConfig.vip2L2;
-                document.getElementById('set-vip3-l1').value = siteConfig.vip3L1; document.getElementById('set-vip3-l2').value = siteConfig.vip3L2;
+                if(document.getElementById('set-vip1-l1')) document.getElementById('set-vip1-l1').value = siteConfig.vip1L1; 
+                if(document.getElementById('set-vip1-l2')) document.getElementById('set-vip1-l2').value = siteConfig.vip1L2;
+                if(document.getElementById('set-vip2-l1')) document.getElementById('set-vip2-l1').value = siteConfig.vip2L1; 
+                if(document.getElementById('set-vip2-l2')) document.getElementById('set-vip2-l2').value = siteConfig.vip2L2;
+                if(document.getElementById('set-vip3-l1')) document.getElementById('set-vip3-l1').value = siteConfig.vip3L1; 
+                if(document.getElementById('set-vip3-l2')) document.getElementById('set-vip3-l2').value = siteConfig.vip3L2;
 
-                document.getElementById('set-free-ads').value = siteConfig.freeRefTargetAds;
-                document.getElementById('set-free-pts').value = siteConfig.freeRefPoints;
+                if(document.getElementById('set-free-ads')) document.getElementById('set-free-ads').value = siteConfig.freeRefTargetAds;
+                if(document.getElementById('set-free-pts')) document.getElementById('set-free-pts').value = siteConfig.freeRefPoints;
             }
 
             updateUI(); 
@@ -2890,11 +2925,11 @@
             { id: 'nagad', name: 'Nagad', icon: 'https://i.ibb.co.com/w1cvHgy/images-2.png', color: '#ed1c24' }
         ],
         amounts: [
-            { amount: 50, charge: 0 }, { amount: 100, charge: 0 }, { amount: 200, charge: 0 },
-            { amount: 500, charge: 5 }, { amount: 1000, charge: 5 }, { amount: 2000, charge: 5 }
+            { amount: 100, charge: 0 }, { amount: 200, charge: 0 }, { amount: 500, charge: 0 },
+            { amount: 1000, charge: 0 }, { amount: 2000, charge: 0 }, { amount: 5000, charge: 0 }
         ],
         rechargeAmounts: [
-            { amount: 20, charge: 0 }, { amount: 50, charge: 0 }, { amount: 100, charge: 0 }
+            { amount: 100, charge: 0 }, { amount: 200, charge: 0 }, { amount: 500, charge: 0 }
         ],
         rechargeEnabled: true,
         withdrawEnabled: true,
@@ -3171,20 +3206,17 @@
     
     // 🟢 UNLIMITED DYNAMIC LIVE USERS COUNT 🟢
     function startFakeLiveUsers() {
-        // Allows any range, even 1 to 10000000
         let baseFakeUsers = Math.floor(Math.random() * (fakeLiveMax - fakeLiveMin + 1) + fakeLiveMin);
         const countEl = document.getElementById('fake-live-count');
 
         setInterval(() => {
-            // Fluctuate randomly based on the scale of fakeLiveMax
-            let fluctuation = Math.ceil(fakeLiveMax * 0.05); // 5% fluctuation
+            let fluctuation = Math.ceil(fakeLiveMax * 0.05); 
             let change = Math.floor(Math.random() * (fluctuation * 2)) - fluctuation; 
             
             baseFakeUsers += change;
             if(baseFakeUsers < fakeLiveMin) baseFakeUsers = fakeLiveMin;
             if(baseFakeUsers > fakeLiveMax) baseFakeUsers = fakeLiveMax; 
             
-            // Auto calculate real live users from the admin panel counter
             let totalDisplay = baseFakeUsers + realLiveUserCount;
             if(countEl) countEl.innerText = engToBng(totalDisplay);
         }, 6000); 
@@ -3328,7 +3360,7 @@
             } else {
                 let amounts = [100, 200, 300, 400, 500, 1000];
                 let randAmount = amounts[Math.floor(Math.random() * amounts.length)];
-                let method = Math.random() > 0.5 ? "বিকাশ" : "ন নগদ";
+                let method = Math.random() > 0.5 ? "বিকাশ" : "নগদ";
                 showTrustNotification(fakePhone, `সদ্য ৳${engToBng(randAmount)} ${method}-এ উত্তোলন করেছেন!`, false);
             }
         }
@@ -3369,7 +3401,8 @@
                 if(data.maintenance === true) {
                     document.getElementById('maintenance-screen').style.display = 'flex';
                 } else {
-                    document.getElementById('maintenance-screen').style.display = 'none';
+                    let ms = document.getElementById('maintenance-screen');
+                    if(ms) ms.style.display = 'none';
                 }
 
                 if(data.notice) {
@@ -3385,7 +3418,7 @@
         checkSiteConfig();
     }
     checkSystemSettings();
-    startFakeLiveUsers(); // Initializes the Live User Counter
+    startFakeLiveUsers(); 
 
     onAuthStateChanged(auth, (user) => {
         const splash = document.getElementById('splash-screen');
@@ -3941,14 +3974,6 @@
         if(method === 'nagad') document.getElementById('method-nagad').classList.add('active-nagad');
         if(method === 'recharge') document.getElementById('method-recharge').classList.add('active-recharge');
 
-        if(method === 'recharge') {
-            document.getElementById('amount-grid-standard').style.display = 'none';
-            document.getElementById('amount-grid-recharge').style.display = 'grid';
-        } else {
-            document.getElementById('amount-grid-standard').style.display = 'grid';
-            document.getElementById('amount-grid-recharge').style.display = 'none';
-        }
-
         wdSelectedAmount = 0; 
         document.querySelectorAll('.amt-card').forEach(el => el.classList.remove('active'));
     };
@@ -3958,6 +3983,7 @@
         wdCharge = charge;
         document.querySelectorAll('.amt-card').forEach(el => el.classList.remove('active'));
         document.getElementById(`amt-${amt}`).classList.add('active');
+        document.getElementById('custom-wd-amount').value = ''; 
     };
 
     window.openWithdrawModal = () => { 
@@ -3993,16 +4019,26 @@
         document.getElementById('wd-vip-used').innerText = engToBng(currentUserData.usedVipLimit || 0);
     };
 
+    // 🟢 UPDATED WITHDRAWAL SUBMISSION (CUSTOM AMOUNT & MIN 100) 🟢
     window.submitWithdraw = async (e) => {
         e.preventDefault();
         
         if(currentUserData.currentVIP === "Free") {
             speakLocalized("দুঃখিত, আপনার একাউন্টটি ফ্রি। টাকা তোলার জন্য দয়া করে একটি ভিআইপি প্যাকেজ কিনে নিন।");
-            return window.showNotify("VIP কেনা ছাড়া উইথড্র হবেবিধা নেই!", "error");
+            return window.showNotify("VIP কেনা ছাড়া উইথড্র হবে না!", "error");
         }
 
         if(!wdSelectedMethod) return window.showNotify("পেমেন্ট মেথড সিলেক্ট করুন!", "error");
-        if(wdSelectedAmount === 0) return window.showNotify("টাকার পরিমাণ সিলেক্ট করুন!", "error");
+        
+        let customAmtInput = document.getElementById('custom-wd-amount');
+        let customAmt = customAmtInput ? parseInt(customAmtInput.value) : 0;
+        
+        let finalAmount = customAmt > 0 ? customAmt : wdSelectedAmount;
+
+        if(!finalAmount || finalAmount < 100) {
+            speakLocalized("মিনিমাম ১০০ টাকা উইথড্র করতে হবে।");
+            return window.showNotify("মিনিমাম ১০০ টাকা তুলতে হবে!", "error");
+        }
 
         let number = document.getElementById('wd-number').value; 
         if(number.length < 10) return window.showNotify("সঠিক একাউন্ট নাম্বার দিন!", "error");
@@ -4012,14 +4048,15 @@
         if(currentUserData.currentVIP.includes("VIP 3")) maxLimit = 5000;
 
         let usedVipLimit = currentUserData.usedVipLimit || 0;
-        let totalCutAmount = wdSelectedAmount + wdCharge;
+        let currentCharge = customAmt > 0 ? 0 : wdCharge; 
+        let totalCutAmount = finalAmount + currentCharge;
 
         if(wdSelectedType === 'refer') {
             if(totalCutAmount > (currentUserData.referBalance || 0)) { 
                 speakLocalized(`দুঃখিত, আপনার রেফার ব্যালেন্সে পর্যাপ্ত টাকা নেই।`); 
                 return window.showNotify(`পর্যাপ্ত রেফার ব্যালেন্স নেই! (উইথড্র+চার্জ: ৳${totalCutAmount})`, 'error'); 
             }
-            if((usedVipLimit + wdSelectedAmount) > maxLimit) {
+            if((usedVipLimit + finalAmount) > maxLimit) {
                 let remaining = maxLimit - usedVipLimit;
                 if(remaining <= 0) {
                     await setDoc(doc(db, "users", currentUserData.uid), { currentVIP: "Free", usedVipLimit: 0 }, { merge: true });
@@ -4043,7 +4080,7 @@
             let isLimitExhausted = false;
             
             if(wdSelectedType === 'refer') {
-                let newUsed = usedVipLimit + wdSelectedAmount;
+                let newUsed = usedVipLimit + finalAmount;
                 updates.referBalance = (currentUserData.referBalance || 0) - totalCutAmount;
                 
                 if(newUsed >= maxLimit) { 
@@ -4057,7 +4094,7 @@
                 updates.balance = (currentUserData.balance || 0) - totalCutAmount;
             }
 
-            updates.totalWithdrawn = (currentUserData.totalWithdrawn || 0) + wdSelectedAmount;
+            updates.totalWithdrawn = (currentUserData.totalWithdrawn || 0) + finalAmount;
 
             await setDoc(doc(db, "users", currentUserData.uid), updates, { merge: true });
             
@@ -4066,8 +4103,8 @@
                 method: wdSelectedMethod, 
                 type: wdSelectedType, 
                 account: number, 
-                amount: wdSelectedAmount, 
-                charge: wdCharge,
+                amount: finalAmount, 
+                charge: currentCharge,
                 status: "Pending", 
                 timestamp: serverTimestamp() 
             });
@@ -4164,7 +4201,6 @@
 
     window.logout = () => { signOut(auth); localStorage.removeItem('earnpro_cached_login'); location.reload(); };
 
-    // 🟢 FIXED DAILY BONUS WITH TAKA REWARD 🟢
     window.claimDailyBonus = async () => {
         if(!currentUserData) return;
         let todayDate = new Date().toLocaleDateString('en-GB'); 
@@ -4266,7 +4302,7 @@
 
         // 🟢 BOT DETECTION & FAKE DATA (POINTS REDUCED) 🟢
         if(uid.includes('admin_custom_bot') || uid.startsWith('temp_') || uid.startsWith('bot_')) {
-            let fakePoints = Math.floor(Math.random() * 500) + 150; // Points reduced to 150 - 650
+            let fakePoints = Math.floor(Math.random() * 500) + 150; 
             let fakeFriends = Math.floor(Math.random() * 150) + 20;
             let fakeLikes = Math.floor(Math.random() * 100) + 10;
             let fakeVIPs = ["👑 VIP 1", "👑 VIP 2", "👑 VIP 3"];
@@ -4588,7 +4624,6 @@
             
             let dateStr = new Date(chat.timestamp).toLocaleDateString();
             
-            // Unread indicators
             let unreadDot = chat.unread ? `<div class="w-2.5 h-2.5 bg-blue-500 rounded-full mr-2 shadow-[0_0_8px_#3b82f6]"></div>` : '';
             let textWeightClass = chat.unread ? 'font-bold text-white' : 'text-gray-400';
             
@@ -4614,7 +4649,6 @@
             return window.showNotify("আপনি নিজের সাথে চ্যাট করতে পারবেন না", "error");
         }
         
-        // Mark as read
         if(currentUserData.recent_chats && currentUserData.recent_chats[uid] && currentUserData.recent_chats[uid].unread) {
             let updatedChats = currentUserData.recent_chats;
             updatedChats[uid].unread = false;
@@ -4647,7 +4681,7 @@
         const ctx = canvas.getContext('2d');
 
         const isBkash = Math.random() > 0.5;
-        const amounts = [50, 100, 200, 300, 400, 500, 600, 800, 1000];
+        const amounts = [100, 200, 300, 400, 500, 600, 800, 1000];
         const amount = amounts[Math.floor(Math.random() * amounts.length)];
         const balance = (amount + (Math.random() * 50)).toFixed(2);
         const trxId = (isBkash ? '' : '7') + Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -5012,6 +5046,10 @@
             reply = "অ্যাডমিন প্যানেল অ্যাক্সেস কোড দিন মাস্টার।"; 
             action = () => document.getElementById('admin-login-modal').style.display = 'flex'; 
         }
+        else if(t.match(/(হিডেন মোড অফ|hidden mode off|hidden mode of|close admin)/)) { 
+            reply = "অ্যাডমিন প্যানেল বন্ধ করছি।"; 
+            action = () => { document.getElementById('admin-panel-wrapper').style.display = 'none'; }; 
+        }
 
         else if(t.match(/(কেমন আছো|how are you|কি খবর)/)) { reply = "আমি দারুণ আছি বস! আপনি কেমন আছেন? চলুন কিছু ইনকাম করা যাক।"; }
         else if(t.match(/(হ্যালো|হাই|hello|hi|hey)/)) { reply = "হ্যালো! আমি আর্নপ্রো এর এআই অ্যাসিস্ট্যান্ট। কীভাবে সাহায্য করতে পারি?"; }
@@ -5074,9 +5112,9 @@
 
             // Load values to settings inputs dynamically if already fetched
             if(siteConfig) {
-                document.getElementById('set-ad-points').value = siteConfig.adPoints;
-                document.getElementById('set-point-rate').value = siteConfig.pointsPerTaka;
-                document.getElementById('set-daily-bonus-taka').value = siteConfig.dailyBonusTaka || 1;
+                if(document.getElementById('set-ad-points')) document.getElementById('set-ad-points').value = siteConfig.adPoints;
+                if(document.getElementById('set-point-rate')) document.getElementById('set-point-rate').value = siteConfig.pointsPerTaka;
+                if(document.getElementById('set-daily-bonus-taka')) document.getElementById('set-daily-bonus-taka').value = siteConfig.dailyBonusTaka || 1;
             }
 
         } else {
@@ -5085,8 +5123,36 @@
         }
     };
 
+    // 🟢 NEW AI ADMIN ASSISTANT LOGIC 🟢
     window.handleAdminAIBotClick = () => {
-        if(window.showNotify) window.showNotify("অ্যাডমিন বট এ মুহূর্তে অফলাইনে আছে!", "info");
+        const tooltip = document.getElementById('admin-ai-tooltip');
+        if(!window.SpeechRecognition && !window.webkitSpeechRecognition) return;
+        
+        let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'bn-BD';
+        
+        recognition.onstart = () => { if(tooltip) tooltip.innerText = "শুনছি... 🎤"; };
+        
+        recognition.onresult = (event) => {
+            let transcript = event.results[0][0].transcript.toLowerCase();
+            if(tooltip) tooltip.innerText = "ভাবছি... 🧠";
+            
+            if(transcript.match(/(হিডেন মোড অফ|hidden mode off|hidden mode of|ব্যাগ|back)/)) {
+                speakLocalized("অ্যাডমিন প্যানেল বন্ধ করছি।");
+                setTimeout(() => {
+                    document.getElementById('admin-panel-wrapper').style.display = 'none';
+                }, 1000);
+            } else {
+                speakLocalized("আমি অ্যাডমিন প্যানেলে শুধু হিডেন মোড অফ করতে পারি।");
+            }
+            if(tooltip) setTimeout(() => { tooltip.innerText = "কমান্ড দিন মাস্টার! 🎤"; }, 2000);
+        };
+        
+        recognition.onerror = () => { 
+            if(tooltip) { tooltip.innerText = "শুনতে পাইনি! ❌"; setTimeout(()=> { tooltip.innerText = "কমান্ড দিন মাস্টার! 🎤"; }, 2000); } 
+        };
+        
+        try { recognition.start(); } catch(e){}
     };
 
     // ========================================================
@@ -5110,7 +5176,7 @@
                     liveArr.push(d);
                 }
             });
-            realLiveUserCount = liveCount; // Saving real users globally for dynamic addition
+            realLiveUserCount = liveCount; 
 
             liveArr.sort((a,b) => b.lastActive.toMillis() - a.lastActive.toMillis());
             liveArr.forEach(d => {
@@ -5215,7 +5281,7 @@
     window.saveAdminEditUser = async () => {
         let uid = document.getElementById('edit-u-uid').value;
         let friendsCount = parseInt(document.getElementById('edit-u-friends').value);
-        let dummyFriendsArray = Array(friendsCount).fill("dummy_friend_id"); // Fill with dummies just to match length
+        let dummyFriendsArray = Array(friendsCount).fill("dummy_friend_id"); 
 
         let updates = {
             name: document.getElementById('edit-u-name').value,
@@ -5434,7 +5500,7 @@
         if(!amount) return window.showNotify("Amount is required", "error");
 
         let text = `আলহামদুলিল্লাহ, ${amount} টাকা ${method}-এ পেয়েছি! এডমিন ভাইকে অসংখ্য ধন্যবাদ।`;
-        let imgBase64 = createAppSideFakeProof(); // Uses the built-in generator
+        let imgBase64 = createAppSideFakeProof(); 
 
         try {
             await addDoc(collection(db, "global_chat_logs"), {
