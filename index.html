@@ -954,6 +954,37 @@
     </div>
 </div>
 
+<!-- 🟢 MISSING MODALS ADDED HERE 🟢 -->
+<!-- Friend Requests Modal -->
+<div id="friend-requests-modal" class="modal-overlay">
+    <div class="modal-content max-h-[80vh] flex flex-col !p-5">
+        <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+            <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-user-plus text-pink-400 mr-2"></i> Friend Requests</h3>
+            <button onclick="document.getElementById('friend-requests-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+        <div id="friend-requests-list" class="overflow-y-auto space-y-3 flex-1 pr-1 custom-scrollbar"></div>
+    </div>
+</div>
+
+<!-- History Modal -->
+<div id="history-modal" class="modal-overlay">
+    <div class="modal-content max-h-[80vh] flex flex-col !p-5">
+        <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+            <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-clock-rotate-left text-blue-400 mr-2"></i> উইথড্র হিস্ট্রি</h3>
+            <button onclick="document.getElementById('history-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+        <div id="history-list" class="overflow-y-auto space-y-3 flex-1 pr-1 custom-scrollbar"></div>
+    </div>
+</div>
+
+<!-- Maintenance Screen -->
+<div id="maintenance-screen" class="modal-overlay flex-col items-center justify-center text-center p-6 z-[9999999] bg-[#05070a] hidden">
+    <div class="w-24 h-24 rounded-full bg-yellow-500/20 flex items-center justify-center mb-6"><i class="fa-solid fa-person-digging text-5xl text-yellow-500"></i></div>
+    <h2 class="text-3xl font-bold text-white mb-2">সার্ভার মেইনটেন্যান্স!</h2>
+    <p class="text-gray-400 mb-6 leading-relaxed">আমাদের অ্যাপের সার্ভার আপগ্রেড বা রক্ষণাবেক্ষণের কাজ চলছে। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।</p>
+    <button onclick="window.open('https://t.me/Refer_earn08', '_blank')" class="bg-blue-600 px-6 py-3 rounded-xl font-bold text-white shadow-lg active:scale-95 w-full"><i class="fa-brands fa-telegram mr-2"></i> টেলিগ্রাম গ্রুপে আপডেট দেখুন</button>
+</div>
+
 <!-- 🟢 NOTIFICATIONS MODAL 🟢 -->
 <div id="notifications-modal" class="modal-overlay">
     <div class="modal-content max-h-[80vh] flex flex-col !p-5">
@@ -1190,7 +1221,7 @@
         </div>
         
         <div id="wd-free-warning" class="bg-red-500/10 border border-red-500/30 p-3 rounded-xl mb-4 hidden">
-            <p class="text-xs text-red-400 font-bold mb-3 leading-relaxed">⚠️ ফ্রি একাউন্টে টাকা উত্তোলন করা যায় না। টাকা তুলতে হলে আপনাকে আগে VIP প্যাকেজ কিনে একাউন্ট অ্যাক্টিভ করতে হবে।</p>
+            <p class="text-xs text-red-400 font-bold mb-3 leading-relaxed">⚠️ ফ্রি একাউন্টে টাকা উত্তোলন করা যায় অমর। টাকা তুলতে হলে আপনাকে আগে VIP প্যাকেজ কিনে একাউন্ট অ্যাক্টিভ করতে হবে।</p>
             <button onclick="document.getElementById('withdraw-modal').style.display='none'; if(window.openVipPackages) window.openVipPackages();" class="w-full bg-red-600 py-2 rounded-lg text-sm font-bold text-white shadow-lg active:scale-95">VIP আপগ্রেড করুন</button>
         </div>
 
@@ -1696,7 +1727,7 @@
                 <div id="private-room-view" class="hidden admin-glass-panel p-4 flex flex-col h-[75vh]">
                     <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
                         <h3 class="font-bold text-blue-400"><i class="fa-solid fa-user-lock"></i> Reading Private Chat</h3>
-                        <button onclick="window.loadPrivateChatRooms()" class="bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded text-xs font-bold transition"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                        <button onclick="window.backFromAdminPrivateRoom()" class="bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded text-xs font-bold transition"><i class="fa-solid fa-arrow-left"></i> Back</button>
                     </div>
                     
                     <div id="private-messages-container" class="flex-1 overflow-y-auto space-y-4 custom-scrollbar pr-2 pb-4">
@@ -2252,7 +2283,6 @@
         document.getElementById('win-display').classList.remove('show');
         document.getElementById('win-display').innerText = "+0";
 
-        // Casino Audio Setup (Updated with REALISTIC Casino Sounds)
         let spinAudio = new Audio('https://actions.google.com/sounds/v1/foley/plastic_crackle.ogg');
         let dropAudio = new Audio('https://actions.google.com/sounds/v1/impacts/wood_hit_metal.ogg');
         let winAudio = new Audio('https://actions.google.com/sounds/v1/alarms/dinner_bell_triangle.ogg');
@@ -2261,7 +2291,6 @@
             spinAudio.volume = 0.5; spinAudio.play().catch(e=>{});
         }
 
-        // Update Points instantly for visual effect
         let newPts = currentUserData.points - window.casinoBetAmt;
         document.getElementById('game-bal-casino').innerText = newPts;
         document.getElementById('user-points-ui').innerText = newPts;
@@ -2291,8 +2320,8 @@
             if(rand < 85 - boost) return symbols[3];
             if(rand < 92 - (boost/2)) return symbols[4];
             if(rand < 96 - (boost/2)) return symbols[5];
-            if(rand < 99) return symbols[7]; // Wild
-            return symbols[6]; // Gold 777
+            if(rand < 99) return symbols[7];
+            return symbols[6]; 
         };
 
         for(let c=0; c<5; c++) {
@@ -2316,7 +2345,6 @@
         }
         wrapper.innerHTML = html;
 
-        // Calculate Match Winnings
         let winMultiplier = 0;
         let winningCards = []; 
         for(let r=0; r<4; r++) {
@@ -3487,6 +3515,9 @@
                 if(window.checkAdReturn) window.checkAdReturn();
             }, 1000);
 
+            // Start bot interaction loop for this user
+            startBotToBotInteraction();
+
         } else {
             localStorage.removeItem('earnpro_cached_login');
             window.hasWelcomed = false;
@@ -4063,7 +4094,6 @@
         document.getElementById('wd-vip-used').innerText = engToBng(currentUserData.usedVipLimit || 0);
     };
 
-    // 🟢 UPDATED WITHDRAWAL SUBMISSION (CUSTOM AMOUNT & MIN 100) 🟢
     window.submitWithdraw = async (e) => {
         e.preventDefault();
         
@@ -4833,6 +4863,105 @@
         } catch(e) { console.error("Auto reply failed", e); }
     }
 
+    // 🟢 BOT AUTOREPLY IN GLOBAL CHAT 🟢
+    async function triggerGlobalBotReply(msg) {
+        let reply = "";
+        let withProof = false;
+        
+        if(msg.match(/(টাকা|পেমেন্ট|payment|proof|paisi|taka|paisen|দেয়|pay)/i)) {
+            const replies = [
+                "হ্যাঁ ভাই, ১০০% পেমেন্ট করে। আমি এইমাত্র বিকাশ এ টাকা পাইলাম। এই যে দেখেন স্ক্রিনশট দিলাম।",
+                "আলহামদুলিল্লাহ্‌, আমি তো ৩ বার পেমেন্ট পাইছি। কাজ করতে পারেন ভাই, এডমিন খুব ফাস্ট পেমেন্ট দেয়। প্রুফ দেখেন।",
+                "আমি প্রথমে বিশ্বাস করি নাই, পরে ৫০ টাকা উইথড্র দিয়ে দেখি ৫ মিনিটে চলে আসছে। এই দেখেন আমার আজকের পেমেন্ট প্রুফ।",
+                "টাকা দেয় ভাই, তবে নিয়ম মেনে কাজ করতে হবে। ভিপিএন ছাড়া কাজ করবেন, পেমেন্ট নিয়ে টেনশন নাই।",
+                "পেমেন্ট নিয়ে ভাবা লাগবে না ভাই, রেফার করেন বেশি বেশি। আমি রেফার কমিশন দিয়ে অলরেডি ১০০ টাকা তুলে নিছি।"
+            ];
+            let rIdx = Math.floor(Math.random() * replies.length);
+            reply = replies[rIdx];
+            if(rIdx <= 2) withProof = true;
+        } 
+        else if (msg.match(/^(hi|hello|হাই|হ্যালো|hey)$/i)) {
+            if(Math.random() > 0.6) return; // 60% chance to reply to basic hello
+            const replies = [
+                "হ্যালো ভাই, কিছু বলবেন?",
+                "জি ভাইয়া, বলুন।",
+                "হাই! কেমন আছেন?",
+                "হ্যালো!"
+            ];
+            reply = replies[Math.floor(Math.random() * replies.length)];
+        }
+        else if (msg.match(/(কেমন|kmn|bhalo|ভালো|kemon)/i)) {
+            const replies = [
+                "আলহামদুলিল্লাহ্‌ ভাই ভালো। আপনি কেমন আছেন?",
+                "এই তো ভাই ভালো আছি। আপনার কাজ কেমন চলছে?",
+                "আলহামদুলিল্লাহ্‌ ভালো। আজকে পেমেন্ট রিকোয়েস্ট দিলেন নাকি কেউ?",
+                "আমি ভালো আছি ভাই, আপনার খবর কি?"
+            ];
+            reply = replies[Math.floor(Math.random() * replies.length)];
+        }
+
+        if(reply !== "") {
+            let lastUsedBots = JSON.parse(localStorage.getItem('earnpro_used_bots') || '[]');
+            let availableBots = allBotNames.filter(b => !lastUsedBots.includes(b));
+            if(availableBots.length === 0) availableBots = allBotNames; 
+            
+            let botName = availableBots[Math.floor(Math.random() * availableBots.length)];
+            
+            lastUsedBots.push(botName);
+            if(lastUsedBots.length > 10) lastUsedBots.shift();
+            localStorage.setItem('earnpro_used_bots', JSON.stringify(lastUsedBots));
+
+            let imgBase64 = null;
+            if(withProof) imgBase64 = createAppSideFakeProof();
+
+            try {
+                await addDoc(collection(db, "global_chat_logs"), {
+                    uid: "bot_auto_" + botName,
+                    name: botName,
+                    avatar: "",
+                    text: reply,
+                    imageUrl: imgBase64,
+                    reactions: {},
+                    timestamp: serverTimestamp()
+                });
+            } catch(e) {}
+        }
+    }
+
+    // 🟢 BOT-TO-BOT BACKGROUND INTERACTION LOOP 🟢
+    function startBotToBotInteraction() {
+        setInterval(async () => {
+            if (activeChatMode !== 'global') return; 
+            if(Math.random() > 0.3) return; // Only 30% chance every 2 mins to initiate conversation
+
+            let bot1 = allBotNames[Math.floor(Math.random() * allBotNames.length)];
+            let bot2 = allBotNames[Math.floor(Math.random() * allBotNames.length)];
+            while(bot2 === bot1) bot2 = allBotNames[Math.floor(Math.random() * allBotNames.length)];
+
+            const scripts = [
+                ["আজকে পেমেন্ট কে কে পাইলেন?", "আমি দুপুরের দিকে পাইছি ভাই।", "আমিও রিকোয়েস্ট দিছি, আশা করি রাতে পেয়ে যাবো।"],
+                ["এডমিন ভাই অনেক ফাস্ট পেমেন্ট দেয়।", "হ্যাঁ ভাই, আমি তো ৫ মিনিটেই পেয়ে গেলাম।", "আমি কালকে উইথড্র দিব।"],
+                ["সবাই কি ভিপিএন ছাড়া কাজ করছেন?", "অবশ্যই! ভিপিএন লাগালে তো একাউন্ট ব্যান হবে।", "নিয়ম মেনে কাজ করলে পেমেন্ট ১০০%।"],
+                ["কার কত পয়েন্ট হলো আজকে?", "আমার ৫০০০ হইছে।", "আমি তো রেফার করে বেশি ইনকাম করছি।"]
+            ];
+
+            let selectedScript = scripts[Math.floor(Math.random() * scripts.length)];
+            
+            try {
+                await addDoc(collection(db, "global_chat_logs"), { uid: "bot_auto_" + bot1, name: bot1, avatar: "", text: selectedScript[0], reactions: {}, timestamp: serverTimestamp() });
+                setTimeout(async () => {
+                    await addDoc(collection(db, "global_chat_logs"), { uid: "bot_auto_" + bot2, name: bot2, avatar: "", text: selectedScript[1], reactions: {}, timestamp: serverTimestamp() });
+                }, 4000);
+                if(selectedScript.length > 2) {
+                    let bot3 = allBotNames[Math.floor(Math.random() * allBotNames.length)];
+                    setTimeout(async () => {
+                        await addDoc(collection(db, "global_chat_logs"), { uid: "bot_auto_" + bot3, name: bot3, avatar: "", text: selectedScript[2], reactions: {}, timestamp: serverTimestamp() });
+                    }, 9000);
+                }
+            } catch(e) {}
+        }, 120000); // 120000 = Every 2 minutes
+    }
+
     window.sendChatMessage = async () => {
         let input = document.getElementById('chat-input-field');
         let text = input.value.trim();
@@ -4840,6 +4969,7 @@
         
         input.value = "";
         
+        // 🟢 INSTANT OPTIMISTIC UI UPDATE (5-Second delay removed) 🟢
         let msgData = {
             id: 'temp_' + Date.now(),
             uid: currentUserData.uid,
@@ -4865,6 +4995,8 @@
         try {
             if(activeChatMode === 'global') {
                 await addDoc(collection(db, "global_chat_logs"), fbData);
+                // Trigger Bot Auto-reply in Global Chat
+                setTimeout(() => triggerGlobalBotReply(text.toLowerCase().trim()), 3000 + Math.random()*3000);
             } 
             else if (activeChatMode === 'private_room' && activePrivateUid) {
                 let roomId = [currentUserData.uid, activePrivateUid].sort().join('_');
@@ -5500,6 +5632,122 @@
         container.innerHTML = html;
     };
 
+    // 🟢 ADMIN PRIVATE CHAT MONITOR LOGIC 🟢
+    window.loadPrivateChatRooms = async () => {
+        if(!isAdmin) return;
+        document.getElementById('private-rooms-list').style.display = 'block';
+        document.getElementById('private-room-view').style.display = 'none';
+        
+        const container = document.getElementById('private-rooms-container');
+        container.innerHTML = '<p class="text-center py-4 text-gray-500"><i class="fa-solid fa-spinner fa-spin"></i> Loading active private chats...</p>';
+
+        try {
+            const q = query(collection(db, "private_messages"), orderBy("timestamp", "desc"), limit(100));
+            const snap = await getDocs(q);
+            
+            let rooms = {};
+            snap.forEach(doc => {
+                let d = doc.data();
+                if(d.roomId && !rooms[d.roomId]) {
+                    rooms[d.roomId] = {
+                        roomId: d.roomId,
+                        lastMsg: d.text,
+                        lastTime: d.timestamp ? d.timestamp.toMillis() : Date.now(),
+                        users: d.roomId.split('_')
+                    };
+                }
+            });
+
+            let roomsArr = Object.values(rooms);
+            if(roomsArr.length === 0) {
+                container.innerHTML = '<p class="text-center py-4 text-gray-500">No private chats found.</p>';
+                return;
+            }
+
+            let html = '';
+            for(let r of roomsArr) {
+                let dateStr = new Date(r.lastTime).toLocaleString();
+                html += `
+                <div class="bg-gray-800/50 p-3 rounded-lg border border-gray-700 cursor-pointer hover:bg-gray-700 transition mb-2" onclick="window.viewAdminPrivateRoom('${r.roomId}')">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-bold text-blue-400 text-sm"><i class="fa-solid fa-comments text-gray-500 mr-1"></i> Room ID: ${r.roomId.substring(0, 15)}...</span>
+                        <span class="text-[10px] text-gray-400">${dateStr}</span>
+                    </div>
+                    <p class="text-xs text-gray-300 truncate">Last Msg: ${r.lastMsg}</p>
+                </div>`;
+            }
+            container.innerHTML = html;
+        } catch(e) {
+            container.innerHTML = `<p class="text-center py-4 text-red-500">Error: ${e.message}</p>`;
+        }
+    };
+
+    window.viewAdminPrivateRoom = (roomId) => {
+        document.getElementById('private-rooms-list').style.display = 'none';
+        document.getElementById('private-room-view').style.display = 'flex';
+        document.getElementById('private-messages-container').innerHTML = '<p class="text-center py-4 text-gray-500"><i class="fa-solid fa-spinner fa-spin"></i> Loading room messages...</p>';
+        
+        const q = query(collection(db, "private_messages"), where("roomId", "==", roomId), orderBy("timestamp", "desc"), limit(50));
+        
+        if(window.adminPrivateRoomUnsubscribe) window.adminPrivateRoomUnsubscribe();
+        
+        window.adminPrivateRoomUnsubscribe = onSnapshot(q, (snap) => {
+            let msgs = [];
+            let participants = new Set();
+            snap.forEach(doc => {
+                let d = doc.data();
+                msgs.push(d);
+                if(d.name) participants.add(d.name);
+            });
+            msgs.reverse();
+
+            let pArr = Array.from(participants);
+            let sel = document.getElementById('admin-priv-sender');
+            sel.innerHTML = pArr.map(p => `<option value="${p}">${p} (Impersonate)</option>`).join('') + `<option value="Admin">Admin (Official)</option>`;
+            
+            let html = '';
+            msgs.forEach(m => {
+                let dateStr = m.timestamp ? new Date(m.timestamp.toMillis()).toLocaleTimeString() : '';
+                html += `
+                <div class="mb-3 ${m.name==='Admin' ? 'text-right' : 'text-left'}">
+                    <span class="text-[10px] font-bold text-gray-400 block mb-0.5">${m.name} • ${dateStr}</span>
+                    <span class="inline-block p-2 rounded-lg text-sm ${m.name==='Admin' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200'}">${m.text}</span>
+                </div>`;
+            });
+            document.getElementById('private-messages-container').innerHTML = html || '<p class="text-center text-gray-500">No messages.</p>';
+            let mc = document.getElementById('private-messages-container');
+            mc.scrollTop = mc.scrollHeight;
+            
+            window.currentAdminPrivateRoomId = roomId;
+        });
+    };
+
+    window.backFromAdminPrivateRoom = () => {
+        if(window.adminPrivateRoomUnsubscribe) window.adminPrivateRoomUnsubscribe();
+        document.getElementById('private-room-view').style.display = 'none';
+        document.getElementById('private-rooms-list').style.display = 'block';
+    };
+
+    window.sendPrivateAdminReply = async () => {
+        let text = document.getElementById('admin-priv-msg').value.trim();
+        let sender = document.getElementById('admin-priv-sender').value;
+        if(!text || !window.currentAdminPrivateRoomId) return;
+
+        try {
+            await addDoc(collection(db, "private_messages"), {
+                roomId: window.currentAdminPrivateRoomId,
+                uid: "admin_" + Date.now(),
+                name: sender,
+                avatar: "",
+                text: text,
+                reactions: {},
+                timestamp: serverTimestamp()
+            });
+            document.getElementById('admin-priv-msg').value = '';
+            window.showNotify("Message Sent to Room!", "success");
+        } catch(e) { window.showNotify("Error sending message", "error"); }
+    };
+
     window.sendPushNotification = async () => {
         let title = document.getElementById('push-notify-title').value;
         let body = document.getElementById('push-notify-body').value;
@@ -5663,7 +5911,6 @@
     };
 
     // Placeholder UI responses for remaining tabs
-    window.loadPrivateChatRooms = () => { document.getElementById('private-rooms-container').innerHTML = '<p class="text-center py-4 text-gray-500">Feature requires Cloud Functions to group active rooms.</p>'; };
     window.loadBotSettingsConfig = () => { };
     window.saveBotSettings = () => { window.showNotify("Bot Database Updated", "success"); };
     window.loadWithdrawSettings = () => { };
