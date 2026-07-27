@@ -409,6 +409,538 @@
         .t-big { background: linear-gradient(to bottom, #fff, #4ade80); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .t-mega { background: linear-gradient(to bottom, #fff, #fb7185); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 120px;}
 
+        /* =========================================
+           GAMES HUB STYLES
+           ========================================= */
+        #games-hub-screen {
+            display: none; position: fixed; top: 0; left: 50%; width: 100%; max-width: 450px;
+            height: 100vh; height: 100dvh; transform: translateX(-50%);
+            background: linear-gradient(135deg, #0a0a1a 0%, #0f0c29 50%, #1a0533 100%);
+            z-index: 9999998; flex-direction: column; font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+        .games-hub-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 14px 16px; 
+            background: rgba(0,0,0,0.5); 
+            border-bottom: 2px solid rgba(139,92,246,0.4);
+            box-shadow: 0 4px 20px rgba(139,92,246,0.2);
+        }
+        .games-hub-title { 
+            font-family: 'Teko', sans-serif; font-size: 32px; font-weight: 700; 
+            background: linear-gradient(90deg, #a78bfa, #f472b6, #facc15);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+        .games-hub-points {
+            background: linear-gradient(135deg, #1a1040, #2d1b69);
+            border: 2px solid #7c3aed;
+            padding: 8px 14px; border-radius: 50px;
+            font-size: 14px; font-weight: 800; color: #facc15;
+            display: flex; align-items: center; gap: 6px;
+            box-shadow: 0 0 15px rgba(124,58,237,0.4);
+        }
+        .games-hub-scroll { 
+            flex: 1; overflow-y: auto; padding: 16px; 
+        }
+        .games-hub-scroll::-webkit-scrollbar { display: none; }
+        .game-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px; padding: 0; overflow: hidden;
+            margin-bottom: 14px; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+        .game-card:active { transform: scale(0.97); }
+        .game-card-inner { display: flex; align-items: center; padding: 16px; gap: 14px; }
+        .game-card-icon { 
+            width: 64px; height: 64px; border-radius: 16px; 
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px; flex-shrink: 0;
+        }
+        .game-card-info { flex: 1; }
+        .game-card-name { font-size: 17px; font-weight: 800; color: #fff; }
+        .game-card-desc { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+        .game-card-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+        .game-tag { 
+            font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 20px; 
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .game-card-badge { 
+            position: absolute; top: 10px; right: 14px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white; font-size: 9px; font-weight: 800;
+            padding: 3px 8px; border-radius: 20px; letter-spacing: 0.5px;
+            animation: pulse-badge 2s infinite;
+        }
+        @keyframes pulse-badge { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .game-card-arrow { color: rgba(255,255,255,0.3); font-size: 18px; }
+        .games-hub-section-title { 
+            font-size: 11px; color: rgba(255,255,255,0.4); 
+            text-transform: uppercase; letter-spacing: 2px; font-weight: 700;
+            margin-bottom: 12px; margin-top: 4px;
+        }
+        .games-hub-featured {
+            background: linear-gradient(135deg, #1e1040, #2d1b69);
+            border: 2px solid rgba(139,92,246,0.3);
+            border-radius: 24px; padding: 20px; margin-bottom: 16px;
+            text-align: center; cursor: pointer; transition: transform 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .games-hub-featured:active { transform: scale(0.97); }
+        .games-hub-featured::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(139,92,246,0.15), transparent);
+        }
+        .games-hub-jackpot {
+            font-family: 'Teko', sans-serif; font-size: 50px; 
+            background: linear-gradient(135deg, #facc15, #f59e0b, #ef4444);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 700; line-height: 1; margin-bottom: 4px;
+        }
+        .hub-live-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3);
+            color: #4ade80; font-size: 10px; font-weight: 700;
+            padding: 4px 10px; border-radius: 20px; margin-bottom: 14px;
+        }
+        .hub-live-dot { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; animation: pulse 1.5s infinite; }
+        .hub-play-btn {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            border: none; color: white; font-weight: 800; font-size: 15px;
+            padding: 12px 30px; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 0 20px rgba(124,58,237,0.5); transition: 0.2s;
+            width: 100%; display: block; text-align: center;
+        }
+        .hub-play-btn:active { transform: scale(0.97); }
+
+        /* =========================================
+           COLOR PREDICTION GAME
+           ========================================= */
+        #game-color-predict {
+            display: none; position: fixed; top: 0; left: 50%; width: 100%; max-width: 450px;
+            height: 100vh; height: 100dvh; transform: translateX(-50%);
+            background: #0d0d1a; z-index: 9999999; flex-direction: column;
+            font-family: 'Poppins', sans-serif; overflow: hidden;
+        }
+        .cp-header { 
+            background: linear-gradient(135deg, #1a0533, #0d0920); 
+            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid rgba(139,92,246,0.3);
+        }
+        .cp-title { font-family: 'Teko', sans-serif; font-size: 28px; color: #a78bfa; font-weight: 700; letter-spacing: 2px; }
+        .cp-bal { background: rgba(250,204,21,0.1); border: 1px solid rgba(250,204,21,0.3); padding: 6px 12px; border-radius: 50px; color: #facc15; font-weight: 800; font-size: 14px; }
+        .cp-history-bar { 
+            display: flex; gap: 6px; padding: 10px 16px; overflow-x: auto; 
+            background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .cp-history-bar::-webkit-scrollbar { display: none; }
+        .cp-hist-dot { 
+            width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; 
+            display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800;
+            border: 2px solid rgba(255,255,255,0.15);
+        }
+        .cp-game-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .cp-timer-ring { 
+            width: 120px; height: 120px; border-radius: 50%; 
+            background: conic-gradient(#7c3aed 0deg, transparent 0deg);
+            display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+            position: relative; box-shadow: 0 0 30px rgba(124,58,237,0.3);
+        }
+        .cp-timer-inner { 
+            width: 96px; height: 96px; border-radius: 50%; background: #0d0d1a;
+            display: flex; align-items: center; justify-content: center; position: absolute;
+        }
+        .cp-timer-num { font-size: 36px; font-weight: 800; color: #fff; font-family: 'Teko', sans-serif; }
+        .cp-result-ball { 
+            width: 90px; height: 90px; border-radius: 50%; margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800;
+            box-shadow: 0 0 40px rgba(255,255,255,0.2); transition: all 0.5s;
+            border: 4px solid rgba(255,255,255,0.2);
+        }
+        .cp-color-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-bottom: 16px; }
+        .cp-color-btn { 
+            border: 3px solid transparent; border-radius: 16px; padding: 16px 8px; 
+            font-weight: 800; font-size: 14px; cursor: pointer; transition: 0.2s;
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            position: relative; overflow: hidden;
+        }
+        .cp-color-btn:active { transform: scale(0.95); }
+        .cp-color-btn.selected { border-color: #fff; box-shadow: 0 0 20px currentColor; transform: scale(1.05); }
+        .cp-btn-red { background: linear-gradient(135deg, #7f1d1d, #dc2626); color: #fff; }
+        .cp-btn-green { background: linear-gradient(135deg, #14532d, #16a34a); color: #fff; }
+        .cp-btn-blue { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; }
+        .cp-btn-violet { background: linear-gradient(135deg, #4c1d95, #7c3aed); color: #fff; }
+        .cp-btn-yellow { background: linear-gradient(135deg, #78350f, #d97706); color: #fff; }
+        .cp-multiplier { font-size: 20px; }
+        .cp-bet-controls { 
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px; padding: 14px; width: 100%;
+        }
+        .cp-bet-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .cp-bet-label { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .cp-bet-adj { display: flex; align-items: center; gap: 10px; }
+        .cp-bet-btn { 
+            width: 34px; height: 34px; border-radius: 50%; background: rgba(124,58,237,0.2);
+            border: 1px solid rgba(124,58,237,0.4); color: #a78bfa; font-weight: 800; font-size: 18px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .cp-bet-val { font-size: 22px; font-weight: 800; color: #facc15; min-width: 60px; text-align: center; font-family: 'Teko', sans-serif; }
+        .cp-place-btn { 
+            width: 100%; background: linear-gradient(135deg, #7c3aed, #4f46e5); 
+            border: none; color: white; font-weight: 800; font-size: 15px; padding: 14px;
+            border-radius: 14px; cursor: pointer; margin-top: 10px;
+            box-shadow: 0 0 20px rgba(124,58,237,0.4); transition: 0.2s;
+        }
+        .cp-place-btn:active { transform: scale(0.98); }
+        .cp-place-btn:disabled { opacity: 0.5; pointer-events: none; }
+        .cp-status { font-size: 12px; color: rgba(255,255,255,0.4); text-align: center; margin-top: 8px; }
+
+        /* =========================================
+           COIN FLIP GAME
+           ========================================= */
+        #game-coin-flip {
+            display: none; position: fixed; top: 0; left: 50%; width: 100%; max-width: 450px;
+            height: 100vh; height: 100dvh; transform: translateX(-50%);
+            background: linear-gradient(135deg, #0a1628, #041832); z-index: 9999999;
+            flex-direction: column; font-family: 'Poppins', sans-serif; overflow: hidden;
+        }
+        .cf-header { 
+            background: linear-gradient(135deg, #0a1a3a, #051020); 
+            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid rgba(59,130,246,0.4);
+        }
+        .cf-title { font-family: 'Teko', sans-serif; font-size: 28px; color: #60a5fa; font-weight: 700; letter-spacing: 2px; }
+        .cf-bal { background: rgba(250,204,21,0.1); border: 1px solid rgba(250,204,21,0.3); padding: 6px 12px; border-radius: 50px; color: #facc15; font-weight: 800; font-size: 14px; }
+        .cf-game-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 24px; }
+        .coin-container { position: relative; width: 140px; height: 140px; perspective: 600px; }
+        .coin { 
+            width: 140px; height: 140px; border-radius: 50%; position: relative;
+            transform-style: preserve-3d; transition: transform 1s ease-in-out;
+        }
+        .coin.flipping { animation: coinFlip 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        @keyframes coinFlip {
+            0% { transform: rotateY(0); } 
+            50% { transform: rotateY(900deg) translateY(-30px); } 
+            100% { transform: rotateY(1800deg); }
+        }
+        .coin-face, .coin-back { 
+            position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            backface-visibility: hidden; display: flex; align-items: center; justify-content: center;
+            font-size: 50px; font-weight: 800; border: 6px solid;
+        }
+        .coin-face { 
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+            border-color: #fde68a; color: #78350f;
+            box-shadow: 0 0 30px rgba(251,191,36,0.5);
+        }
+        .coin-back { 
+            background: linear-gradient(135deg, #94a3b8, #64748b, #475569);
+            border-color: #cbd5e1; color: #1e293b;
+            transform: rotateY(180deg);
+            box-shadow: 0 0 30px rgba(148,163,184,0.3);
+        }
+        .cf-choice-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; }
+        .cf-choice-btn { 
+            border-radius: 16px; padding: 18px; text-align: center; cursor: pointer;
+            border: 3px solid transparent; transition: 0.2s; font-weight: 800;
+        }
+        .cf-choice-btn:active { transform: scale(0.95); }
+        .cf-head-btn { background: linear-gradient(135deg, #78350f40, #78350f20); border-color: #d97706; color: #fbbf24; }
+        .cf-tail-btn { background: linear-gradient(135deg, #1e293b40, #1e293b20); border-color: #64748b; color: #cbd5e1; }
+        .cf-choice-btn.cf-selected { box-shadow: 0 0 20px currentColor; transform: scale(1.03); }
+        .cf-choice-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+        .cf-choice-name { font-size: 20px; }
+        .cf-choice-multi { font-size: 12px; margin-top: 4px; opacity: 0.7; }
+        .cf-bet-row { 
+            display: flex; align-items: center; gap: 14px; width: 100%;
+            background: rgba(255,255,255,0.04); border-radius: 16px; padding: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .cf-bet-label { flex: 1; font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 700; }
+        .cf-bet-adj { display: flex; align-items: center; gap: 10px; }
+        .cf-bet-btn { 
+            width: 36px; height: 36px; border-radius: 50%; background: rgba(59,130,246,0.2);
+            border: 1px solid rgba(59,130,246,0.4); color: #60a5fa; font-weight: 800; font-size: 18px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .cf-bet-val { font-size: 22px; font-weight: 800; color: #facc15; min-width: 60px; text-align: center; font-family: 'Teko', sans-serif; }
+        .cf-flip-btn { 
+            width: 100%; background: linear-gradient(135deg, #1d4ed8, #2563eb); 
+            border: none; color: white; font-weight: 800; font-size: 16px; padding: 16px;
+            border-radius: 14px; cursor: pointer; box-shadow: 0 0 20px rgba(37,99,235,0.4); transition: 0.2s;
+        }
+        .cf-flip-btn:active { transform: scale(0.98); }
+        .cf-flip-btn:disabled { opacity: 0.5; pointer-events: none; }
+        .cf-result-text { 
+            font-size: 28px; font-weight: 800; font-family: 'Teko', sans-serif;
+            text-align: center; min-height: 40px; letter-spacing: 2px;
+        }
+
+        /* =========================================
+           DICE GAME
+           ========================================= */
+        #game-dice {
+            display: none; position: fixed; top: 0; left: 50%; width: 100%; max-width: 450px;
+            height: 100vh; height: 100dvh; transform: translateX(-50%);
+            background: linear-gradient(135deg, #0d1b0a, #0a1f12); z-index: 9999999;
+            flex-direction: column; font-family: 'Poppins', sans-serif; overflow: hidden;
+        }
+        .dice-header { 
+            background: linear-gradient(135deg, #0d1f0a, #071a0f); 
+            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid rgba(34,197,94,0.4);
+        }
+        .dice-title { font-family: 'Teko', sans-serif; font-size: 28px; color: #4ade80; font-weight: 700; letter-spacing: 2px; }
+        .dice-bal { background: rgba(250,204,21,0.1); border: 1px solid rgba(250,204,21,0.3); padding: 6px 12px; border-radius: 50px; color: #facc15; font-weight: 800; font-size: 14px; }
+        .dice-game-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 20px; }
+        .dice-3d { 
+            width: 100px; height: 100px; position: relative; transform-style: preserve-3d;
+            transition: transform 1s ease-in-out;
+        }
+        .dice-3d.rolling { animation: diceRoll 1s ease-in-out forwards; }
+        @keyframes diceRoll {
+            0% { transform: rotateX(0) rotateY(0); }
+            25% { transform: rotateX(180deg) rotateY(90deg); }
+            50% { transform: rotateX(360deg) rotateY(180deg); }
+            75% { transform: rotateX(540deg) rotateY(270deg); }
+            100% { transform: rotateX(720deg) rotateY(360deg); }
+        }
+        .dice-face-big { 
+            width: 100px; height: 100px; border-radius: 18px; 
+            background: linear-gradient(135deg, #fff 0%, #e2e8f0 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 54px; font-weight: 900; color: #1e293b;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.6);
+            border: 4px solid #cbd5e1;
+        }
+        .dice-predict-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+        .dice-predict-btn { 
+            border-radius: 14px; padding: 14px 8px; text-align: center; cursor: pointer;
+            border: 2px solid; font-weight: 800; transition: 0.2s;
+        }
+        .dice-predict-btn:active { transform: scale(0.95); }
+        .dice-btn-high { background: rgba(239,68,68,0.15); border-color: #ef4444; color: #f87171; }
+        .dice-btn-low { background: rgba(59,130,246,0.15); border-color: #3b82f6; color: #60a5fa; }
+        .dice-btn-seven { background: rgba(234,179,8,0.15); border-color: #eab308; color: #facc15; }
+        .dice-predict-btn.dice-selected { box-shadow: 0 0 20px currentColor; transform: scale(1.05); }
+        .dice-predict-name { font-size: 16px; }
+        .dice-predict-detail { font-size: 10px; margin-top: 4px; opacity: 0.6; }
+        .dice-predict-multi { font-size: 13px; margin-top: 6px; font-weight: 900; }
+        .dice-bet-row { 
+            display: flex; align-items: center; gap: 14px; width: 100%;
+            background: rgba(255,255,255,0.04); border-radius: 16px; padding: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .dice-bet-label { flex: 1; font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 700; }
+        .dice-bet-adj { display: flex; align-items: center; gap: 10px; }
+        .dice-bet-btn { 
+            width: 36px; height: 36px; border-radius: 50%; background: rgba(34,197,94,0.2);
+            border: 1px solid rgba(34,197,94,0.4); color: #4ade80; font-weight: 800; font-size: 18px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .dice-bet-val { font-size: 22px; font-weight: 800; color: #facc15; min-width: 60px; text-align: center; font-family: 'Teko', sans-serif; }
+        .dice-roll-btn { 
+            width: 100%; background: linear-gradient(135deg, #16a34a, #15803d); 
+            border: none; color: white; font-weight: 800; font-size: 16px; padding: 16px;
+            border-radius: 14px; cursor: pointer; box-shadow: 0 0 20px rgba(22,163,74,0.4); transition: 0.2s;
+        }
+        .dice-roll-btn:active { transform: scale(0.98); }
+        .dice-roll-btn:disabled { opacity: 0.5; pointer-events: none; }
+        .dice-result-text { font-size: 24px; font-weight: 800; font-family: 'Teko', sans-serif; text-align: center; min-height: 36px; }
+
+        /* =========================================
+           LUCKY WHEEL GAME
+           ========================================= */
+        #game-wheel {
+            display: none; position: fixed; top: 0; left: 50%; width: 100%; max-width: 450px;
+            height: 100vh; height: 100dvh; transform: translateX(-50%);
+            background: linear-gradient(135deg, #1a0a2e, #2d0a1f); z-index: 9999999;
+            flex-direction: column; font-family: 'Poppins', sans-serif; overflow: hidden;
+        }
+        .wheel-header { 
+            background: linear-gradient(135deg, #1a0a2e, #0d0520); 
+            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid rgba(244,114,182,0.4);
+        }
+        .wheel-title { font-family: 'Teko', sans-serif; font-size: 28px; color: #f472b6; font-weight: 700; letter-spacing: 2px; }
+        .wheel-bal { background: rgba(250,204,21,0.1); border: 1px solid rgba(250,204,21,0.3); padding: 6px 12px; border-radius: 50px; color: #facc15; font-weight: 800; font-size: 14px; }
+        .wheel-game-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; gap: 14px; }
+        .wheel-container { position: relative; display: flex; align-items: center; justify-content: center; }
+        .wheel-pointer { 
+            position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; z-index: 10;
+            border-left: 14px solid transparent; border-right: 14px solid transparent;
+            border-top: 28px solid #f472b6;
+            filter: drop-shadow(0 2px 8px rgba(244,114,182,0.8));
+        }
+        #lucky-wheel-canvas { border-radius: 50%; box-shadow: 0 0 40px rgba(244,114,182,0.4), inset 0 0 20px rgba(0,0,0,0.3); }
+        .wheel-bet-row { 
+            display: flex; align-items: center; gap: 14px; width: 100%;
+            background: rgba(255,255,255,0.04); border-radius: 16px; padding: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .wheel-bet-label { flex: 1; font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 700; }
+        .wheel-bet-adj { display: flex; align-items: center; gap: 10px; }
+        .wheel-bet-btn { 
+            width: 34px; height: 34px; border-radius: 50%; background: rgba(244,114,182,0.2);
+            border: 1px solid rgba(244,114,182,0.4); color: #f472b6; font-weight: 800; font-size: 18px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .wheel-bet-val { font-size: 20px; font-weight: 800; color: #facc15; min-width: 60px; text-align: center; font-family: 'Teko', sans-serif; }
+        .wheel-spin-btn { 
+            width: 100%; background: linear-gradient(135deg, #be185d, #9d174d); 
+            border: none; color: white; font-weight: 800; font-size: 16px; padding: 16px;
+            border-radius: 14px; cursor: pointer; box-shadow: 0 0 20px rgba(190,24,93,0.4); transition: 0.2s;
+        }
+        .wheel-spin-btn:active { transform: scale(0.98); }
+        .wheel-spin-btn:disabled { opacity: 0.5; pointer-events: none; }
+        .wheel-result { font-size: 22px; font-weight: 800; font-family: 'Teko', sans-serif; text-align: center; min-height: 32px; }
+
+        /* =========================================
+           NUMBER RUSH GAME
+           ========================================= */
+        #game-number-rush {
+            display: none; position: fixed; top: 0; left: 50%; width: 100%; max-width: 450px;
+            height: 100vh; height: 100dvh; transform: translateX(-50%);
+            background: linear-gradient(135deg, #0f1a2e, #0a0f1e); z-index: 9999999;
+            flex-direction: column; font-family: 'Poppins', sans-serif; overflow: hidden;
+        }
+        .nr-header { 
+            background: linear-gradient(135deg, #0f1a2e, #080f1c); 
+            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid rgba(251,191,36,0.4);
+        }
+        .nr-title { font-family: 'Teko', sans-serif; font-size: 28px; color: #fbbf24; font-weight: 700; letter-spacing: 2px; }
+        .nr-bal { background: rgba(250,204,21,0.1); border: 1px solid rgba(250,204,21,0.3); padding: 6px 12px; border-radius: 50px; color: #facc15; font-weight: 800; font-size: 14px; }
+        .nr-game-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 20px; }
+        .nr-display { 
+            width: 120px; height: 120px; border-radius: 24px; 
+            background: linear-gradient(135deg, #1e2d4a, #0f1a2e);
+            border: 4px solid rgba(251,191,36,0.4); display: flex; align-items: center; justify-content: center;
+            font-family: 'Teko', sans-serif; font-size: 72px; font-weight: 700; color: #fbbf24;
+            box-shadow: 0 0 30px rgba(251,191,36,0.2), inset 0 0 20px rgba(251,191,36,0.05);
+            transition: all 0.3s;
+        }
+        .nr-display.nr-rolling { animation: nrRoll 0.1s steps(1) infinite; }
+        @keyframes nrRoll { 0% { color: #fbbf24; } 50% { color: #f472b6; } }
+        .nr-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 100%; }
+        .nr-number-btn { 
+            aspect-ratio: 1; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: 22px; font-weight: 800; cursor: pointer; transition: 0.2s;
+            background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(251,191,36,0.05));
+            border: 2px solid rgba(251,191,36,0.2); color: #fbbf24;
+        }
+        .nr-number-btn:active { transform: scale(0.9); }
+        .nr-number-btn.nr-selected { 
+            background: linear-gradient(135deg, #d97706, #b45309);
+            border-color: #fbbf24; color: #fff;
+            box-shadow: 0 0 20px rgba(217,119,6,0.5);
+        }
+        .nr-number-btn.nr-win { background: linear-gradient(135deg, #15803d, #16a34a); border-color: #4ade80; color: #fff; }
+        .nr-number-btn.nr-lose { background: linear-gradient(135deg, #991b1b, #dc2626); border-color: #f87171; color: #fff; }
+        .nr-bet-row { 
+            display: flex; align-items: center; gap: 14px; width: 100%;
+            background: rgba(255,255,255,0.04); border-radius: 16px; padding: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .nr-bet-label { flex: 1; font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 700; }
+        .nr-bet-adj { display: flex; align-items: center; gap: 10px; }
+        .nr-bet-btn { 
+            width: 34px; height: 34px; border-radius: 50%; background: rgba(251,191,36,0.2);
+            border: 1px solid rgba(251,191,36,0.4); color: #fbbf24; font-weight: 800; font-size: 18px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .nr-bet-val { font-size: 22px; font-weight: 800; color: #facc15; min-width: 60px; text-align: center; font-family: 'Teko', sans-serif; }
+        .nr-play-btn { 
+            width: 100%; background: linear-gradient(135deg, #d97706, #b45309); 
+            border: none; color: white; font-weight: 800; font-size: 16px; padding: 16px;
+            border-radius: 14px; cursor: pointer; box-shadow: 0 0 20px rgba(217,119,6,0.4); transition: 0.2s;
+        }
+        .nr-play-btn:active { transform: scale(0.98); }
+        .nr-play-btn:disabled { opacity: 0.5; pointer-events: none; }
+        .nr-result-text { font-size: 22px; font-weight: 800; font-family: 'Teko', sans-serif; text-align: center; min-height: 32px; }
+
+        /* =========================================
+           PROFESSIONAL WITHDRAW HISTORY
+           ========================================= */
+        .wd-history-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px; padding: 16px; margin-bottom: 12px;
+            position: relative; overflow: hidden; transition: transform 0.2s;
+        }
+        .wd-history-card:active { transform: scale(0.98); }
+        .wd-history-card::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+            border-radius: 4px 0 0 4px;
+        }
+        .wd-card-pending::before { background: linear-gradient(180deg, #fbbf24, #f59e0b); }
+        .wd-card-approved::before { background: linear-gradient(180deg, #4ade80, #16a34a); }
+        .wd-card-rejected::before { background: linear-gradient(180deg, #f87171, #dc2626); }
+        .wd-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .wd-card-amount { font-size: 26px; font-weight: 800; color: #fff; font-family: 'Teko', sans-serif; line-height: 1; }
+        .wd-card-currency { font-size: 14px; color: rgba(255,255,255,0.5); }
+        .wd-card-status { 
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 12px; border-radius: 50px; font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .wd-status-pending { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+        .wd-status-approved { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+        .wd-status-rejected { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
+        .wd-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+        .wd-status-pending .wd-status-dot { animation: pulse 1.5s infinite; }
+        .wd-card-bottom { display: flex; justify-content: space-between; align-items: center; }
+        .wd-card-method { 
+            display: flex; align-items: center; gap: 8px;
+        }
+        .wd-method-icon { 
+            width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px;
+        }
+        .wd-method-bkash { background: rgba(226,19,110,0.15); color: #e2136e; }
+        .wd-method-nagad { background: rgba(237,28,36,0.15); color: #ed1c24; }
+        .wd-method-recharge { background: rgba(59,130,246,0.15); color: #3b82f6; }
+        .wd-method-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.8); }
+        .wd-method-number { font-size: 11px; color: rgba(255,255,255,0.4); }
+        .wd-card-date { font-size: 11px; color: rgba(255,255,255,0.3); text-align: right; }
+        .wd-card-charge { 
+            font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;
+        }
+        .wd-filter-tabs { 
+            display: flex; gap: 6px; margin-bottom: 14px;
+        }
+        .wd-filter-tab { 
+            flex: 1; padding: 8px 4px; border-radius: 10px; font-size: 11px; font-weight: 700;
+            text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.08);
+            background: transparent; color: rgba(255,255,255,0.4); transition: 0.2s;
+        }
+        .wd-filter-tab.wd-active { 
+            background: rgba(59,130,246,0.2); color: #60a5fa; border-color: rgba(59,130,246,0.4);
+        }
+        .wd-summary-bar {
+            background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(99,102,241,0.05));
+            border: 1px solid rgba(59,130,246,0.15); border-radius: 16px;
+            padding: 14px; margin-bottom: 16px; display: flex; justify-content: space-between;
+        }
+        .wd-summary-item { text-align: center; }
+        .wd-summary-val { font-size: 20px; font-weight: 800; font-family: 'Teko', sans-serif; }
+        .wd-summary-lbl { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+        
+        /* Performance: will-change and hardware acceleration */
+        .casino-card, .cp-color-btn, .game-card, .cf-choice-btn, .dice-predict-btn, .nr-number-btn {
+            will-change: transform;
+            transform: translateZ(0);
+        }
+        
+        /* Fix lag: reduce expensive blur operations */
+        .scrollable-content { -webkit-overflow-scrolling: touch; transform: translateZ(0); }
+        
+        @keyframes popZoom { 0% { transform: scale(0) rotate(-10deg); opacity: 0; } 80% { transform: scale(1.1) rotate(2deg); opacity: 1; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+        @keyframes rotateIcon { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes slideUpFade { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
     </style>
 </head>
 <body onclick="if(window.closeAllReactMenus) window.closeAllReactMenus(event)">
@@ -893,9 +1425,9 @@
                 <i class="fa-solid fa-box-open"></i> Box
             </button>
             
-            <!-- BIG CENTER BUTTON FOR CASINO -->
-            <button id="nav-casino" onclick="if(window.switchTab) window.switchTab('casino')" class="relative -top-5 w-[65px] h-[65px] bg-gradient-to-tr from-yellow-400 to-yellow-600 rounded-full flex flex-col items-center justify-center text-black font-bold border-[4px] border-[#0b0e14] transition-transform active:scale-95 z-50 flex-shrink-0 cursor-pointer">
-                <i class="fa-solid fa-dice text-[26px] mt-1"></i>
+            <!-- BIG CENTER BUTTON FOR GAMES HUB -->
+            <button id="nav-casino" onclick="if(window.openGamesHub) window.openGamesHub()" class="relative -top-5 w-[65px] h-[65px] bg-gradient-to-tr from-yellow-400 to-yellow-600 rounded-full flex flex-col items-center justify-center text-black font-bold border-[4px] border-[#0b0e14] transition-transform active:scale-95 z-50 flex-shrink-0 cursor-pointer">
+                <i class="fa-solid fa-gamepad text-[26px] mt-1"></i>
                 <span class="text-[10px] uppercase tracking-widest leading-none mt-1 font-black">Play</span>
             </button>
 
@@ -966,14 +1498,363 @@
     </div>
 </div>
 
-<!-- History Modal -->
-<div id="history-modal" class="modal-overlay">
-    <div class="modal-content max-h-[80vh] flex flex-col !p-5">
-        <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
-            <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-clock-rotate-left text-blue-400 mr-2"></i> উইথড্র হিস্ট্রি</h3>
-            <button onclick="document.getElementById('history-modal').style.display='none'" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+<!-- ========================================
+     GAMES HUB SCREEN
+     ======================================== -->
+<div id="games-hub-screen" style="display:none; flex-direction:column;">
+    <div class="games-hub-header">
+        <div>
+            <div class="games-hub-title">🎮 GAME ZONE</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;">বেট করুন, জিতুন!</div>
         </div>
-        <div id="history-list" class="overflow-y-auto space-y-3 flex-1 pr-1 custom-scrollbar"></div>
+        <div class="games-hub-points">
+            <i class="fa-solid fa-star" style="color:#facc15;font-size:12px;"></i>
+            <span id="hub-pts-display">0</span> Pts
+        </div>
+        <button onclick="window.closeGamesHub()" style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div class="games-hub-scroll">
+        <!-- Featured: Casino -->
+        <div class="hub-live-badge"><span class="hub-live-dot"></span> LIVE NOW</div>
+        <div class="games-hub-featured" onclick="window.closeGamesHub(); window.openCasinoGame();">
+            <div style="font-size:50px;margin-bottom:8px;">🎰</div>
+            <div class="games-hub-jackpot">RT 777</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:16px;">ক্লাসিক স্লট মেশিন • Win up to 50x!</div>
+            <button class="hub-play-btn"><i class="fa-solid fa-dice mr-2"></i> এখনই খেলুন</button>
+        </div>
+
+        <div class="games-hub-section-title">🔥 সকল গেমস</div>
+
+        <!-- Color Prediction -->
+        <div class="game-card" onclick="window.openColorPredict()">
+            <div class="game-card-badge">HOT</div>
+            <div class="game-card-inner">
+                <div class="game-card-icon" style="background:linear-gradient(135deg,#7c3aed22,#7c3aed44);border:2px solid rgba(124,58,237,0.3);">🎨</div>
+                <div class="game-card-info">
+                    <div class="game-card-name">Color Prediction</div>
+                    <div class="game-card-desc">রং বেছে নিন, জিতুন বড় পুরস্কার</div>
+                    <div class="game-card-tags">
+                        <span class="game-tag" style="background:rgba(239,68,68,0.15);color:#f87171;">🔴 Red</span>
+                        <span class="game-tag" style="background:rgba(34,197,94,0.15);color:#4ade80;">🟢 Green</span>
+                        <span class="game-tag" style="background:rgba(59,130,246,0.15);color:#60a5fa;">🔵 Blue</span>
+                        <span class="game-tag" style="background:rgba(250,204,21,0.15);color:#facc15;">Up to 3x</span>
+                    </div>
+                </div>
+                <div class="game-card-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+        </div>
+
+        <!-- Coin Flip -->
+        <div class="game-card" onclick="window.openCoinFlip()">
+            <div class="game-card-inner">
+                <div class="game-card-icon" style="background:linear-gradient(135deg,#1d4ed822,#1d4ed844);border:2px solid rgba(29,78,216,0.3);">🪙</div>
+                <div class="game-card-info">
+                    <div class="game-card-name">Coin Flip</div>
+                    <div class="game-card-desc">Heads না Tails? 1.9x মাল্টিপ্লায়ার</div>
+                    <div class="game-card-tags">
+                        <span class="game-tag" style="background:rgba(251,191,36,0.15);color:#fbbf24;">🟡 Heads</span>
+                        <span class="game-tag" style="background:rgba(148,163,184,0.15);color:#cbd5e1;">⚫ Tails</span>
+                        <span class="game-tag" style="background:rgba(59,130,246,0.15);color:#60a5fa;">1.9x Win</span>
+                    </div>
+                </div>
+                <div class="game-card-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+        </div>
+
+        <!-- Dice Roll -->
+        <div class="game-card" onclick="window.openDiceGame()">
+            <div class="game-card-inner">
+                <div class="game-card-icon" style="background:linear-gradient(135deg,#16a34a22,#16a34a44);border:2px solid rgba(22,163,74,0.3);">🎲</div>
+                <div class="game-card-info">
+                    <div class="game-card-name">Dice Roll</div>
+                    <div class="game-card-desc">High/Low/Seven বেছে নিন ও জিতুন</div>
+                    <div class="game-card-tags">
+                        <span class="game-tag" style="background:rgba(239,68,68,0.15);color:#f87171;">High 2x</span>
+                        <span class="game-tag" style="background:rgba(59,130,246,0.15);color:#60a5fa;">Low 2x</span>
+                        <span class="game-tag" style="background:rgba(234,179,8,0.15);color:#facc15;">Seven 5x</span>
+                    </div>
+                </div>
+                <div class="game-card-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+        </div>
+
+        <!-- Lucky Wheel -->
+        <div class="game-card" onclick="window.openWheelGame()">
+            <div class="game-card-badge" style="background:linear-gradient(135deg,#9d174d,#be185d);">NEW</div>
+            <div class="game-card-inner">
+                <div class="game-card-icon" style="background:linear-gradient(135deg,#be185d22,#be185d44);border:2px solid rgba(190,24,93,0.3);">🎡</div>
+                <div class="game-card-info">
+                    <div class="game-card-name">Lucky Wheel</div>
+                    <div class="game-card-desc">স্পিন করুন, ভাগ্য পরীক্ষা করুন</div>
+                    <div class="game-card-tags">
+                        <span class="game-tag" style="background:rgba(244,114,182,0.15);color:#f472b6;">Spin to Win</span>
+                        <span class="game-tag" style="background:rgba(250,204,21,0.15);color:#facc15;">Max 10x!</span>
+                    </div>
+                </div>
+                <div class="game-card-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+        </div>
+
+        <!-- Number Rush -->
+        <div class="game-card" onclick="window.openNumberRush()">
+            <div class="game-card-inner">
+                <div class="game-card-icon" style="background:linear-gradient(135deg,#d9770622,#d9770644);border:2px solid rgba(217,119,6,0.3);">🔢</div>
+                <div class="game-card-info">
+                    <div class="game-card-name">Number Rush</div>
+                    <div class="game-card-desc">সঠিক নম্বর বেছে নিন, 9x জিতুন</div>
+                    <div class="game-card-tags">
+                        <span class="game-tag" style="background:rgba(251,191,36,0.15);color:#fbbf24;">1-9 Pick</span>
+                        <span class="game-tag" style="background:rgba(239,68,68,0.15);color:#f87171;">Jackpot 9x</span>
+                    </div>
+                </div>
+                <div class="game-card-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+        </div>
+
+        <div style="height:24px;"></div>
+    </div>
+</div>
+
+<!-- ========================================
+     COLOR PREDICTION GAME
+     ======================================== -->
+<div id="game-color-predict" style="display:none;flex-direction:column;">
+    <div class="cp-header">
+        <button onclick="window.closeColorPredict()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="cp-title">🎨 COLOR BET</div>
+        <div class="cp-bal"><i class="fa-solid fa-star" style="font-size:12px;"></i> <span id="cp-bal-display">0</span></div>
+    </div>
+    <!-- History bar -->
+    <div class="cp-history-bar" id="cp-history-bar">
+        <span style="font-size:11px;color:rgba(255,255,255,0.3);flex-shrink:0;align-self:center;">ইতিহাস:</span>
+    </div>
+    <div class="cp-game-area">
+        <div style="position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+            <div class="cp-timer-ring" id="cp-timer-ring">
+                <div class="cp-timer-inner">
+                    <div class="cp-timer-num" id="cp-timer-num">30</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="cp-result-area" style="font-size:20px;font-weight:800;font-family:'Teko',sans-serif;text-align:center;min-height:32px;margin-bottom:8px;letter-spacing:2px;"></div>
+        
+        <!-- Color buttons -->
+        <div class="cp-color-btns" id="cp-color-btns">
+            <button class="cp-color-btn cp-btn-red" onclick="window.cpSelectColor('red',2,'🔴')">
+                <div class="cp-multiplier">🔴</div>
+                <div style="font-size:14px;font-weight:800;">RED</div>
+                <div style="font-size:11px;opacity:0.7;">2x Win</div>
+            </button>
+            <button class="cp-color-btn cp-btn-green" onclick="window.cpSelectColor('green',2,'🟢')">
+                <div class="cp-multiplier">🟢</div>
+                <div style="font-size:14px;font-weight:800;">GREEN</div>
+                <div style="font-size:11px;opacity:0.7;">2x Win</div>
+            </button>
+            <button class="cp-color-btn cp-btn-violet" onclick="window.cpSelectColor('violet',3,'🟣')">
+                <div class="cp-multiplier">🟣</div>
+                <div style="font-size:14px;font-weight:800;">VIOLET</div>
+                <div style="font-size:11px;opacity:0.7;">3x Win</div>
+            </button>
+        </div>
+        
+        <div class="cp-bet-controls">
+            <div class="cp-bet-row">
+                <span class="cp-bet-label">💰 বাজি পরিমাণ (Pts)</span>
+                <div class="cp-bet-adj">
+                    <button class="cp-bet-btn" onclick="window.cpChangeBet(-10)">−</button>
+                    <div class="cp-bet-val" id="cp-bet-val">50</div>
+                    <button class="cp-bet-btn" onclick="window.cpChangeBet(10)">+</button>
+                </div>
+            </div>
+        </div>
+        <button class="cp-place-btn" id="cp-place-btn" onclick="window.cpPlaceBet()">
+            <i class="fa-solid fa-bolt mr-2"></i> বাজি রাখুন
+        </button>
+        <div class="cp-status" id="cp-status">রং বেছে নিন এবং বাজি রাখুন</div>
+    </div>
+</div>
+
+<!-- ========================================
+     COIN FLIP GAME
+     ======================================== -->
+<div id="game-coin-flip" style="display:none;flex-direction:column;">
+    <div class="cf-header">
+        <button onclick="window.closeCoinFlip()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="cf-title">🪙 COIN FLIP</div>
+        <div class="cf-bal"><i class="fa-solid fa-star" style="font-size:12px;"></i> <span id="cf-bal-display">0</span></div>
+    </div>
+    <div class="cf-game-area">
+        <div class="coin-container">
+            <div class="coin" id="coin-3d">
+                <div class="coin-face">H</div>
+                <div class="coin-back">T</div>
+            </div>
+        </div>
+        <div class="cf-result-text" id="cf-result-text" style="color:rgba(255,255,255,0.3);">Heads বা Tails বেছে নিন</div>
+        <div class="cf-choice-btns">
+            <div class="cf-choice-btn cf-head-btn" id="cf-head-btn" onclick="window.cfSelectSide('heads')">
+                <div class="cf-choice-label">বেছে নিন</div>
+                <div class="cf-choice-name">🟡 HEADS</div>
+                <div class="cf-choice-multi">1.9x মাল্টিপ্লায়ার</div>
+            </div>
+            <div class="cf-choice-btn cf-tail-btn" id="cf-tail-btn" onclick="window.cfSelectSide('tails')">
+                <div class="cf-choice-label">বেছে নিন</div>
+                <div class="cf-choice-name">⚫ TAILS</div>
+                <div class="cf-choice-multi">1.9x মাল্টিপ্লায়ার</div>
+            </div>
+        </div>
+        <div class="cf-bet-row">
+            <span class="cf-bet-label">💰 বাজি পরিমাণ (Pts)</span>
+            <div class="cf-bet-adj">
+                <button class="cf-bet-btn" onclick="window.cfChangeBet(-10)">−</button>
+                <div class="cf-bet-val" id="cf-bet-val">50</div>
+                <button class="cf-bet-btn" onclick="window.cfChangeBet(10)">+</button>
+            </div>
+        </div>
+        <button class="cf-flip-btn" id="cf-flip-btn" onclick="window.cfFlip()">
+            <i class="fa-solid fa-rotate mr-2"></i> Coin ছুঁড়ুন!
+        </button>
+    </div>
+</div>
+
+<!-- ========================================
+     DICE GAME
+     ======================================== -->
+<div id="game-dice" style="display:none;flex-direction:column;">
+    <div class="dice-header">
+        <button onclick="window.closeDiceGame()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="dice-title">🎲 DICE ROLL</div>
+        <div class="dice-bal"><i class="fa-solid fa-star" style="font-size:12px;"></i> <span id="dice-bal-display">0</span></div>
+    </div>
+    <div class="dice-game-area">
+        <div class="dice-face-big" id="dice-face-display">🎲</div>
+        <div class="dice-result-text" id="dice-result-text" style="color:rgba(255,255,255,0.3);">High, Low বা Seven বেছে নিন</div>
+        <div class="dice-predict-btns">
+            <div class="dice-predict-btn dice-btn-high" onclick="window.diceSelect('high')">
+                <div class="dice-predict-name">📈 HIGH</div>
+                <div class="dice-predict-detail">5-6 আসলে জিতবেন</div>
+                <div class="dice-predict-multi">2x</div>
+            </div>
+            <div class="dice-predict-btn dice-btn-seven" onclick="window.diceSelect('seven')">
+                <div class="dice-predict-name">✨ LUCKY</div>
+                <div class="dice-predict-detail">যেকোনো জোড় সংখ্যা</div>
+                <div class="dice-predict-multi">3x</div>
+            </div>
+            <div class="dice-predict-btn dice-btn-low" onclick="window.diceSelect('low')">
+                <div class="dice-predict-name">📉 LOW</div>
+                <div class="dice-predict-detail">1-2 আসলে জিতবেন</div>
+                <div class="dice-predict-multi">2x</div>
+            </div>
+        </div>
+        <div class="dice-bet-row">
+            <span class="dice-bet-label">💰 বাজি পরিমাণ (Pts)</span>
+            <div class="dice-bet-adj">
+                <button class="dice-bet-btn" onclick="window.diceChangeBet(-10)">−</button>
+                <div class="dice-bet-val" id="dice-bet-val">50</div>
+                <button class="dice-bet-btn" onclick="window.diceChangeBet(10)">+</button>
+            </div>
+        </div>
+        <button class="dice-roll-btn" id="dice-roll-btn" onclick="window.diceRollNow()">
+            <i class="fa-solid fa-dice mr-2"></i> Dice ছুঁড়ুন!
+        </button>
+    </div>
+</div>
+
+<!-- ========================================
+     LUCKY WHEEL GAME
+     ======================================== -->
+<div id="game-wheel" style="display:none;flex-direction:column;">
+    <div class="wheel-header">
+        <button onclick="window.closeWheelGame()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="wheel-title">🎡 LUCKY WHEEL</div>
+        <div class="wheel-bal"><i class="fa-solid fa-star" style="font-size:12px;"></i> <span id="wheel-bal-display">0</span></div>
+    </div>
+    <div class="wheel-game-area">
+        <div class="wheel-container">
+            <div class="wheel-pointer"></div>
+            <canvas id="lucky-wheel-canvas" width="260" height="260"></canvas>
+        </div>
+        <div class="wheel-result" id="wheel-result" style="color:rgba(255,255,255,0.3);">স্পিন করুন!</div>
+        <div class="wheel-bet-row">
+            <span class="wheel-bet-label">💰 বাজি পরিমাণ (Pts)</span>
+            <div class="wheel-bet-adj">
+                <button class="wheel-bet-btn" onclick="window.wheelChangeBet(-10)">−</button>
+                <div class="wheel-bet-val" id="wheel-bet-val">50</div>
+                <button class="wheel-bet-btn" onclick="window.wheelChangeBet(10)">+</button>
+            </div>
+        </div>
+        <button class="wheel-spin-btn" id="wheel-spin-btn" onclick="window.wheelSpin()">
+            <i class="fa-solid fa-rotate mr-2"></i> স্পিন করুন!
+        </button>
+    </div>
+</div>
+
+<!-- ========================================
+     NUMBER RUSH GAME
+     ======================================== -->
+<div id="game-number-rush" style="display:none;flex-direction:column;">
+    <div class="nr-header">
+        <button onclick="window.closeNumberRush()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="nr-title">🔢 NUMBER RUSH</div>
+        <div class="nr-bal"><i class="fa-solid fa-star" style="font-size:12px;"></i> <span id="nr-bal-display">0</span></div>
+    </div>
+    <div class="nr-game-area">
+        <div class="nr-display" id="nr-display">?</div>
+        <div class="nr-result-text" id="nr-result-text" style="color:rgba(255,255,255,0.3);">একটি নম্বর বেছে নিন (১-৯)</div>
+        <div class="nr-grid" id="nr-grid">
+            <!-- Buttons generated by JS -->
+        </div>
+        <div class="nr-bet-row">
+            <span class="nr-bet-label">💰 বাজি পরিমাণ (Pts)</span>
+            <div class="nr-bet-adj">
+                <button class="nr-bet-btn" onclick="window.nrChangeBet(-10)">−</button>
+                <div class="nr-bet-val" id="nr-bet-val">50</div>
+                <button class="nr-bet-btn" onclick="window.nrChangeBet(10)">+</button>
+            </div>
+        </div>
+        <button class="nr-play-btn" id="nr-play-btn" onclick="window.nrPlay()">
+            <i class="fa-solid fa-bolt mr-2"></i> খেলুন!
+        </button>
+    </div>
+</div>
+
+<!-- ========================================
+     ENHANCED HISTORY MODAL
+     ======================================== -->
+<div id="history-modal" class="modal-overlay">
+    <div class="modal-content max-h-[85vh] flex flex-col !p-0 !overflow-hidden" style="border-radius:24px;background:linear-gradient(135deg,#0d111c,#111827);">
+        <!-- Header -->
+        <div style="padding:18px 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,rgba(59,130,246,0.08),transparent);">
+            <div>
+                <div style="font-size:18px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;"><i class="fa-solid fa-clock-rotate-left" style="color:#60a5fa;margin-right:8px;"></i> উইথড্র হিস্ট্রি</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">আপনার সমস্ত উইথড্রয়ালের বিস্তারিত</div>
+            </div>
+            <button onclick="document.getElementById('history-modal').style.display='none'" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <!-- Summary Bar -->
+        <div style="padding:0 16px;padding-top:14px;">
+            <div class="wd-summary-bar" id="wd-summary-bar">
+                <div class="wd-summary-item"><div class="wd-summary-val" id="wd-total-amt" style="color:#60a5fa;">৳0</div><div class="wd-summary-lbl">মোট</div></div>
+                <div style="width:1px;background:rgba(255,255,255,0.08);"></div>
+                <div class="wd-summary-item"><div class="wd-summary-val" id="wd-approved-amt" style="color:#4ade80;">৳0</div><div class="wd-summary-lbl">অনুমোদিত</div></div>
+                <div style="width:1px;background:rgba(255,255,255,0.08);"></div>
+                <div class="wd-summary-item"><div class="wd-summary-val" id="wd-pending-cnt" style="color:#fbbf24;">0</div><div class="wd-summary-lbl">পেন্ডিং</div></div>
+            </div>
+        </div>
+        <!-- Filter Tabs -->
+        <div style="padding:0 16px;padding-bottom:10px;">
+            <div class="wd-filter-tabs" id="wd-filter-tabs">
+                <div class="wd-filter-tab wd-active" onclick="window.wdFilter('all',this)">সব</div>
+                <div class="wd-filter-tab" onclick="window.wdFilter('Pending',this)">পেন্ডিং</div>
+                <div class="wd-filter-tab" onclick="window.wdFilter('Approved',this)">অনুমোদিত</div>
+                <div class="wd-filter-tab" onclick="window.wdFilter('Rejected',this)">বাতিল</div>
+            </div>
+        </div>
+        <!-- List -->
+        <div id="history-list" class="overflow-y-auto flex-1 custom-scrollbar" style="padding:0 16px 16px;"></div>
     </div>
 </div>
 
@@ -2216,7 +3097,7 @@
 
     window.closeCasinoGame = () => {
         document.getElementById('game-screen-casino').style.display = 'none';
-        window.switchTab('home');
+        window.openGamesHub();
     };
 
     window.toggleTurbo = () => {
@@ -2525,12 +3406,8 @@
         // 🟢 CASINO NAV BUTTON STYLING 🟢
         const casinoBtn = document.getElementById('nav-casino');
         if(tabId === 'casino') {
-            casinoBtn.classList.remove('from-yellow-400', 'to-yellow-600', 'text-black');
-            casinoBtn.classList.add('from-blue-500', 'to-cyan-400', 'text-white', 'shadow-[0_0_20px_rgba(59,130,246,0.6)]');
-            setTimeout(() => { window.openCasinoGame(); }, 50);
-        } else {
-            casinoBtn.classList.add('from-yellow-400', 'to-yellow-600', 'text-black');
-            casinoBtn.classList.remove('from-blue-500', 'to-cyan-400', 'text-white', 'shadow-[0_0_20px_rgba(59,130,246,0.6)]');
+            // Redirect casino tab to games hub
+            setTimeout(() => window.openGamesHub(), 50);
         }
 
         if(tabId === 'chat' && window.setChatMode) { 
@@ -4333,26 +5210,701 @@
         }
     };
 
+    // ==========================================
+    // 🏆 ENHANCED WITHDRAW HISTORY MODAL
+    // ==========================================
+    let _wdAllHistory = [];
+
+    window.wdFilter = (filter, tabEl) => {
+        document.querySelectorAll('#wd-filter-tabs .wd-filter-tab').forEach(t => t.classList.remove('wd-active'));
+        if(tabEl) tabEl.classList.add('wd-active');
+        window._wdRenderList(_wdAllHistory, filter);
+    };
+
+    window._wdRenderList = (arr, filter) => {
+        const listDiv = document.getElementById('history-list');
+        let filtered = filter === 'all' ? arr : arr.filter(d => d.status === filter);
+        if(filtered.length === 0) {
+            listDiv.innerHTML = `<div style="text-align:center;padding:40px 20px;"><div style="font-size:48px;margin-bottom:12px;">📭</div><div style="color:rgba(255,255,255,0.3);font-size:14px;">কোনো রেকর্ড পাওয়া যায়নি</div></div>`;
+            return;
+        }
+        listDiv.innerHTML = '';
+        filtered.forEach((data, idx) => {
+            let statusKey = data.status === "Approved" ? "approved" : (data.status === "Pending" ? "pending" : "rejected");
+            let statusCard = statusKey === "approved" ? "wd-card-approved" : (statusKey === "pending" ? "wd-card-pending" : "wd-card-rejected");
+            let statusBadge = statusKey === "approved" ? "wd-status-approved" : (statusKey === "pending" ? "wd-status-pending" : "wd-status-rejected");
+            let statusLabel = data.status === "Approved" ? "✓ অনুমোদিত" : (data.status === "Pending" ? "⏳ প্রক্রিয়াধীন" : "✕ বাতিল");
+            let date = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString('en-BD', {day:'numeric',month:'short',year:'numeric'}) : "এইমাত্র";
+            let time = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString('en-BD', {hour:'2-digit',minute:'2-digit'}) : "";
+            let method = (data.method||'').toLowerCase();
+            let methodIcon = method.includes('bkash') ? '🩷' : method.includes('nagad') ? '🧡' : '📱';
+            let methodClass = method.includes('bkash') ? 'wd-method-bkash' : method.includes('nagad') ? 'wd-method-nagad' : 'wd-method-recharge';
+            let methodName = method.includes('bkash') ? 'bKash' : method.includes('nagad') ? 'Nagad' : 'রিচার্জ';
+            listDiv.innerHTML += `
+            <div class="wd-history-card ${statusCard}" style="animation:slideUpFade 0.3s ease ${idx * 0.06}s both;">
+                <div class="wd-card-top">
+                    <div>
+                        <div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">উইথড্র পরিমাণ</div>
+                        <div class="wd-card-amount">৳${data.amount} <span class="wd-card-currency">BDT</span></div>
+                    </div>
+                    <div class="wd-card-status ${statusBadge}">
+                        <span class="wd-status-dot"></span>${statusLabel}
+                    </div>
+                </div>
+                <div style="height:1px;background:rgba(255,255,255,0.05);margin-bottom:10px;"></div>
+                <div class="wd-card-bottom">
+                    <div class="wd-card-method">
+                        <div class="wd-method-icon ${methodClass}">${methodIcon}</div>
+                        <div>
+                            <div class="wd-method-name">${methodName}</div>
+                            <div class="wd-method-number">${data.number || ''}</div>
+                        </div>
+                    </div>
+                    <div class="wd-card-date">
+                        <div>${date}</div>
+                        <div style="font-size:10px;color:rgba(255,255,255,0.2);">${time}</div>
+                    </div>
+                </div>
+            </div>`;
+        });
+    };
+
     window.openHistoryModal = async () => {
         document.getElementById('history-modal').style.display = 'flex';
         const listDiv = document.getElementById('history-list');
-        listDiv.innerHTML = '<p class="text-center text-gray-500 py-4"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</p>';
+        listDiv.innerHTML = `<div style="text-align:center;padding:40px 20px;color:rgba(255,255,255,0.3);"><i class="fa-solid fa-spinner fa-spin" style="font-size:28px;color:#60a5fa;margin-bottom:12px;display:block;"></i>লোড হচ্ছে...</div>`;
+        document.querySelectorAll('#wd-filter-tabs .wd-filter-tab').forEach((t,i) => { t.classList.toggle('wd-active', i===0); });
         try {
             const q = query(collection(db, "withdrawals"), where("uid", "==", currentUserData.uid));
             const querySnapshot = await getDocs(q);
-            if(querySnapshot.empty) { listDiv.innerHTML = '<p class="text-center text-gray-500 py-4">কোনো হিস্ট্রি নেই</p>'; return; }
-            let historyArray = []; querySnapshot.forEach(doc => historyArray.push(doc.data()));
-            historyArray.sort((a,b) => b.timestamp - a.timestamp); 
-            listDiv.innerHTML = "";
-            historyArray.forEach(data => {
-                let statusColor = data.status === "Approved" ? "text-green-500" : (data.status === "Pending" ? "text-yellow-500" : "text-red-500");
-                let date = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString() : "Just now";
-                listDiv.innerHTML += `<div class="bg-[#05070a] p-3 rounded-xl border border-gray-800 flex justify-between items-center mb-3"><div><p class="font-bold text-white">৳${data.amount} <span class="text-xs text-gray-500 ml-2">${data.method.toUpperCase()}</span></p><p class="text-xs text-gray-500 mt-1">${date}</p></div><span class="text-sm font-bold ${statusColor}">${data.status}</span></div>`;
-            });
-        } catch (e) { listDiv.innerHTML = '<p class="text-center text-red-500 py-4">ডাটা লোড হতে সমস্যা হয়েছে</p>'; }
+            if(querySnapshot.empty) {
+                document.getElementById('wd-total-amt').innerText = '৳0';
+                document.getElementById('wd-approved-amt').innerText = '৳0';
+                document.getElementById('wd-pending-cnt').innerText = '0';
+                listDiv.innerHTML = `<div style="text-align:center;padding:40px 20px;"><div style="font-size:48px;margin-bottom:12px;">📭</div><div style="color:rgba(255,255,255,0.3);font-size:14px;">এখনো কোনো উইথড্র করা হয়নি</div></div>`;
+                return;
+            }
+            _wdAllHistory = [];
+            querySnapshot.forEach(d => _wdAllHistory.push(d.data()));
+            _wdAllHistory.sort((a,b) => (b.timestamp?.toDate?.()?.getTime?.() || 0) - (a.timestamp?.toDate?.()?.getTime?.() || 0));
+            let totalAmt = _wdAllHistory.reduce((s,d) => s + (Number(d.amount)||0), 0);
+            let approvedAmt = _wdAllHistory.filter(d => d.status === 'Approved').reduce((s,d) => s + (Number(d.amount)||0), 0);
+            let pendingCnt = _wdAllHistory.filter(d => d.status === 'Pending').length;
+            document.getElementById('wd-total-amt').innerText = '৳' + totalAmt;
+            document.getElementById('wd-approved-amt').innerText = '৳' + approvedAmt;
+            document.getElementById('wd-pending-cnt').innerText = pendingCnt;
+            window._wdRenderList(_wdAllHistory, 'all');
+        } catch (e) {
+            listDiv.innerHTML = '<div style="text-align:center;padding:40px;color:#f87171;"><i class="fa-solid fa-triangle-exclamation" style="font-size:28px;margin-bottom:12px;display:block;"></i>ডাটা লোড করতে সমস্যা হয়েছে</div>';
+        }
     };
 
-    window.contactSupport = () => { window.open(`https://wa.me/88${window.currentAdminNumber.replace(/^0+/, '')}`, '_blank'); };
+    // ==========================================
+    // 🎮 GAMES HUB LOGIC
+    // ==========================================
+    window.openGamesHub = () => {
+        const hub = document.getElementById('games-hub-screen');
+        hub.style.display = 'flex';
+        if(currentUserData) {
+            document.getElementById('hub-pts-display').innerText = currentUserData.points || 0;
+        }
+    };
+    window.closeGamesHub = () => {
+        document.getElementById('games-hub-screen').style.display = 'none';
+    };
+
+    // ==========================================
+    // 🎨 COLOR PREDICTION GAME
+    // ==========================================
+    let _cpBet = 50;
+    let _cpSelected = null;
+    let _cpSelectedMulti = 2;
+    let _cpSelectedEmoji = '';
+    let _cpTimer = null;
+    let _cpTimeLeft = 30;
+    let _cpBetting = true;
+    let _cpHistory = [];
+
+    window.openColorPredict = () => {
+        document.getElementById('game-color-predict').style.display = 'flex';
+        if(currentUserData) document.getElementById('cp-bal-display').innerText = currentUserData.points || 0;
+        _cpBet = 50;
+        document.getElementById('cp-bet-val').innerText = 50;
+        _cpSelected = null;
+        document.querySelectorAll('.cp-color-btn').forEach(b => b.classList.remove('selected'));
+        document.getElementById('cp-result-area').innerText = '';
+        document.getElementById('cp-status').innerText = 'রং বেছে নিন এবং বাজি রাখুন';
+        window._cpStartRound();
+    };
+
+    window.closeColorPredict = () => {
+        document.getElementById('game-color-predict').style.display = 'none';
+        clearInterval(_cpTimer);
+        window.openGamesHub();
+    };
+
+    window._cpStartRound = () => {
+        _cpTimeLeft = 30;
+        _cpBetting = true;
+        _cpSelected = null;
+        document.querySelectorAll('.cp-color-btn').forEach(b => { b.classList.remove('selected'); b.disabled = false; b.style.opacity = '1'; });
+        document.getElementById('cp-place-btn').disabled = false;
+        document.getElementById('cp-place-btn').innerText = '⚡ বাজি রাখুন';
+        document.getElementById('cp-result-area').innerText = '';
+        document.getElementById('cp-status').innerText = 'রং বেছে নিন এবং বাজি রাখুন';
+        clearInterval(_cpTimer);
+        _cpTimer = setInterval(window._cpTick, 1000);
+        window._cpDrawTimer();
+    };
+
+    window._cpTick = () => {
+        _cpTimeLeft--;
+        window._cpDrawTimer();
+        if(_cpTimeLeft <= 0) {
+            clearInterval(_cpTimer);
+            window._cpReveal();
+        }
+    };
+
+    window._cpDrawTimer = () => {
+        const ring = document.getElementById('cp-timer-ring');
+        const num = document.getElementById('cp-timer-num');
+        if(!ring || !num) return;
+        num.innerText = _cpTimeLeft;
+        let pct = _cpTimeLeft / 30;
+        let color = pct > 0.5 ? '#7c3aed' : (pct > 0.25 ? '#f59e0b' : '#ef4444');
+        ring.style.background = `conic-gradient(${color} ${pct * 360}deg, rgba(255,255,255,0.05) 0deg)`;
+        num.style.color = color;
+    };
+
+    window.cpSelectColor = (color, multi, emoji) => {
+        if(!_cpBetting) return;
+        _cpSelected = color;
+        _cpSelectedMulti = multi;
+        _cpSelectedEmoji = emoji;
+        document.querySelectorAll('.cp-color-btn').forEach(b => b.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+        document.getElementById('cp-status').innerText = emoji + ' ' + color.toUpperCase() + ' বেছে নিয়েছেন — বাজি রাখুন!';
+    };
+
+    window.cpChangeBet = (dir) => {
+        _cpBet = Math.max(10, Math.min(_cpBet + dir * 10, currentUserData?.points || 10));
+        document.getElementById('cp-bet-val').innerText = _cpBet;
+    };
+
+    window.cpPlaceBet = () => {
+        if(!_cpSelected) { window.showNotify('আগে একটি রং বেছে নিন!', 'error'); return; }
+        if(!currentUserData || (currentUserData.points || 0) < _cpBet) { window.showNotify('পর্যাপ্ত পয়েন্ট নেই!', 'error'); return; }
+        _cpBetting = false;
+        document.getElementById('cp-place-btn').disabled = true;
+        document.getElementById('cp-place-btn').innerText = '⏳ বাজি রাখা হয়েছে...';
+        document.querySelectorAll('.cp-color-btn').forEach(b => { b.disabled = true; b.style.opacity = '0.6'; });
+        document.getElementById('cp-status').innerText = _cpSelectedEmoji + ' ' + _cpSelected.toUpperCase() + ' — রেজাল্টের জন্য অপেক্ষা করুন...';
+    };
+
+    window._cpReveal = async () => {
+        const colors = ['red','green','violet','red','green','red','green','violet'];
+        let winColor = colors[Math.floor(Math.random() * colors.length)];
+        let multiMap = {red:2, green:2, violet:3};
+        let winEmoji = {red:'🔴', green:'🟢', violet:'🟣'};
+        
+        document.getElementById('cp-result-area').innerHTML = `<span style="font-size:32px;">${winEmoji[winColor]}</span> <span style="color:#fff;">${winColor.toUpperCase()}</span>`;
+        
+        // Add to history bar
+        _cpHistory.unshift(winEmoji[winColor]);
+        if(_cpHistory.length > 12) _cpHistory.pop();
+        const bar = document.getElementById('cp-history-bar');
+        if(bar) {
+            bar.innerHTML = '<span style="font-size:11px;color:rgba(255,255,255,0.3);flex-shrink:0;align-self:center;">ইতিহাস:</span>';
+            _cpHistory.forEach(e => {
+                bar.innerHTML += `<div class="cp-hist-dot" style="background:${e==='🔴'?'#dc2626':(e==='🟢'?'#16a34a':'#7c3aed')}">${e}</div>`;
+            });
+        }
+        
+        if(_cpBetting || !_cpSelected) {
+            document.getElementById('cp-status').innerText = 'রেজাল্ট: ' + winEmoji[winColor] + ' ' + winColor.toUpperCase() + ' — বাজি রাখা হয়নি';
+            setTimeout(() => window._cpStartRound(), 3000);
+            return;
+        }
+        
+        let didWin = _cpSelected === winColor;
+        let pts = currentUserData.points || 0;
+        
+        if(didWin) {
+            let winAmt = Math.floor(_cpBet * multiMap[winColor]);
+            pts = pts - _cpBet + winAmt;
+            document.getElementById('cp-result-area').innerHTML += `<div style="color:#4ade80;font-size:18px;margin-top:8px;">+${winAmt} পয়েন্ট জিতেছেন! 🎉</div>`;
+            document.getElementById('cp-status').innerText = '🎉 জিতেছেন! ' + multiMap[winColor] + 'x মাল্টিপ্লায়ার!';
+            window.showNotify('🎉 আপনি +' + winAmt + ' পয়েন্ট জিতেছেন!', 'success');
+            await logPointHistory(currentUserData.uid, 'Color Bet জয় (' + winColor + ')', '+' + winAmt + ' Pts', 'text-green-400');
+        } else {
+            pts = pts - _cpBet;
+            document.getElementById('cp-result-area').innerHTML += `<div style="color:#f87171;font-size:18px;margin-top:8px;">-${_cpBet} পয়েন্ট হারেছেন!</div>`;
+            document.getElementById('cp-status').innerText = '😔 হারেছেন! রং মেলেনি।';
+            window.showNotify('😔 -' + _cpBet + ' পয়েন্ট হারেছেন', 'error');
+            await logPointHistory(currentUserData.uid, 'Color Bet হার (' + winColor + ')', '-' + _cpBet + ' Pts', 'text-red-400');
+        }
+        
+        pts = Math.max(0, pts);
+        currentUserData.points = pts;
+        document.getElementById('cp-bal-display').innerText = pts;
+        document.getElementById('user-points-ui').innerText = pts;
+        try { await setDoc(doc(db, 'users', currentUserData.uid), { points: pts }, { merge: true }); } catch(e){}
+        
+        setTimeout(() => window._cpStartRound(), 3500);
+    };
+
+    // ==========================================
+    // 🪙 COIN FLIP GAME
+    // ==========================================
+    let _cfBet = 50;
+    let _cfSide = null;
+    let _cfFlipping = false;
+
+    window.openCoinFlip = () => {
+        document.getElementById('game-coin-flip').style.display = 'flex';
+        if(currentUserData) document.getElementById('cf-bal-display').innerText = currentUserData.points || 0;
+        _cfBet = 50;
+        _cfSide = null;
+        _cfFlipping = false;
+        document.getElementById('cf-bet-val').innerText = 50;
+        document.getElementById('cf-result-text').innerText = 'Heads বা Tails বেছে নিন';
+        document.getElementById('cf-result-text').style.color = 'rgba(255,255,255,0.3)';
+        document.getElementById('cf-head-btn').classList.remove('cf-selected');
+        document.getElementById('cf-tail-btn').classList.remove('cf-selected');
+    };
+
+    window.closeCoinFlip = () => {
+        document.getElementById('game-coin-flip').style.display = 'none';
+        window.openGamesHub();
+    };
+
+    window.cfSelectSide = (side) => {
+        if(_cfFlipping) return;
+        _cfSide = side;
+        document.getElementById('cf-head-btn').classList.toggle('cf-selected', side === 'heads');
+        document.getElementById('cf-tail-btn').classList.toggle('cf-selected', side === 'tails');
+    };
+
+    window.cfChangeBet = (dir) => {
+        _cfBet = Math.max(10, Math.min(_cfBet + dir * 10, currentUserData?.points || 10));
+        document.getElementById('cf-bet-val').innerText = _cfBet;
+    };
+
+    window.cfFlip = async () => {
+        if(_cfFlipping) return;
+        if(!_cfSide) { window.showNotify('আগে Heads বা Tails বেছে নিন!', 'error'); return; }
+        if(!currentUserData || (currentUserData.points || 0) < _cfBet) { window.showNotify('পর্যাপ্ত পয়েন্ট নেই!', 'error'); return; }
+        
+        _cfFlipping = true;
+        document.getElementById('cf-flip-btn').disabled = true;
+        document.getElementById('cf-result-text').innerText = 'টস হচ্ছে...';
+        document.getElementById('cf-result-text').style.color = '#fbbf24';
+        
+        const coin = document.getElementById('coin-3d');
+        coin.classList.add('flipping');
+        
+        let result = Math.random() < 0.5 ? 'heads' : 'tails';
+        let didWin = result === _cfSide;
+        let pts = currentUserData.points || 0;
+        
+        setTimeout(async () => {
+            coin.classList.remove('flipping');
+            
+            if(didWin) {
+                let winAmt = Math.floor(_cfBet * 1.9);
+                pts = pts - _cfBet + winAmt;
+                document.getElementById('cf-result-text').innerText = (result === 'heads' ? '🟡 HEADS' : '⚫ TAILS') + ' — জিতেছেন! +' + winAmt + ' Pts';
+                document.getElementById('cf-result-text').style.color = '#4ade80';
+                window.showNotify('🎉 +' + winAmt + ' পয়েন্ট জিতেছেন!', 'success');
+                await logPointHistory(currentUserData.uid, 'Coin Flip জয়', '+' + winAmt + ' Pts', 'text-green-400');
+            } else {
+                pts = pts - _cfBet;
+                document.getElementById('cf-result-text').innerText = (result === 'heads' ? '🟡 HEADS' : '⚫ TAILS') + ' — হারেছেন! -' + _cfBet + ' Pts';
+                document.getElementById('cf-result-text').style.color = '#f87171';
+                window.showNotify('😔 -' + _cfBet + ' পয়েন্ট হারেছেন', 'error');
+                await logPointHistory(currentUserData.uid, 'Coin Flip হার', '-' + _cfBet + ' Pts', 'text-red-400');
+            }
+            
+            pts = Math.max(0, pts);
+            currentUserData.points = pts;
+            document.getElementById('cf-bal-display').innerText = pts;
+            document.getElementById('user-points-ui').innerText = pts;
+            try { await setDoc(doc(db, 'users', currentUserData.uid), { points: pts }, { merge: true }); } catch(e){}
+            
+            _cfFlipping = false;
+            document.getElementById('cf-flip-btn').disabled = false;
+        }, 1300);
+    };
+
+    // ==========================================
+    // 🎲 DICE ROLL GAME
+    // ==========================================
+    let _diceBet = 50;
+    let _diceChoice = null;
+    let _diceRolling = false;
+    const _diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+    window.openDiceGame = () => {
+        document.getElementById('game-dice').style.display = 'flex';
+        if(currentUserData) document.getElementById('dice-bal-display').innerText = currentUserData.points || 0;
+        _diceBet = 50;
+        _diceChoice = null;
+        _diceRolling = false;
+        document.getElementById('dice-bet-val').innerText = 50;
+        document.getElementById('dice-face-display').innerText = '🎲';
+        document.getElementById('dice-result-text').innerText = 'High, Low বা Lucky বেছে নিন';
+        document.getElementById('dice-result-text').style.color = 'rgba(255,255,255,0.3)';
+        document.querySelectorAll('.dice-predict-btn').forEach(b => b.classList.remove('dice-selected'));
+    };
+
+    window.closeDiceGame = () => {
+        document.getElementById('game-dice').style.display = 'none';
+        window.openGamesHub();
+    };
+
+    window.diceSelect = (choice) => {
+        if(_diceRolling) return;
+        _diceChoice = choice;
+        document.querySelectorAll('.dice-predict-btn').forEach(b => b.classList.remove('dice-selected'));
+        event.currentTarget.classList.add('dice-selected');
+    };
+
+    window.diceChangeBet = (dir) => {
+        _diceBet = Math.max(10, Math.min(_diceBet + dir * 10, currentUserData?.points || 10));
+        document.getElementById('dice-bet-val').innerText = _diceBet;
+    };
+
+    window.diceRollNow = async () => {
+        if(_diceRolling) return;
+        if(!_diceChoice) { window.showNotify('আগে একটি পছন্দ করুন!', 'error'); return; }
+        if(!currentUserData || (currentUserData.points || 0) < _diceBet) { window.showNotify('পর্যাপ্ত পয়েন্ট নেই!', 'error'); return; }
+        
+        _diceRolling = true;
+        document.getElementById('dice-roll-btn').disabled = true;
+        document.getElementById('dice-result-text').innerText = 'রোলিং...';
+        document.getElementById('dice-result-text').style.color = '#fbbf24';
+        
+        // Rolling animation
+        let rollInterval = setInterval(() => {
+            document.getElementById('dice-face-display').innerText = _diceFaces[Math.floor(Math.random() * 6)];
+        }, 80);
+        
+        setTimeout(async () => {
+            clearInterval(rollInterval);
+            let rollResult = Math.floor(Math.random() * 6) + 1;
+            document.getElementById('dice-face-display').innerText = _diceFaces[rollResult - 1];
+            
+            let isEven = rollResult % 2 === 0;
+            let isHigh = rollResult >= 5;
+            let isLow = rollResult <= 2;
+            
+            let didWin = (_diceChoice === 'high' && isHigh) || (_diceChoice === 'low' && isLow) || (_diceChoice === 'seven' && isEven);
+            let multiMap = {high:2, low:2, seven:3};
+            let pts = currentUserData.points || 0;
+            
+            if(didWin) {
+                let winAmt = Math.floor(_diceBet * multiMap[_diceChoice]);
+                pts = pts - _diceBet + winAmt;
+                document.getElementById('dice-result-text').innerText = '🎉 জিতেছেন! +' + winAmt + ' পয়েন্ট!';
+                document.getElementById('dice-result-text').style.color = '#4ade80';
+                window.showNotify('🎉 +' + winAmt + ' পয়েন্ট জিতেছেন!', 'success');
+                await logPointHistory(currentUserData.uid, 'Dice Roll জয় (' + rollResult + ')', '+' + winAmt + ' Pts', 'text-green-400');
+            } else {
+                pts = pts - _diceBet;
+                document.getElementById('dice-result-text').innerText = '😔 হারেছেন! ' + rollResult + ' আসলো';
+                document.getElementById('dice-result-text').style.color = '#f87171';
+                window.showNotify('😔 -' + _diceBet + ' পয়েন্ট হারেছেন', 'error');
+                await logPointHistory(currentUserData.uid, 'Dice Roll হার (' + rollResult + ')', '-' + _diceBet + ' Pts', 'text-red-400');
+            }
+            
+            pts = Math.max(0, pts);
+            currentUserData.points = pts;
+            document.getElementById('dice-bal-display').innerText = pts;
+            document.getElementById('user-points-ui').innerText = pts;
+            try { await setDoc(doc(db, 'users', currentUserData.uid), { points: pts }, { merge: true }); } catch(e){}
+            
+            _diceRolling = false;
+            document.getElementById('dice-roll-btn').disabled = false;
+        }, 1200);
+    };
+
+    // ==========================================
+    // 🎡 LUCKY WHEEL GAME
+    // ==========================================
+    let _wheelBet = 50;
+    let _wheelSpinning = false;
+    let _wheelAngle = 0;
+    const _wheelSegments = [
+        {label:'2x', multi:2, color:'#7c3aed'},
+        {label:'LOSE', multi:0, color:'#dc2626'},
+        {label:'3x', multi:3, color:'#2563eb'},
+        {label:'1.5x', multi:1.5, color:'#16a34a'},
+        {label:'LOSE', multi:0, color:'#dc2626'},
+        {label:'5x', multi:5, color:'#d97706'},
+        {label:'1.5x', multi:1.5, color:'#16a34a'},
+        {label:'10x', multi:10, color:'#be185d'},
+        {label:'LOSE', multi:0, color:'#dc2626'},
+        {label:'2x', multi:2, color:'#7c3aed'},
+        {label:'LOSE', multi:0, color:'#dc2626'},
+        {label:'3x', multi:3, color:'#2563eb'},
+    ];
+
+    window._wheelDraw = (angle) => {
+        const canvas = document.getElementById('lucky-wheel-canvas');
+        if(!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+        const r = cx - 8;
+        const n = _wheelSegments.length;
+        const sliceAngle = (Math.PI * 2) / n;
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw segments
+        for(let i = 0; i < n; i++) {
+            let startAngle = angle + i * sliceAngle;
+            let endAngle = startAngle + sliceAngle;
+            
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.arc(cx, cy, r, startAngle, endAngle);
+            ctx.closePath();
+            ctx.fillStyle = _wheelSegments[i].color;
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Text
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(startAngle + sliceAngle / 2);
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 13px Poppins, sans-serif';
+            ctx.shadowColor = 'rgba(0,0,0,0.8)';
+            ctx.shadowBlur = 4;
+            ctx.fillText(_wheelSegments[i].label, r - 10, 5);
+            ctx.restore();
+        }
+        
+        // Center circle
+        ctx.beginPath();
+        ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+        ctx.fillStyle = '#0d0d1a';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(244,114,182,0.6)';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        
+        ctx.fillStyle = '#f472b6';
+        ctx.font = 'bold 14px Poppins';
+        ctx.textAlign = 'center';
+        ctx.fillText('🎡', cx, cy + 5);
+    };
+
+    window.openWheelGame = () => {
+        document.getElementById('game-wheel').style.display = 'flex';
+        if(currentUserData) document.getElementById('wheel-bal-display').innerText = currentUserData.points || 0;
+        _wheelBet = 50;
+        document.getElementById('wheel-bet-val').innerText = 50;
+        document.getElementById('wheel-result').innerText = 'স্পিন করুন!';
+        document.getElementById('wheel-result').style.color = 'rgba(255,255,255,0.3)';
+        _wheelAngle = -Math.PI / 2;
+        setTimeout(() => window._wheelDraw(_wheelAngle), 100);
+    };
+
+    window.closeWheelGame = () => {
+        document.getElementById('game-wheel').style.display = 'none';
+        window.openGamesHub();
+    };
+
+    window.wheelChangeBet = (dir) => {
+        _wheelBet = Math.max(10, Math.min(_wheelBet + dir * 10, currentUserData?.points || 10));
+        document.getElementById('wheel-bet-val').innerText = _wheelBet;
+    };
+
+    window.wheelSpin = async () => {
+        if(_wheelSpinning) return;
+        if(!currentUserData || (currentUserData.points || 0) < _wheelBet) { window.showNotify('পর্যাপ্ত পয়েন্ট নেই!', 'error'); return; }
+        
+        _wheelSpinning = true;
+        document.getElementById('wheel-spin-btn').disabled = true;
+        document.getElementById('wheel-result').innerText = 'স্পিন হচ্ছে...';
+        document.getElementById('wheel-result').style.color = '#f472b6';
+        
+        const n = _wheelSegments.length;
+        const sliceAngle = (Math.PI * 2) / n;
+        
+        // Decide result
+        let weights = _wheelSegments.map(s => s.multi === 0 ? 40 : (s.multi <= 2 ? 25 : (s.multi <= 3 ? 15 : (s.multi <= 5 ? 10 : 5))));
+        let totalWeight = weights.reduce((a,b) => a+b, 0);
+        let rand = Math.random() * totalWeight;
+        let resultIdx = 0;
+        for(let i = 0; i < weights.length; i++) { rand -= weights[i]; if(rand <= 0) { resultIdx = i; break; } }
+        
+        // Calculate final angle so pointer hits resultIdx segment
+        let targetAngle = -Math.PI / 2 - (resultIdx * sliceAngle + sliceAngle / 2);
+        let extraSpins = (Math.PI * 2) * (8 + Math.floor(Math.random() * 4));
+        let finalAngle = targetAngle - extraSpins;
+        
+        let start = _wheelAngle;
+        let duration = 4000;
+        let startTime = null;
+        
+        const animate = (ts) => {
+            if(!startTime) startTime = ts;
+            let elapsed = ts - startTime;
+            let t = Math.min(elapsed / duration, 1);
+            // Ease out
+            let ease = 1 - Math.pow(1 - t, 4);
+            _wheelAngle = start + (finalAngle - start) * ease;
+            window._wheelDraw(_wheelAngle);
+            if(t < 1) requestAnimationFrame(animate);
+            else {
+                _wheelAngle = finalAngle;
+                window._wheelSettle(resultIdx);
+            }
+        };
+        requestAnimationFrame(animate);
+    };
+
+    window._wheelSettle = async (idx) => {
+        let seg = _wheelSegments[idx];
+        let pts = currentUserData.points || 0;
+        
+        if(seg.multi > 0) {
+            let winAmt = Math.floor(_wheelBet * seg.multi);
+            pts = pts - _wheelBet + winAmt;
+            document.getElementById('wheel-result').innerText = '🎉 ' + seg.label + ' জিতেছেন! +' + winAmt + ' Pts';
+            document.getElementById('wheel-result').style.color = '#4ade80';
+            window.showNotify('🎉 +' + winAmt + ' পয়েন্ট জিতেছেন!', 'success');
+            await logPointHistory(currentUserData.uid, 'Lucky Wheel জয় (' + seg.label + ')', '+' + winAmt + ' Pts', 'text-green-400');
+        } else {
+            pts = pts - _wheelBet;
+            document.getElementById('wheel-result').innerText = '😔 LOSE — হারেছেন! -' + _wheelBet + ' Pts';
+            document.getElementById('wheel-result').style.color = '#f87171';
+            window.showNotify('😔 -' + _wheelBet + ' পয়েন্ট হারেছেন', 'error');
+            await logPointHistory(currentUserData.uid, 'Lucky Wheel হার', '-' + _wheelBet + ' Pts', 'text-red-400');
+        }
+        
+        pts = Math.max(0, pts);
+        currentUserData.points = pts;
+        document.getElementById('wheel-bal-display').innerText = pts;
+        document.getElementById('user-points-ui').innerText = pts;
+        try { await setDoc(doc(db, 'users', currentUserData.uid), { points: pts }, { merge: true }); } catch(e){}
+        
+        _wheelSpinning = false;
+        document.getElementById('wheel-spin-btn').disabled = false;
+    };
+
+    // ==========================================
+    // 🔢 NUMBER RUSH GAME
+    // ==========================================
+    let _nrBet = 50;
+    let _nrSelected = null;
+    let _nrPlaying = false;
+
+    window.openNumberRush = () => {
+        document.getElementById('game-number-rush').style.display = 'flex';
+        if(currentUserData) document.getElementById('nr-bal-display').innerText = currentUserData.points || 0;
+        _nrBet = 50;
+        _nrSelected = null;
+        _nrPlaying = false;
+        document.getElementById('nr-bet-val').innerText = 50;
+        document.getElementById('nr-display').innerText = '?';
+        document.getElementById('nr-result-text').innerText = 'একটি নম্বর বেছে নিন (১-৯)';
+        document.getElementById('nr-result-text').style.color = 'rgba(255,255,255,0.3)';
+        // Render number grid
+        const grid = document.getElementById('nr-grid');
+        grid.innerHTML = '';
+        for(let i = 1; i <= 9; i++) {
+            grid.innerHTML += `<button class="nr-number-btn" id="nr-btn-${i}" onclick="window.nrSelectNum(${i})">${i}</button>`;
+        }
+    };
+
+    window.closeNumberRush = () => {
+        document.getElementById('game-number-rush').style.display = 'none';
+        window.openGamesHub();
+    };
+
+    window.nrSelectNum = (num) => {
+        if(_nrPlaying) return;
+        _nrSelected = num;
+        document.querySelectorAll('.nr-number-btn').forEach(b => b.classList.remove('nr-selected'));
+        const btn = document.getElementById('nr-btn-' + num);
+        if(btn) btn.classList.add('nr-selected');
+    };
+
+    window.nrChangeBet = (dir) => {
+        _nrBet = Math.max(10, Math.min(_nrBet + dir * 10, currentUserData?.points || 10));
+        document.getElementById('nr-bet-val').innerText = _nrBet;
+    };
+
+    window.nrPlay = async () => {
+        if(_nrPlaying) return;
+        if(!_nrSelected) { window.showNotify('আগে একটি নম্বর বেছে নিন!', 'error'); return; }
+        if(!currentUserData || (currentUserData.points || 0) < _nrBet) { window.showNotify('পর্যাপ্ত পয়েন্ট নেই!', 'error'); return; }
+        
+        _nrPlaying = true;
+        document.getElementById('nr-play-btn').disabled = true;
+        document.getElementById('nr-result-text').innerText = 'নম্বর বের হচ্ছে...';
+        document.getElementById('nr-result-text').style.color = '#fbbf24';
+        
+        // Rolling animation
+        const display = document.getElementById('nr-display');
+        display.classList.add('nr-rolling');
+        let rollInterval = setInterval(() => { display.innerText = Math.floor(Math.random() * 9) + 1; }, 100);
+        
+        setTimeout(async () => {
+            clearInterval(rollInterval);
+            display.classList.remove('nr-rolling');
+            let result = Math.floor(Math.random() * 9) + 1;
+            display.innerText = result;
+            
+            let didWin = result === _nrSelected;
+            let pts = currentUserData.points || 0;
+            
+            // Show result on buttons
+            document.querySelectorAll('.nr-number-btn').forEach(b => b.classList.remove('nr-selected'));
+            const winBtn = document.getElementById('nr-btn-' + result);
+            const selBtn = document.getElementById('nr-btn-' + _nrSelected);
+            if(winBtn) winBtn.classList.add(didWin ? 'nr-win' : 'nr-lose');
+            if(selBtn && !didWin) selBtn.classList.add('nr-lose');
+            
+            if(didWin) {
+                let winAmt = _nrBet * 9;
+                pts = pts - _nrBet + winAmt;
+                document.getElementById('nr-result-text').innerText = '🎉 JACKPOT! +' + winAmt + ' পয়েন্ট!';
+                document.getElementById('nr-result-text').style.color = '#4ade80';
+                window.showNotify('🎉 JACKPOT! +' + winAmt + ' পয়েন্ট জিতেছেন!', 'success');
+                await logPointHistory(currentUserData.uid, 'Number Rush জয় (' + result + ')', '+' + winAmt + ' Pts', 'text-green-400');
+            } else {
+                pts = pts - _nrBet;
+                document.getElementById('nr-result-text').innerText = '😔 হারেছেন! ' + result + ' বের হয়েছে';
+                document.getElementById('nr-result-text').style.color = '#f87171';
+                window.showNotify('😔 -' + _nrBet + ' পয়েন্ট হারেছেন', 'error');
+                await logPointHistory(currentUserData.uid, 'Number Rush হার (' + result + ')', '-' + _nrBet + ' Pts', 'text-red-400');
+            }
+            
+            pts = Math.max(0, pts);
+            currentUserData.points = pts;
+            document.getElementById('nr-bal-display').innerText = pts;
+            document.getElementById('user-points-ui').innerText = pts;
+            try { await setDoc(doc(db, 'users', currentUserData.uid), { points: pts }, { merge: true }); } catch(e){}
+            
+            setTimeout(() => {
+                _nrPlaying = false;
+                document.getElementById('nr-play-btn').disabled = false;
+                _nrSelected = null;
+                document.querySelectorAll('.nr-number-btn').forEach(b => { b.classList.remove('nr-win','nr-lose','nr-selected'); });
+            }, 2000);
+        }, 1500);
+    };
+
+        window.contactSupport = () => { window.open(`https://wa.me/88${window.currentAdminNumber.replace(/^0+/, '')}`, '_blank'); };
 
     // 🟢 SOCIAL SYSTEM (Public Profiles, Likes, Friend Requests) 🟢
     let currentViewingProfile = null;
@@ -5210,7 +6762,7 @@
         else if(t.match(/(ভিআইপি|vip|প্যাকেজ|কিনবো|কিনব)/)) { reply = "ভিআইপি প্যাকেজ পেজ খুলছি।"; action = () => window.openVipPackages(); }
         else if(t.match(/(চ্যাট|chat|মেসেজ|message|কথা বলবো)/)) { reply = "চ্যাট পেজ খুলছি। সবার সাথে কথা বলুন।"; action = () => window.switchTab('chat'); }
         else if(t.match(/(বক্স|box|স্পিন|spin|মিস্ট্রি)/)) { reply = "মিস্ট্রি বক্স খুলছি। প্রতিদিন ২টি বক্স খুলতে পারবেন।"; action = () => window.switchTab('box'); }
-        else if(t.match(/(গেম|খেলা|ক্যাসিনো|casino|play|game)/)) { reply = "ক্যাসিনো গেম চালু করছি। গুড লাক!"; action = () => window.switchTab('casino'); }
+        else if(t.match(/(গেম|খেলা|ক্যাসিনো|casino|play|game)/)) { reply = "Game Zone চালু করছি। গুড লাক!"; action = () => window.openGamesHub(); }
         else if(t.match(/(রেফার|refer|ইনভাইট)/)) { reply = "রেফার পেজে যাচ্ছি। বন্ধুদের ইনভাইট করে বোনাস পান।"; action = () => window.switchTab('refer'); }
         else if(t.match(/(প্রোফাইল|profile|একাউন্ট)/)) { reply = "প্রোফাইল পেজ খুলছি।"; action = () => window.switchTab('profile'); }
         else if(t.match(/(এডমিন|সাপোর্ট|admin|support|টেলিগ্রাম|telegram)/)) { reply = "অ্যাডমিনের টেলিগ্রাম গ্রুপ খুলছি।"; action = () => window.contactSupport(); }
