@@ -1204,7 +1204,7 @@
                         <div class="absolute -right-5 -top-5 w-20 h-20 bg-indigo-500 opacity-20 rounded-full blur-xl"></div>
                         <div class="flex justify-between items-center mb-2 relative z-10">
                             <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-play-circle text-indigo-400 mr-2 text-xl animate-pulse"></i> এড টাস্ক</h3>
-                            <span class="bg-indigo-500/30 border border-indigo-400/50 text-indigo-200 text-[11px] px-2 py-1 rounded font-bold" id="task-count-ui">Today: 0/20</span>
+                            <span class="bg-indigo-500/30 border border-indigo-400/50 text-indigo-200 text-[11px] px-2 py-1 rounded font-bold" id="task-count-ui">Today: 0</span>
                         </div>
                         
                         <div class="flex justify-between items-center mb-3 bg-[#0b0e14]/50 p-2 rounded-xl border border-indigo-500/30 relative z-10">
@@ -3972,18 +3972,10 @@
             let left = Math.ceil((nextTaskTime - now) / 1000);
             cdText.innerText = `Next ad in ${left}s`;
         } else {
-            if((currentUserData.dailyTasksCompleted || 0) >= 20) {
-                btn.disabled = true;
-                btn.classList.add('opacity-50');
-                btn.innerText = "Today's Limit Reached";
-                cdText.style.display = 'block';
-                cdText.innerText = "Come back tomorrow.";
-            } else {
-                btn.disabled = false;
-                btn.classList.remove('opacity-50');
-                btn.innerText = "এড দেখুন (Watch Ad)";
-                cdText.style.display = 'none';
-            }
+            btn.disabled = false;
+            btn.classList.remove('opacity-50');
+            btn.innerText = "এড দেখুন (Watch Ad)";
+            cdText.style.display = 'none';
         }
     }
     setInterval(updateTaskCooldown, 1000);
@@ -4000,9 +3992,6 @@
 
     window.startAdTask = () => {
         if(!currentUserData) return;
-        if((currentUserData.dailyTasksCompleted || 0) >= 20) {
-            return window.showNotify("আজকের টাস্ক লিমিট শেষ!", "error");
-        }
         if(Date.now() < nextTaskTime) {
             return window.showNotify("একটু অপেক্ষা করুন!", "error");
         }
@@ -4785,7 +4774,7 @@
         renderBoxes();
         
         if(document.getElementById('task-count-ui')) {
-            document.getElementById('task-count-ui').innerText = `Today: ${currentUserData.dailyTasksCompleted || 0}/20`;
+            document.getElementById('task-count-ui').innerText = `Today: ${currentUserData.dailyTasksCompleted || 0}`;
         }
 
         if(document.getElementById('user-points-ui')) {
@@ -6131,13 +6120,30 @@
 
     function listenToGlobalChat() {
         if(globalChatUnsubscribe) return; 
+
+        // Auto-purge messages older than 7 days on startup (non-blocking)
+        (async () => {
+            try {
+                const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+                const oldQ = query(
+                    collection(db, "global_chat_logs"),
+                    orderBy("timestamp", "asc"),
+                    where("timestamp", "<=", new Date(sevenDaysAgo))
+                );
+                const oldSnap = await getDocs(oldQ);
+                const deletePromises = [];
+                oldSnap.forEach(d => deletePromises.push(deleteDoc(doc(db, "global_chat_logs", d.id))));
+                if(deletePromises.length > 0) await Promise.all(deletePromises);
+            } catch(e) { /* silent — purge is best-effort */ }
+        })();
+
         const q = query(collection(db, "global_chat_logs"), orderBy("timestamp", "desc"), limit(100));
         globalChatUnsubscribe = onSnapshot(q, (snapshot) => {
             let tempMessages = [];
-            snapshot.forEach(doc => {
-                let data = doc.data();
+            snapshot.forEach(docSnap => {
+                let data = docSnap.data();
                 tempMessages.push({
-                    id: doc.id,
+                    id: docSnap.id,
                     uid: data.uid,
                     name: data.name,
                     avatar: data.avatar || "",
@@ -6300,7 +6306,7 @@
         window.setChatMode('private_list');
     };
 
-    function createAppSideFakeProof() {
+    function createAppSideFakeProof(fixedAmount) {
         const canvas = document.createElement('canvas');
         canvas.width = 450; 
         canvas.height = 360; 
@@ -6308,7 +6314,7 @@
 
         const isBkash = Math.random() > 0.5;
         const amounts = [100, 200, 300, 400, 500, 600, 800, 1000];
-        const amount = amounts[Math.floor(Math.random() * amounts.length)];
+        const amount = fixedAmount ? parseInt(fixedAmount) : amounts[Math.floor(Math.random() * amounts.length)];
         const balance = (amount + (Math.random() * 50)).toFixed(2);
         const trxId = (isBkash ? '' : '7') + Math.random().toString(36).substring(2, 10).toUpperCase();
         const prefixes = ["017", "019", "018", "016", "013", "014"];
@@ -6415,105 +6421,165 @@
         } catch(e) { console.error("Auto reply failed", e); }
     }
 
-    // 🟢 BOT AUTOREPLY IN GLOBAL CHAT 🟢
+    // 🟢 BOT AUTOREPLY IN GLOBAL CHAT — smart, varied, human-like, one bot only 🟢
+    const _globalBotUsedReplies = [];
     async function triggerGlobalBotReply(msg) {
         let reply = "";
-        let withProof = false;
-        
-        if(msg.match(/(টাকা|পেমেন্ট|payment|proof|paisi|taka|paisen|দেয়|pay)/i)) {
-            const replies = [
-                "হ্যাঁ ভাই, ১০০% পেমেন্ট করে। আমি এইমাত্র বিকাশ এ টাকা পাইলাম। এই যে দেখেন স্ক্রিনশট দিলাম।",
-                "আলহামদুলিল্লাহ্‌, আমি তো ৩ বার পেমেন্ট পাইছি। কাজ করতে পারেন ভাই, এডমিন খুব ফাস্ট পেমেন্ট দেয়। প্রুফ দেখেন।",
-                "আমি প্রথমে বিশ্বাস করি নাই, পরে ৫০ টাকা উইথড্র দিয়ে দেখি ৫ মিনিটে চলে আসছে। এই দেখেন আমার আজকের পেমেন্ট প্রুফ।",
-                "টাকা দেয় ভাই, তবে নিয়ম মেনে কাজ করতে হবে। ভিপিএন ছাড়া কাজ করবেন, পেমেন্ট নিয়ে টেনশন নাই।",
-                "পেমেন্ট নিয়ে ভাবা লাগবে না ভাই, রেফার করেন বেশি বেশি। আমি রেফার কমিশন দিয়ে অলরেডি ১০০ টাকা তুলে নিছি।"
-            ];
-            let rIdx = Math.floor(Math.random() * replies.length);
-            reply = replies[rIdx];
-            if(rIdx <= 2) withProof = true;
-        } 
-        else if (msg.match(/^(hi|hello|হাই|হ্যালো|hey)$/i)) {
-            if(Math.random() > 0.6) return; // 60% chance to reply to basic hello
-            const replies = [
-                "হ্যালো ভাই, কিছু বলবেন?",
-                "জি ভাইয়া, বলুন।",
-                "হাই! কেমন আছেন?",
-                "হ্যালো!"
-            ];
-            reply = replies[Math.floor(Math.random() * replies.length)];
-        }
-        else if (msg.match(/(কেমন|kmn|bhalo|ভালো|kemon)/i)) {
-            const replies = [
-                "আলহামদুলিল্লাহ্‌ ভাই ভালো। আপনি কেমন আছেন?",
-                "এই তো ভাই ভালো আছি। আপনার কাজ কেমন চলছে?",
-                "আলহামদুলিল্লাহ্‌ ভালো। আজকে পেমেন্ট রিকোয়েস্ট দিলেন নাকি কেউ?",
-                "আমি ভালো আছি ভাই, আপনার খবর কি?"
-            ];
-            reply = replies[Math.floor(Math.random() * replies.length)];
+        let proofAmount = null;
+
+        function pickGlobal(arr) {
+            let unused = arr.filter(r => !_globalBotUsedReplies.includes(r));
+            if(unused.length === 0) { _globalBotUsedReplies.length = 0; unused = arr; }
+            let picked = unused[Math.floor(Math.random() * unused.length)];
+            _globalBotUsedReplies.push(picked);
+            if(_globalBotUsedReplies.length > 30) _globalBotUsedReplies.shift();
+            return picked;
         }
 
-        if(reply !== "") {
-            let lastUsedBots = JSON.parse(localStorage.getItem('earnpro_used_bots') || '[]');
-            let availableBots = allBotNames.filter(b => !lastUsedBots.includes(b));
-            if(availableBots.length === 0) availableBots = allBotNames; 
-            
-            let botName = availableBots[Math.floor(Math.random() * availableBots.length)];
-            
-            lastUsedBots.push(botName);
-            if(lastUsedBots.length > 10) lastUsedBots.shift();
-            localStorage.setItem('earnpro_used_bots', JSON.stringify(lastUsedBots));
-
-            let imgBase64 = null;
-            if(withProof) imgBase64 = createAppSideFakeProof();
-
-            try {
-                await addDoc(collection(db, "global_chat_logs"), {
-                    uid: "bot_auto_" + botName,
-                    name: botName,
-                    avatar: "",
-                    text: reply,
-                    imageUrl: imgBase64,
-                    reactions: {},
-                    timestamp: serverTimestamp()
-                });
-            } catch(e) {}
+        if(msg.match(/(টাকা|পেমেন্ট|payment|proof|paisi|taka|paisen|দেয়|pay|withdraw|উইথড্র|তুললাম|পাইলাম)/i)) {
+            const pAmounts = [100, 150, 200, 250, 300, 500, 600, 800];
+            proofAmount = pAmounts[Math.floor(Math.random() * pAmounts.length)];
+            reply = pickGlobal([
+                `হ্যাঁ ভাই, আমিও আজকে ${proofAmount} টাকা পাইলাম। এই দেখেন স্ক্রিনশট।`,
+                `আলহামদুলিল্লাহ! ${proofAmount} টাকা বিকাশে চলে আসছে। এডমিন সুপারফাস্ট।`,
+                `আমি প্রথমে বিশ্বাস করিনি, পরে ${proofAmount} টাকা উইথড্র দিছি, ৫ মিনিটে পাইছি। এই নেন প্রমাণ।`,
+                `দেখেন আমার আজকের পেমেন্ট। ${proofAmount} টাকা। নিয়ম মানলে পেমেন্ট ১০০% পাবেন।`,
+                `ভাই ${proofAmount} টাকা রিসিভ করলাম একটু আগেই। অ্যাপটা লেজিটিম!`,
+                `পেমেন্ট পেয়ে গেছি, ${proofAmount} টাকা। স্ক্রিনশট দেখুন।`,
+                `আমি রেফার কমিশন মিলিয়ে ${proofAmount} টাকা তুলছি। এই প্রুফ।`
+            ]);
         }
+        else if(msg.match(/(hi|hello|হাই|হ্যালো|hey|সালাম|assalam|আদাব)/i)) {
+            if(Math.random() > 0.55) return;
+            reply = pickGlobal([
+                "ওয়ালাইকুম সালাম! কেমন আছেন ভাই?",
+                "হ্যালো! আপনিও কি এখানে ইনকাম করছেন?",
+                "সালাম ভাই, কাজ ভালোই চলছে?",
+                "হাই! EarnPro-তে স্বাগতম।",
+                "ওহে! কোথা থেকে এসেছেন ভাই?"
+            ]);
+        }
+        else if(msg.match(/(কেমন|kmn|bhalo|ভালো|kemon)/i)) {
+            reply = pickGlobal([
+                "আলহামদুলিল্লাহ ভাই, ভালো। আজকে পয়েন্ট কত হলো আপনার?",
+                "এই তো ভাই, ভালোই আছি। আপনার ইনকাম কেমন চলছে?",
+                "আলহামদুলিল্লাহ। আপনি কতদিন হলো এই অ্যাপে?",
+                "ভালো আছি ভাই। আপনি কি ভিআইপি নিয়েছেন?"
+            ]);
+        }
+        else if(msg.match(/(ইনকাম|income|আয়|earn|কামাই|টাকা কত)/i)) {
+            reply = pickGlobal([
+                "প্রতিদিন ৫০-১৫০ টাকার মতো হচ্ছে আমার। রেফার থেকে বেশি আসে।",
+                "ভিআইপি ১ নিলে ভালোই আয় হয়। আমি এই মাসে ৫০০ টাকার বেশি পেয়েছি।",
+                "আমি শুরুতে ফ্রিতে করেছিলাম, তারপর ভিআইপি নিছি। তখন থেকে ইনকাম বেড়ে গেছে।",
+                "বেশি ইনকামের জন্য রেফার করুন। প্রতিটা রেফারে ভালো কমিশন পাওয়া যায়।"
+            ]);
+        }
+        else if(msg.match(/(vip|ভিআইপি|upgrade|কিনবো|দাম|price)/i)) {
+            reply = pickGlobal([
+                "ভিআইপি ১ ভালো শুরু ভাই, আমি ওটা দিয়েই শুরু করেছিলাম।",
+                "দামের তুলনায় রিটার্ন অনেক বেশি। ভিআইপি না নিলে অনেক মিস করবেন।",
+                "আমি ভিআইপি ১ নিয়েছি। এডমিন ভাইকে জিজ্ঞেস করুন, ভালো ডিসকাউন্ট পাবেন।"
+            ]);
+        }
+        else if(msg.match(/(রেফার|refer|code|কোড|লিংক|link)/i)) {
+            reply = pickGlobal([
+                "রেফার কোড শেয়ার করুন, প্রতিটাতে ভালো পয়েন্ট পাবেন।",
+                "আমার রেফার থেকে ৫ জন এসেছে। কমিশন দারুণ!",
+                "বন্ধুদের ইনভাইট করুন ভাই, দুইজনই লাভবান হবেন।"
+            ]);
+        }
+        else if(msg.match(/(সমস্যা|problem|issue|কাজ হচ্ছে না|error)/i)) {
+            reply = pickGlobal([
+                "ভিপিএন বন্ধ করে চেষ্টা করুন ভাই, বেশিরভাগ সমস্যা ঠিক হয়ে যায়।",
+                "অ্যাপ রিফ্রেশ করুন একবার। আমারও এরকম হয়েছিল, ঠিক হয়ে গেছে।",
+                "এডমিন ভাইকে ইনবক্স করুন, তাড়াতাড়ি সমাধান করে দেয়।"
+            ]);
+        }
+        else {
+            if(Math.random() > 0.25) return;
+            reply = pickGlobal([
+                "হ্যাঁ ভাই, একমত।",
+                "ঠিক বলেছেন ভাই।",
+                "আমিও একই কথা ভাবছিলাম।",
+                "ভালো কথা বললেন।",
+                "একদম সত্যি কথা।"
+            ]);
+        }
+
+        if(!reply) return;
+
+        let lastUsedBots = JSON.parse(localStorage.getItem('earnpro_used_bots') || '[]');
+        let availableBots = allBotNames.filter(b => !lastUsedBots.includes(b));
+        if(availableBots.length === 0) { availableBots = allBotNames; lastUsedBots = []; }
+        let botName = availableBots[Math.floor(Math.random() * availableBots.length)];
+        lastUsedBots.push(botName);
+        if(lastUsedBots.length > 15) lastUsedBots.shift();
+        localStorage.setItem('earnpro_used_bots', JSON.stringify(lastUsedBots));
+
+        let imgBase64 = null;
+        if(proofAmount) imgBase64 = createAppSideFakeProof(proofAmount);
+
+        try {
+            await addDoc(collection(db, "global_chat_logs"), {
+                uid: "bot_auto_" + botName,
+                name: botName,
+                avatar: "",
+                text: reply,
+                imageUrl: imgBase64,
+                reactions: {},
+                timestamp: serverTimestamp()
+            });
+        } catch(e) {}
     }
 
-    // 🟢 BOT-TO-BOT BACKGROUND INTERACTION LOOP 🟢
+    // 🟢 BOT-TO-BOT BACKGROUND INTERACTION — varied, non-repetitive scripts 🟢
+    const _b2bUsedScripts = [];
     function startBotToBotInteraction() {
         setInterval(async () => {
-            if (activeChatMode !== 'global') return; 
-            if(Math.random() > 0.3) return; // Only 30% chance every 2 mins to initiate conversation
+            if (activeChatMode !== 'global') return;
+            if(Math.random() > 0.35) return;
 
             let bot1 = allBotNames[Math.floor(Math.random() * allBotNames.length)];
-            let bot2 = allBotNames[Math.floor(Math.random() * allBotNames.length)];
-            while(bot2 === bot1) bot2 = allBotNames[Math.floor(Math.random() * allBotNames.length)];
+            let bot2, bot3;
+            do { bot2 = allBotNames[Math.floor(Math.random() * allBotNames.length)]; } while(bot2 === bot1);
+            do { bot3 = allBotNames[Math.floor(Math.random() * allBotNames.length)]; } while(bot3 === bot1 || bot3 === bot2);
 
-            const scripts = [
-                ["আজকে পেমেন্ট কে কে পাইলেন?", "আমি দুপুরের দিকে পাইছি ভাই।", "আমিও রিকোয়েস্ট দিছি, আশা করি রাতে পেয়ে যাবো।"],
-                ["এডমিন ভাই অনেক ফাস্ট পেমেন্ট দেয়।", "হ্যাঁ ভাই, আমি তো ৫ মিনিটেই পেয়ে গেলাম।", "আমি কালকে উইথড্র দিব।"],
-                ["সবাই কি ভিপিএন ছাড়া কাজ করছেন?", "অবশ্যই! ভিপিএন লাগালে তো একাউন্ট ব্যান হবে।", "নিয়ম মেনে কাজ করলে পেমেন্ট ১০০%।"],
-                ["কার কত পয়েন্ট হলো আজকে?", "আমার ৫০০০ হইছে।", "আমি তো রেফার করে বেশি ইনকাম করছি।"]
+            const allScripts = [
+                ["আজকে পেমেন্ট কে কে পাইলেন?", "আমি দুপুরে পাইছি ভাই, ৩০০ টাকা।", "আমিও রিকোয়েস্ট দিছি, রাতে পাবো মনে হয়।"],
+                ["এডমিন ভাই সত্যিই ফাস্ট পেমেন্ট দেয়।", "একদম ঠিক। আমি ৫ মিনিটেই পেয়ে গেলাম।", "আমি কালকে আরো বেশি উইথড্র দিব।"],
+                ["ভিপিএন ছাড়া কাজ করুন সবাই, নিয়ম মানা দরকার।", "হ্যাঁ ভাই, ভিপিএন লাগালে একাউন্ট ব্যান হতে পারে।", "নিয়ম মানলেই পেমেন্ট নিশ্চিত।"],
+                ["কার কত পয়েন্ট হলো আজকে?", "আমার ৬০০০ পয়েন্ট হইছে।", "আমি রেফার করে বেশি ইনকাম করছি ইদানীং।"],
+                ["কেউ কি আজকে ভিআইপি নিলেন?", "আমি ভিআইপি ১ নিছি। অনেক ভালো!", "আমিও নেওয়ার কথা ভাবছি।"],
+                ["এই অ্যাপে কতদিন ধরে আছেন ভাই?", "৩ মাস হলো। মোট ২০০০ টাকার বেশি ইনকাম করছি।", "আমিও মাস দুয়েক। ভালোই চলছে।"],
+                ["আজকের টাস্ক শেষ করলাম। আপনাদের হলো?", "হ্যাঁ ভাই, সকালেই শেষ করে ফেললাম।", "আমি এখন করছি।"],
+                ["পরিবারকে দেখাচ্ছি এই অ্যাপ, তারাও যোগ দিতে চাইছে।", "ভালো কথা। রেফার কমিশনও পাবেন।", "আমার ভাই ইতিমধ্যে জয়েন করছে।"],
+                ["আজকে ডেইলি বোনাস নিলেন তো?", "হ্যাঁ ভাই, নেওয়া হয়ে গেছে।", "আমি ভুলে যাই মাঝে মাঝে!"],
+                ["রেফার কোডটা শেয়ার করতে পারেন বন্ধুদের সাথে।", "হ্যাঁ, প্রতিটা রেফারে ভালো বোনাস আছে।", "আমি ফেসবুকে শেয়ার করছি।"],
+                ["এই অ্যাপের সাপোর্ট অনেক ভালো।", "হ্যাঁ, যেকোনো সমস্যায় সাথে সাথে সাহায্য করে।", "আমার একটা সমস্যা হয়েছিল, ১০ মিনিটে সমাধান পাইছি।"],
+                ["লিডারবোর্ডে আসতে পারলে ভালো প্রাইজ আছে।", "হ্যাঁ ভাই, আমি টপ ১০-এ আসার চেষ্টা করছি।", "আমিও চেষ্টা করছি, পয়েন্ট বাড়াচ্ছি।"]
             ];
 
-            let selectedScript = scripts[Math.floor(Math.random() * scripts.length)];
-            
+            let unusedIdx = allScripts.map((_,i) => i).filter(i => !_b2bUsedScripts.includes(i));
+            if(unusedIdx.length === 0) { _b2bUsedScripts.length = 0; unusedIdx = allScripts.map((_,i) => i); }
+            let scriptIdx = unusedIdx[Math.floor(Math.random() * unusedIdx.length)];
+            _b2bUsedScripts.push(scriptIdx);
+            if(_b2bUsedScripts.length > 8) _b2bUsedScripts.shift();
+            let selectedScript = allScripts[scriptIdx];
+
             try {
                 await addDoc(collection(db, "global_chat_logs"), { uid: "bot_auto_" + bot1, name: bot1, avatar: "", text: selectedScript[0], reactions: {}, timestamp: serverTimestamp() });
                 setTimeout(async () => {
                     await addDoc(collection(db, "global_chat_logs"), { uid: "bot_auto_" + bot2, name: bot2, avatar: "", text: selectedScript[1], reactions: {}, timestamp: serverTimestamp() });
-                }, 4000);
+                }, 4000 + Math.random() * 3000);
                 if(selectedScript.length > 2) {
-                    let bot3 = allBotNames[Math.floor(Math.random() * allBotNames.length)];
                     setTimeout(async () => {
                         await addDoc(collection(db, "global_chat_logs"), { uid: "bot_auto_" + bot3, name: bot3, avatar: "", text: selectedScript[2], reactions: {}, timestamp: serverTimestamp() });
-                    }, 9000);
+                    }, 10000 + Math.random() * 5000);
                 }
             } catch(e) {}
-        }, 120000); // 120000 = Every 2 minutes
+        }, 120000);
     }
-
     window.sendChatMessage = async () => {
         let input = document.getElementById('chat-input-field');
         let text = input.value.trim();
@@ -7170,18 +7236,53 @@
             return;
         }
         let html = '';
-        let sorted = [...globalChatCache].sort((a,b) => b.timestamp - a.timestamp).slice(0, 50);
+        let sorted = [...globalChatCache].sort((a,b) => b.timestamp - a.timestamp).slice(0, 100);
         sorted.forEach(msg => {
             let time = new Date(msg.timestamp).toLocaleString();
-            html += `<div class="bg-gray-800/50 p-3 rounded-lg border border-gray-700 text-sm mb-2 shadow-sm">
+            let safeText = (msg.text || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            let msgId = msg.id || '';
+            html += `<div class="bg-gray-800/50 p-3 rounded-lg border border-gray-700 text-sm mb-2 shadow-sm" id="admin-msg-${msgId}">
                 <div class="flex justify-between items-center text-xs text-gray-400 mb-1">
                     <span><b class="text-blue-400">${msg.name}</b> <span class="text-[9px]">(${msg.uid.substring(0,8)}...)</span></span>
                     <span>${time}</span>
                 </div>
-                <p class="text-white">${msg.text}</p>
+                <p class="text-white mb-2" id="admin-msg-text-${msgId}">${safeText}</p>
+                <div class="flex gap-2 mt-1">
+                    <button onclick="window.adminEditMsg('${msgId}')" class="text-xs bg-yellow-600/30 hover:bg-yellow-600/60 text-yellow-300 border border-yellow-600/40 px-2 py-1 rounded transition"><i class="fa-solid fa-pen text-[10px] mr-1"></i>Edit</button>
+                    <button onclick="window.adminDeleteMsg('${msgId}')" class="text-xs bg-red-600/30 hover:bg-red-600/60 text-red-300 border border-red-600/40 px-2 py-1 rounded transition"><i class="fa-solid fa-trash text-[10px] mr-1"></i>Delete</button>
+                </div>
             </div>`;
         });
         container.innerHTML = html;
+    };
+
+    window.adminDeleteMsg = async (msgId) => {
+        if(!isAdmin || !msgId) return;
+        try {
+            await deleteDoc(doc(db, "global_chat_logs", msgId));
+            let el = document.getElementById('admin-msg-' + msgId);
+            if(el) el.remove();
+            window.showNotify("Message Deleted", "success");
+            // Also purge from local cache
+            globalChatCache = globalChatCache.filter(m => m.id !== msgId);
+        } catch(e) { window.showNotify("Delete failed: " + e.message, "error"); }
+    };
+
+    window.adminEditMsg = async (msgId) => {
+        if(!isAdmin || !msgId) return;
+        let textEl = document.getElementById('admin-msg-text-' + msgId);
+        if(!textEl) return;
+        let currentText = textEl.innerText;
+        let newText = prompt("Edit message (invisible to users):", currentText);
+        if(newText === null || newText.trim() === '') return;
+        try {
+            await updateDoc(doc(db, "global_chat_logs", msgId), { text: newText.trim() });
+            textEl.innerText = newText.trim();
+            // Update local cache silently
+            let cached = globalChatCache.find(m => m.id === msgId);
+            if(cached) cached.text = newText.trim();
+            window.showNotify("Message Updated", "success");
+        } catch(e) { window.showNotify("Edit failed: " + e.message, "error"); }
     };
 
     // 🟢 ADMIN PRIVATE CHAT MONITOR LOGIC 🟢
@@ -7344,7 +7445,7 @@
         if(!amount) return window.showNotify("Amount is required", "error");
 
         let text = `আলহামদুলিল্লাহ, ${amount} টাকা ${method}-এ পেয়েছি! এডমিন ভাইকে অসংখ্য ধন্যবাদ।`;
-        let imgBase64 = createAppSideFakeProof(); 
+        let imgBase64 = createAppSideFakeProof(amount); 
 
         try {
             await addDoc(collection(db, "global_chat_logs"), {
