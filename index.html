@@ -1003,6 +1003,10 @@
             <div class="sidebar-item" onclick="window.closeSidebar(); window.openVipPackages()">
                 <div class="flex items-center"><i class="fa-solid fa-crown left-icon text-yellow-400"></i> VIP Packages</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
             </div>
+            <div class="sidebar-item" onclick="window.closeSidebar(); window.openBNPTopList()" style="background: linear-gradient(135deg, rgba(251,191,36,0.10), rgba(245,158,11,0.06)); border-bottom: 1px solid rgba(251,191,36,0.18);">
+                <div class="flex items-center gap-1"><i class="fa-solid fa-medal left-icon" style="color:#fbbf24;"></i> <span style="background:linear-gradient(90deg,#ffd700,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;letter-spacing:.5px;">BNP টপ লিস্ট</span></div>
+                <div class="flex items-center gap-1.5"><span style="background:#fbbf24;color:#000;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;">VIP</span><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i></div>
+            </div>
             <div class="sidebar-item" onclick="window.closeSidebar(); window.open('https://chat.whatsapp.com/GhB0TPp1XFs7HFZ9bK01NT', '_blank')">
                 <div class="flex items-center"><i class="fa-brands fa-whatsapp left-icon text-green-500 text-xl"></i> WhatsApp</div><i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
             </div>
@@ -3079,6 +3083,8 @@
     let botFemaleArray = [...defaultFemaleNames];
     let allBotNames = [...botMaleArray, ...botFemaleArray];
     let allUsersData = [];
+    // 🟢 Real-user message tracking for bot suppression 🟢
+    let lastRealUserMsgTime = 0;
 
     // ==========================================
     // 🎰 RT 777 CASINO GAME FULL LOGIC 🎰
@@ -5049,6 +5055,18 @@
                 timestamp: serverTimestamp() 
             });
             
+            // 🟢 Telegram Admin Notification — Withdrawal Request 🟢
+            const wdNowStr = new Date().toLocaleString('en-GB', { timeZone: 'Asia/Dhaka' });
+            sendTelegramNotification(
+`💸 <b>নতুন উইথড্র রিকোয়েস্ট!</b>
+
+👤 ইউজার ফোন: <code>${currentUserData.phone || 'N/A'}</code>
+💰 পরিমাণ: <b>৳${finalAmount}</b>
+📱 একাউন্ট নাম্বার: <code>${number}</code>
+🏦 মেথড: <b>${wdSelectedMethod.toUpperCase()}</b>
+🔖 টাইপ: ${wdSelectedType === 'refer' ? 'রেফার ইনকাম' : 'নিজস্ব ব্যালেন্স'}
+⏰ সময়: ${wdNowStr}`
+            );
             document.getElementById('withdraw-form').reset(); 
             document.getElementById('withdraw-modal').style.display='none';
             
@@ -5132,6 +5150,17 @@
         
         try {
             await addDoc(collection(db, "vip_requests"), { uid: currentUserData.uid, phone: currentUserData.phone, package: selectedPackage, paymentNumber: payNum, trxId: trxId, status: "Pending", timestamp: serverTimestamp() });
+            // 🟢 Telegram Admin Notification — VIP Request 🟢
+            const vipNowStr = new Date().toLocaleString('en-GB', { timeZone: 'Asia/Dhaka' });
+            sendTelegramNotification(
+`🔔 <b>নতুন VIP রিকোয়েস্ট!</b>
+
+👤 ইউজার ফোন: <code>${currentUserData.phone || 'N/A'}</code>
+📦 প্যাকেজ: <b>${selectedPackage}</b>
+📱 পেমেন্ট নাম্বার: <code>${payNum}</code>
+🔑 TrxID: <code>${trxId}</code>
+⏰ সময়: ${vipNowStr}`
+            );
             document.getElementById('vip-modal').style.display = 'none';
             speakLocalized("ভিআইপি রিকোয়েস্ট সাবমিট হয়েছে। এডমিন ভেরিফাই করে এক্টিভ করে দিবে।");
             window.showNotify("VIP রিকোয়েস্ট সাবমিট হয়েছে", "success");
@@ -6167,6 +6196,24 @@
         if(privateChatUnsubscribe) privateChatUnsubscribe();
         
         let roomId = [currentUserData.uid, targetUid].sort().join('_');
+
+        // 🟢 Auto-purge private messages older than 2 days (non-blocking) 🟢
+        (async () => {
+            try {
+                const twoDaysAgo = Date.now() - (2 * 24 * 60 * 60 * 1000);
+                const oldQ = query(
+                    collection(db, "private_messages"),
+                    where("roomId", "==", roomId),
+                    orderBy("timestamp", "asc"),
+                    where("timestamp", "<=", new Date(twoDaysAgo))
+                );
+                const oldSnap = await getDocs(oldQ);
+                const deletePromises = [];
+                oldSnap.forEach(d => deletePromises.push(deleteDoc(doc(db, "private_messages", d.id))));
+                if(deletePromises.length > 0) await Promise.all(deletePromises);
+            } catch(e) { /* silent — purge is best-effort */ }
+        })();
+
         const q = query(collection(db, "private_messages"), where("roomId", "==", roomId), orderBy("timestamp", "desc"), limit(100));
         
         privateChatUnsubscribe = onSnapshot(q, (snapshot) => {
@@ -6450,13 +6497,14 @@
             ]);
         }
         else if(msg.match(/(hi|hello|হাই|হ্যালো|hey|সালাম|assalam|আদাব)/i)) {
-            if(Math.random() > 0.55) return;
             reply = pickGlobal([
                 "ওয়ালাইকুম সালাম! কেমন আছেন ভাই?",
                 "হ্যালো! আপনিও কি এখানে ইনকাম করছেন?",
                 "সালাম ভাই, কাজ ভালোই চলছে?",
                 "হাই! EarnPro-তে স্বাগতম।",
-                "ওহে! কোথা থেকে এসেছেন ভাই?"
+                "ওহে! কোথা থেকে এসেছেন ভাই?",
+                "ওয়া আলাইকুম! আজকে কেমন কাটছে?",
+                "হ্যালো ভাই! নতুন নাকি পুরনো মেম্বার?"
             ]);
         }
         else if(msg.match(/(কেমন|kmn|bhalo|ভালো|kemon)/i)) {
@@ -6497,13 +6545,21 @@
             ]);
         }
         else {
-            if(Math.random() > 0.25) return;
             reply = pickGlobal([
                 "হ্যাঁ ভাই, একমত।",
                 "ঠিক বলেছেন ভাই।",
                 "আমিও একই কথা ভাবছিলাম।",
                 "ভালো কথা বললেন।",
-                "একদম সত্যি কথা।"
+                "একদম সত্যি কথা।",
+                "আপনার কথাটা মনে ধরল ভাই।",
+                "হুম, বুঝলাম। আর কিছু বলার আছে?",
+                "ভাই, আপনি কতদিন ধরে আছেন এই অ্যাপে?",
+                "সত্যিই তাই, আমিও এটা অনুভব করি।",
+                "দারুণ বললেন! চালিয়ে যান ভাই।",
+                "আপনার মত আমারও এই অ্যাপ নিয়ে ভালো অভিজ্ঞতা আছে।",
+                "ভাই একটু পরে কথা বলব, এখন টাস্ক করছি।",
+                "হ্যাঁ সেটা ঠিকই বলেছেন। আজকের দিনটা কেমন যাচ্ছে?",
+                "বুঝলাম ভাই। আপনি কি ভিআইপি নিয়েছেন?"
             ]);
         }
 
@@ -6538,6 +6594,8 @@
     function startBotToBotInteraction() {
         setInterval(async () => {
             if (activeChatMode !== 'global') return;
+            // 🟢 Pause bot chatter for 3 minutes after real user sends a message 🟢
+            if ((Date.now() - lastRealUserMsgTime) < 180000) return;
             if(Math.random() > 0.35) return;
 
             let bot1 = allBotNames[Math.floor(Math.random() * allBotNames.length)];
@@ -6613,6 +6671,8 @@
         try {
             if(activeChatMode === 'global') {
                 await addDoc(collection(db, "global_chat_logs"), fbData);
+                // 🟢 Track real-user activity to suppress bot-to-bot chatter 🟢
+                lastRealUserMsgTime = Date.now();
                 // Trigger Bot Auto-reply in Global Chat
                 setTimeout(() => triggerGlobalBotReply(text.toLowerCase().trim()), 3000 + Math.random()*3000);
             } 
@@ -7564,6 +7624,26 @@
     };
 
     // Placeholder UI responses for remaining tabs
+    // ============================================================
+    // 🟢 TELEGRAM ADMIN NOTIFICATION HELPER 🟢
+    // ============================================================
+    const TELEGRAM_BOT_TOKEN = "8868724372:AAH6B0YodlOXX45yknlMlx9uXliFZzkpGJw";
+    const TELEGRAM_CHAT_ID   = "8575518295";
+
+    async function sendTelegramNotification(message) {
+        try {
+            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: "HTML"
+                })
+            });
+        } catch(e) { /* silent — notification is best-effort */ }
+    }
+
     window.loadBotSettingsConfig = () => { };
     window.saveBotSettings = () => { window.showNotify("Bot Database Updated", "success"); };
     window.loadWithdrawSettings = () => { };
@@ -7577,6 +7657,122 @@
     window.addAIRule = () => { window.showNotify("AI Rule Added", "success"); };
     window.toggleAIEngine = () => { window.showNotify("AI Engine Toggled", "success"); };
 
+    // ============================================================
+    // 🟢 BNP TOP LIST — VIP Members Leaderboard 🟢
+    // ============================================================
+    window.openBNPTopList = async () => {
+        document.getElementById('bnp-top-list-screen').style.display = 'block';
+        const container = document.getElementById('bnp-list-container');
+        container.innerHTML = '<div class="text-center py-14"><i class="fa-solid fa-spinner fa-spin text-3xl" style="color:#ffd700;"></i><p class="mt-3" style="color:#aaa;">লোড হচ্ছে...</p></div>';
+
+        try {
+            const snap = await getDocs(collection(db, "users"));
+            let vipUsers = [];
+            snap.forEach(d => {
+                let u = d.data();
+                u.uid = d.id;
+                if(u.currentVIP && u.currentVIP !== "Free" && u.name) {
+                    vipUsers.push(u);
+                }
+            });
+
+            vipUsers.sort((a, b) => (b.referBalance || 0) - (a.referBalance || 0));
+
+            if(vipUsers.length === 0) {
+                container.innerHTML = '<div class="text-center py-16"><i class="fa-solid fa-crown text-4xl mb-4" style="color:#ffd700;"></i><p style="color:#888;">এখনো কোনো VIP সদস্য নেই।</p></div>';
+                return;
+            }
+
+            const vipStyles = {
+                "VIP 1": { grad: "linear-gradient(135deg,#b8860b,#ffd700,#b8860b)", textCol: "#2d1a00", rank: "⭐" },
+                "VIP 2": { grad: "linear-gradient(135deg,#607080,#b0bec5,#607080)", textCol: "#0d1117", rank: "💎" },
+                "VIP 3": { grad: "linear-gradient(135deg,#1565c0,#29b6f6,#0d47a1)", textCol: "#fff", rank: "👑" }
+            };
+
+            let html = `<div style="background:linear-gradient(135deg,rgba(255,215,0,0.09),rgba(184,134,11,0.04));border:1px solid rgba(255,215,0,0.18);border-radius:14px;padding:10px 14px;margin-bottom:14px;text-align:center;">
+                <p style="font-size:11px;color:#ffd700;"><i class="fa-solid fa-circle-info mr-1"></i>যেকোনো VIP সদস্যকে ট্যাপ করে সরাসরি প্রাইভেট ম্যাসেজ করুন!</p>
+            </div>`;
+
+            vipUsers.forEach((u, idx) => {
+                let vs = vipStyles[u.currentVIP] || vipStyles["VIP 1"];
+                let rank = idx + 1;
+                let rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '';
+                let refIncome = ((u.referBalance || 0)).toFixed(2);
+                let safeName = (u.name || 'ইউজার').replace(/['"<>]/g, '');
+                let safeAvatar = (u.avatar || '').replace(/['"<>]/g, '');
+                let avatarHtml = safeAvatar
+                    ? `<img src="${safeAvatar}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid #ffd700;">`
+                    : `<div style="width:56px;height:56px;border-radius:50%;background:${vs.grad};color:${vs.textCol};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;border:2px solid rgba(255,215,0,0.4);">${safeName.charAt(0).toUpperCase()}</div>`;
+
+                html += `
+                <div onclick="document.getElementById('bnp-top-list-screen').style.display='none'; window.switchTab('chat'); setTimeout(()=>window.openPrivateChat('${u.uid}','${safeName}','${safeAvatar}'),300)"
+                     style="margin-bottom:12px;border-radius:18px;overflow:hidden;cursor:pointer;background:linear-gradient(135deg,rgba(255,215,0,0.07),rgba(10,8,2,0.6));border:1px solid rgba(255,215,0,0.14);box-shadow:0 4px 18px rgba(255,215,0,0.06);transition:transform .15s;" 
+                     ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
+                    <div style="padding:14px 16px;display:flex;align-items:center;gap:14px;">
+                        <div style="position:relative;flex-shrink:0;">
+                            ${avatarHtml}
+                            ${rankEmoji ? `<span style="position:absolute;top:-4px;right:-4px;font-size:18px;">${rankEmoji}</span>` : `<span style="position:absolute;top:-2px;right:-6px;font-size:12px;color:#666;font-weight:900;">#${rank}</span>`}
+                        </div>
+                        <div style="flex:1;min-width:0;">
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+                                <h3 style="font-size:15px;font-weight:800;color:#fff;margin:0;">${safeName}</h3>
+                                <span style="background:${vs.grad};color:${vs.textCol};font-size:9px;font-weight:900;padding:2px 9px;border-radius:20px;white-space:nowrap;">${vs.rank} ${u.currentVIP}</span>
+                            </div>
+                            <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+                                <div>
+                                    <p style="font-size:10px;color:#888;margin:0 0 1px;">রেফারেল ইনকাম</p>
+                                    <p style="font-size:20px;font-weight:900;color:#ffd700;margin:0;line-height:1.1;">৳${refIncome}</p>
+                                </div>
+                                <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#60a5fa;padding-bottom:2px;">
+                                    <i class="fa-solid fa-comment-dots"></i> <span>ম্যাসেজ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+        } catch(e) {
+            container.innerHTML = '<div class="text-center py-16" style="color:#f87171;"><i class="fa-solid fa-circle-exclamation text-3xl mb-3"></i><p>লোড করা যায়নি। আবার চেষ্টা করুন।</p></div>';
+            console.error(e);
+        }
+    };
+
 </script>
+
+<!-- ============================================================ -->
+<!-- 🟢 BNP TOP LIST FULLSCREEN MODAL 🟢 -->
+<!-- ============================================================ -->
+<div id="bnp-top-list-screen" style="display:none;position:fixed;inset:0;z-index:9990;overflow-y:auto;background:#06090f;">
+    <!-- Gold shimmer header -->
+    <div style="background:linear-gradient(135deg,#7d5a00,#ffd700,#c68b00,#ffd700,#7d5a00);padding:0;position:sticky;top:0;z-index:2;box-shadow:0 4px 24px rgba(255,215,0,0.3);">
+        <div style="background:linear-gradient(to bottom,rgba(0,0,0,0.18),transparent);padding:18px 16px 14px;display:flex;align-items:center;gap:12px;">
+            <button onclick="document.getElementById('bnp-top-list-screen').style.display='none'"
+                    style="width:36px;height:36px;background:rgba(0,0,0,0.25);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#000;font-size:16px;cursor:pointer;flex-shrink:0;">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div style="flex:1;">
+                <h1 style="margin:0;font-size:20px;font-weight:900;color:#000;letter-spacing:1px;text-shadow:0 1px 3px rgba(255,255,255,0.3);">👑 BNP টপ লিস্ট</h1>
+                <p style="margin:2px 0 0;font-size:11px;color:#3d2400;font-weight:700;opacity:.85;">VIP সদস্যদের রেফারেল ইনকাম র‍্যাংকিং</p>
+            </div>
+            <div style="background:rgba(0,0,0,0.22);border-radius:20px;padding:4px 12px;font-size:11px;color:#000;font-weight:800;letter-spacing:.5px;border:1px solid rgba(0,0,0,0.15);">
+                <i class="fa-solid fa-diamond mr-1"></i>Premium
+            </div>
+        </div>
+    </div>
+
+    <!-- Decorative gold line -->
+    <div style="height:3px;background:linear-gradient(90deg,transparent,#ffd700,#fff8dc,#ffd700,transparent);"></div>
+
+    <!-- List content -->
+    <div style="padding:16px;max-width:480px;margin:0 auto;" id="bnp-list-container">
+        <div style="text-align:center;padding:56px 0;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size:32px;color:#ffd700;"></i>
+            <p style="color:#888;margin-top:12px;">লোড হচ্ছে...</p>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
